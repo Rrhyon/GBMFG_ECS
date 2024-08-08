@@ -1,23 +1,12 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package gbmfg_ecs;
-
-import javax.persistence.*;
 
 /**
  *
  * @author phillip.tette
  */
-@Entity
-@Table(name = "materials")
-public class Material implements InventoryItem {
+public class Material {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int materialId;
-
     private String name;
     private String description;
     private double quantity;
@@ -42,7 +31,6 @@ public class Material implements InventoryItem {
         this.materialId = materialId;
     }
 
-    @Override
     public String getName() {
         return name;
     }
@@ -51,18 +39,12 @@ public class Material implements InventoryItem {
         this.name = name;
     }
 
-    @Override
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    @Override
-    public String getStatus() {
-        return quantity > 0 ? "In Stock" : "Out of Stock";
     }
 
     public double getQuantity() {

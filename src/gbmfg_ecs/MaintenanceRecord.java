@@ -1,50 +1,32 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package gbmfg_ecs;
-
-import javax.persistence.*;
-import java.time.LocalDateTime;
 
 /**
  *
  * @author phillip.tette
  */
+import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "maintenance_records")
 public class MaintenanceRecord {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int recordId;
-
-    @ManyToOne
-    @JoinColumn(name = "toolId")
-    private Tool tool;
-
-    @ManyToOne
-    @JoinColumn(name = "empId")
-    private Employee employee;
-
+    private int toolId;
+    private int empId;
     private LocalDateTime maintenanceDate;
     private String description;
     private String status;
 
-    // Constructors
+    // Constructors, getters, and setters
     public MaintenanceRecord() {
     }
 
-    public MaintenanceRecord(Tool tool, Employee employee, String description) {
-        this.tool = tool;
-        this.employee = employee;
-        this.maintenanceDate = LocalDateTime.now();
+    public MaintenanceRecord(int toolId, int empId, LocalDateTime maintenanceDate, String description, String status) {
+        this.toolId = toolId;
+        this.empId = empId;
+        this.maintenanceDate = maintenanceDate;
         this.description = description;
-        this.status = "Pending";
+        this.status = status;
     }
 
-    // Getters and Setters
     public int getRecordId() {
         return recordId;
     }
@@ -53,20 +35,20 @@ public class MaintenanceRecord {
         this.recordId = recordId;
     }
 
-    public Tool getTool() {
-        return tool;
+    public int getToolId() {
+        return toolId;
     }
 
-    public void setTool(Tool tool) {
-        this.tool = tool;
+    public void setToolId(int toolId) {
+        this.toolId = toolId;
     }
 
-    public Employee getEmployee() {
-        return employee;
+    public int getEmpId() {
+        return empId;
     }
 
-    public void setEmployee(Employee employee) {
-        this.employee = employee;
+    public void setEmpId(int empId) {
+        this.empId = empId;
     }
 
     public LocalDateTime getMaintenanceDate() {

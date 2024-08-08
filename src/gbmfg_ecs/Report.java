@@ -1,42 +1,30 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package gbmfg_ecs;
-
-import javax.persistence.*;
-import java.time.LocalDateTime;
 
 /**
  *
  * @author phillip.tette
  */
+import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "reports")
 public class Report {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int reportId;
-
     private String title;
     private String content;
     private LocalDateTime createdDate;
     private String reportType;
 
-    // Constructors
+    // Constructors, getters, and setters
     public Report() {
     }
 
-    public Report(String title, String content, String reportType) {
+    public Report(String title, String content, LocalDateTime createdDate, String reportType) {
         this.title = title;
         this.content = content;
-        this.createdDate = LocalDateTime.now();
+        this.createdDate = createdDate;
         this.reportType = reportType;
     }
 
-    // Getters and Setters
     public int getReportId() {
         return reportId;
     }

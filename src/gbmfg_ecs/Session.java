@@ -1,28 +1,15 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package gbmfg_ecs;
-
-import javax.persistence.*;
-import java.time.LocalDateTime;
 
 /**
  *
  * @author phillip.tette
  */
-@Entity
-@Table(name = "sessions")
+import java.time.LocalDateTime;
+
 public class Session {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int sessionId;
-
-    @ManyToOne
-    @JoinColumn(name = "empId")
-    private Employee employee;
-
+    private int empId;
     private boolean isActive;
     private LocalDateTime createdAt;
     private LocalDateTime expiresAt;
@@ -31,11 +18,11 @@ public class Session {
     public Session() {
     }
 
-    public Session(Employee employee) {
-        this.employee = employee;
-        this.isActive = true;
-        this.createdAt = LocalDateTime.now();
-        this.expiresAt = this.createdAt.plusHours(2);
+    public Session(int empId, boolean isActive, LocalDateTime createdAt, LocalDateTime expiresAt) {
+        this.empId = empId;
+        this.isActive = isActive;
+        this.createdAt = createdAt;
+        this.expiresAt = expiresAt;
     }
 
     public int getSessionId() {
@@ -46,20 +33,20 @@ public class Session {
         this.sessionId = sessionId;
     }
 
-    public Employee getEmployee() {
-        return employee;
+    public int getEmpId() {
+        return empId;
     }
 
-    public void setEmployee(Employee employee) {
-        this.employee = employee;
+    public void setEmpId(int empId) {
+        this.empId = empId;
     }
 
     public boolean isActive() {
         return isActive;
     }
 
-    public void setActive(boolean active) {
-        isActive = active;
+    public void setActive(boolean isActive) {
+        this.isActive = isActive;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -76,9 +63,5 @@ public class Session {
 
     public void setExpiresAt(LocalDateTime expiresAt) {
         this.expiresAt = expiresAt;
-    }
-
-    public void endSession() {
-        this.isActive = false;
     }
 }

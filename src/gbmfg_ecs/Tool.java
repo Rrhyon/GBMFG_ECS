@@ -1,50 +1,32 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package gbmfg_ecs;
-
-import javax.persistence.*;
 
 /**
  *
  * @author phillip.tette
  */
+public class Tool {
 
-@Entity
-@Table(name = "tools")
-public class Tool implements InventoryItem {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int toolId;
-
     private String name;
     private String description;
     private String condition;
     private boolean isAvailable;
     private String serialNum;
-
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    private Category category;
-
-    @ManyToOne
-    @JoinColumn(name = "location_id")
-    private Location location;
+    private int categoryId;
+    private int locationId;
 
     // Constructors, getters, and setters
     public Tool() {
     }
 
-    public Tool(String name, String description, String condition, boolean isAvailable, String serialNum, Category category, Location location) {
+    public Tool(String name, String description, String condition, boolean isAvailable, String serialNum, int categoryId, int locationId) {
         this.name = name;
         this.description = description;
         this.condition = condition;
         this.isAvailable = isAvailable;
         this.serialNum = serialNum;
-        this.category = category;
-        this.location = location;
+        this.categoryId = categoryId;
+        this.locationId = locationId;
     }
 
     public int getToolId() {
@@ -55,7 +37,6 @@ public class Tool implements InventoryItem {
         this.toolId = toolId;
     }
 
-    @Override
     public String getName() {
         return name;
     }
@@ -64,7 +45,6 @@ public class Tool implements InventoryItem {
         this.name = name;
     }
 
-    @Override
     public String getDescription() {
         return description;
     }
@@ -73,9 +53,8 @@ public class Tool implements InventoryItem {
         this.description = description;
     }
 
-    @Override
-    public String getStatus() {
-        return isAvailable ? "Available" : "Not Available";
+    public String getCondition() {
+        return condition;
     }
 
     public void setCondition(String condition) {
@@ -98,19 +77,19 @@ public class Tool implements InventoryItem {
         this.serialNum = serialNum;
     }
 
-    public Category getCategory() {
-        return category;
+    public int getCategoryId() {
+        return categoryId;
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
     }
 
-    public Location getLocation() {
-        return location;
+    public int getLocationId() {
+        return locationId;
     }
 
-    public void setLocation(Location location) {
-        this.location = location;
+    public void setLocationId(int locationId) {
+        this.locationId = locationId;
     }
 }

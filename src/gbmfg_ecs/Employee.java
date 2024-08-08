@@ -1,25 +1,12 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package gbmfg_ecs;
-
-import javax.persistence.*;
-import org.mindrot.jbcrypt.BCrypt;
 
 /**
  *
  * @author phillip.tette
  */
-
-@Entity
-@Table(name = "employees")
 public class Employee {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int empId;
-
     private String lastName;
     private String firstName;
     private String middleInitial;
@@ -29,7 +16,7 @@ public class Employee {
     private String username;
     private String password;
 
-    // Constructors
+    // Constructors, getters, and setters
     public Employee() {
     }
 
@@ -41,10 +28,9 @@ public class Employee {
         this.emailAddress = emailAddress;
         this.empRole = empRole;
         this.username = username;
-        this.password = hashPassword(password);
+        this.password = PasswordHashUtil.hashPassword(password);
     }
 
-    // Getters and Setters
     public int getEmpId() {
         return empId;
     }
@@ -114,15 +100,10 @@ public class Employee {
     }
 
     public void setPassword(String password) {
-        this.password = hashPassword(password);
-    }
-
-    // Methods for password hashing and checking
-    public static String hashPassword(String password) {
-        return BCrypt.hashpw(password, BCrypt.gensalt());
+        this.password = PasswordHashUtil.hashPassword(password);
     }
 
     public boolean checkPassword(String password) {
-        return BCrypt.checkpw(password, this.password);
+        return PasswordHashUtil.checkPassword(password, this.password);
     }
 }

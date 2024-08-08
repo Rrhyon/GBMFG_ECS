@@ -1,50 +1,34 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package gbmfg_ecs;
-
-import javax.persistence.*;
-import java.time.LocalDateTime;
 
 /**
  *
  * @author phillip.tette
  */
+import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "checkout_transactions")
 public class CheckoutTransaction {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int transactionId;
-
-    @ManyToOne
-    @JoinColumn(name = "empId")
-    private Employee employee;
-
-    @ManyToOne
-    @JoinColumn(name = "toolId")
-    private InventoryItem inventoryItem;
+    private int empId;
+    private int toolId;
     private LocalDateTime checkoutDate;
     private LocalDateTime dueDate;
     private LocalDateTime returnDate;
     private String status;
 
-    // Constructors
+    // Constructors, getters, and setters
     public CheckoutTransaction() {
     }
 
-    public CheckoutTransaction(Employee employee, InventoryItem inventoryItem, LocalDateTime dueDate) {
-        this.employee = employee;
-        this.inventoryItem = inventoryItem;
-        this.checkoutDate = LocalDateTime.now();
+    public CheckoutTransaction(int empId, int toolId, LocalDateTime checkoutDate, LocalDateTime dueDate, LocalDateTime returnDate, String status) {
+        this.empId = empId;
+        this.toolId = toolId;
+        this.checkoutDate = checkoutDate;
         this.dueDate = dueDate;
-        this.status = "Checked Out";
+        this.returnDate = returnDate;
+        this.status = status;
     }
 
-    // Getters and Setters
     public int getTransactionId() {
         return transactionId;
     }
@@ -53,20 +37,20 @@ public class CheckoutTransaction {
         this.transactionId = transactionId;
     }
 
-    public Employee getEmployee() {
-        return employee;
+    public int getEmpId() {
+        return empId;
     }
 
-    public void setEmployee(Employee employee) {
-        this.employee = employee;
+    public void setEmpId(int empId) {
+        this.empId = empId;
     }
 
-    public InventoryItem getInventoryItem() {
-        return inventoryItem;
+    public int getToolId() {
+        return toolId;
     }
 
-    public void setInventoryItem(InventoryItem inventoryItem) {
-        this.inventoryItem = inventoryItem;
+    public void setToolId(int toolId) {
+        this.toolId = toolId;
     }
 
     public LocalDateTime getCheckoutDate() {
@@ -99,10 +83,5 @@ public class CheckoutTransaction {
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public void returnItem() {
-        this.returnDate = LocalDateTime.now();
-        this.status = "Returned";
     }
 }
