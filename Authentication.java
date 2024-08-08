@@ -32,6 +32,7 @@ public class Authentication {
             }
         } finally {
             session.close();
+            test();
         }
     }
 }
