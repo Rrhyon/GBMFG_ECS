@@ -1,43 +1,41 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package gbmfg_ecs;
-
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 
 /**
  *
  * @author phillip.tette
  */
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 public class ReportService {
 
-    private SessionFactory sessionFactory;
+    private ReportDAO reportDAO;
 
     public ReportService() {
-        this.sessionFactory = HibernateUtil.getSessionFactory();
+        this.reportDAO = new ReportDAO();
     }
 
-    public String generateReport(String title, String content, String reportType) {
-        Session session = sessionFactory.openSession();
-        try {
-            session.beginTransaction();
-            Report report = new Report(title, content, reportType);
-            session.save(report);
-            session.getTransaction().commit();
-            return "Report generated successfully.";
-        } catch (Exception e) {
-            session.getTransaction().rollback();
-            e.printStackTrace();
-            return "Error generating report.";
-        } finally {
-            session.close();
-        }
+    public String addReport(String title, String content, LocalDateTime createdDate, String reportType) {
+        Report report = new Report(title, content, createdDate, reportType);
+        return reportDAO.addReport(report);
     }
 
-    public void close() {
-        sessionFactory.close();
+    public String removeReport(int reportId) {
+        return reportDAO.removeReport(reportId);
+    }
+
+    public Report getReport(int reportId) {
+        return reportDAO.getReport(reportId);
+    }
+
+    public String updateReport(int reportId, String title, String content, LocalDateTime createdDate, String reportType) {
+        Report report = new Report(title, content, createdDate, reportType);
+        report.setReportId(reportId);
+        return reportDAO.updateReport(report);
+    }
+
+    public List<Report> getAllReports() {
+        return reportDAO.getAllReports();
     }
 }
