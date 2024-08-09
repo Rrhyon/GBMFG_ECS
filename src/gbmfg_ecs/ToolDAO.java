@@ -11,8 +11,11 @@ import java.util.List;
 public class ToolDAO {
 
     public String addTool(Tool tool) {
-        String sql = "INSERT INTO tools (name, description, condition, isAvailable, serialNum, categoryId, locationId) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        String sql = "INSERT INTO tool (toolName, toolDesc, toolCondition, "
+                + "isAvailable, toolSerial, categoryId, locationId) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        try (Connection conn = DatabaseUtil.getConnection(); 
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, tool.getName());
             stmt.setString(2, tool.getDescription());
             stmt.setString(3, tool.getCondition());
@@ -29,8 +32,9 @@ public class ToolDAO {
     }
 
     public String removeTool(int toolId) {
-        String sql = "DELETE FROM tools WHERE toolId = ?";
-        try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        String sql = "DELETE FROM tool WHERE toolId = ?";
+        try (Connection conn = DatabaseUtil.getConnection(); 
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, toolId);
             int rowsAffected = stmt.executeUpdate();
             if (rowsAffected > 0) {
@@ -45,17 +49,18 @@ public class ToolDAO {
     }
 
     public Tool getTool(int toolId) {
-        String sql = "SELECT * FROM tools WHERE toolId = ?";
-        try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        String sql = "SELECT * FROM tool WHERE toolId = ?";
+        try (Connection conn = DatabaseUtil.getConnection(); 
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, toolId);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 Tool tool = new Tool(
-                        rs.getString("name"),
-                        rs.getString("description"),
-                        rs.getString("condition"),
+                        rs.getString("toolName"),
+                        rs.getString("toolDesc"),
+                        rs.getString("toolCondition"),
                         rs.getBoolean("isAvailable"),
-                        rs.getString("serialNum"),
+                        rs.getString("toolSerial"),
                         rs.getInt("categoryId"),
                         rs.getInt("locationId")
                 );
@@ -70,8 +75,11 @@ public class ToolDAO {
     }
 
     public String updateTool(Tool tool) {
-        String sql = "UPDATE tools SET name = ?, description = ?, condition = ?, isAvailable = ?, serialNum = ?, categoryId = ?, locationId = ? WHERE toolId = ?";
-        try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        String sql = "UPDATE tool SET toolName = ?, toolDesc = ?, "
+                + "toolCondition = ?, isAvailable = ?, toolSerial = ?, "
+                + "categoryId = ?, locationId = ? WHERE toolId = ?";
+        try (Connection conn = DatabaseUtil.getConnection(); 
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, tool.getName());
             stmt.setString(2, tool.getDescription());
             stmt.setString(3, tool.getCondition());
@@ -89,17 +97,18 @@ public class ToolDAO {
     }
 
     public List<Tool> getAllTools() {
-        String sql = "SELECT * FROM tools";
+        String sql = "SELECT * FROM tool";
         List<Tool> tools = new ArrayList<>();
-        try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseUtil.getConnection(); 
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 Tool tool = new Tool(
-                        rs.getString("name"),
-                        rs.getString("description"),
-                        rs.getString("condition"),
+                        rs.getString("toolName"),
+                        rs.getString("toolDesc"),
+                        rs.getString("toolCondition"),
                         rs.getBoolean("isAvailable"),
-                        rs.getString("serialNum"),
+                        rs.getString("toolSerial"),
                         rs.getInt("categoryId"),
                         rs.getInt("locationId")
                 );

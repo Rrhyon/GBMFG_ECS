@@ -14,8 +14,8 @@ public class CategoryService {
         this.categoryDAO = new CategoryDAO();
     }
 
-    public String addCategory(String name, String description) {
-        Category category = new Category(name, description);
+    public String addCategory(int categoryId, String name, String description) {
+        Category category = new Category(categoryId, name, description);
         return categoryDAO.addCategory(category);
     }
 
@@ -28,7 +28,7 @@ public class CategoryService {
     }
 
     public String updateCategory(int categoryId, String name, String description) {
-        Category category = new Category(name, description);
+        Category category = new Category(categoryId, name, description);
         category.setCategoryId(categoryId);
         return categoryDAO.updateCategory(category);
     }

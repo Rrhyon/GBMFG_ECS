@@ -12,22 +12,36 @@ import java.io.InputStream;
 
 public class DatabaseUtil {
 
+    // constants
+    private static String propFileName = "db.properties";
     private static String dbUrl;
     private static String dbUsername;
     private static String dbPassword;
     private static String dbDriverClassName;
 
     static {
-        try (InputStream input = DatabaseUtil.class.getClassLoader().getResourceAsStream("db.properties")) {
-            Properties prop = new Properties();
+        try (InputStream input = DatabaseUtil.class.getClassLoader()
+                .getResourceAsStream(propFileName)) {
+            
+            // debugging actions below
             if (input == null) {
                 System.out.println("Sorry, unable to find db.properties");
             }
+
+            Properties prop = new Properties();
             prop.load(input);
-            dbUrl = prop.getProperty("jdbc:mysql://localhost:3306/gbmfg_ecs");
-            dbUsername = prop.getProperty("root");
-            dbPassword = prop.getProperty("devry123");
-            dbDriverClassName = prop.getProperty("com.mysql.cj.jdbc.Driver");
+
+            dbUrl = prop.getProperty("db.url");
+            dbUsername = prop.getProperty("db.username");
+            dbPassword = prop.getProperty("db.password");
+            dbDriverClassName = prop.getProperty("db.driverClassName");
+            
+            if (dbDriverClassName == null) {
+                System.out.println("jdbcDriverClassName is null");
+            } else {
+                Class.forName(dbDriverClassName);
+            }
+
             Class.forName(dbDriverClassName);
         } catch (Exception ex) {
             ex.printStackTrace();

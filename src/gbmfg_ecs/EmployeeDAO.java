@@ -9,8 +9,11 @@ import java.sql.*;
 public class EmployeeDAO {
 
     public String addEmployee(Employee employee) {
-        String sql = "INSERT INTO employees (lastName, firstName, middleInitial, phoneNum, emailAddress, empRole, username, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        String sql = "INSERT INTO employee (empLastName, empFirstName, "
+                + "empMiddleInitial, empPhoneNum, empEmailAddress, empRole, "
+                + "empUsername, empPassword) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        try (Connection conn = DatabaseUtil.getConnection(); 
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, employee.getLastName());
             stmt.setString(2, employee.getFirstName());
             stmt.setString(3, employee.getMiddleInitial());
@@ -28,8 +31,9 @@ public class EmployeeDAO {
     }
 
     public String removeEmployee(int empId) {
-        String sql = "DELETE FROM employees WHERE empId = ?";
-        try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        String sql = "DELETE FROM employee WHERE empId = ?";
+        try (Connection conn = DatabaseUtil.getConnection(); 
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, empId);
             int rowsAffected = stmt.executeUpdate();
             if (rowsAffected > 0) {
@@ -44,20 +48,21 @@ public class EmployeeDAO {
     }
 
     public Employee getEmployee(int empId) {
-        String sql = "SELECT * FROM employees WHERE empId = ?";
-        try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        String sql = "SELECT * FROM employee WHERE empId = ?";
+        try (Connection conn = DatabaseUtil.getConnection(); 
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, empId);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 Employee employee = new Employee(
-                        rs.getString("lastName"),
-                        rs.getString("firstName"),
-                        rs.getString("middleInitial"),
-                        rs.getString("phoneNum"),
-                        rs.getString("emailAddress"),
+                        rs.getString("empLastName"),
+                        rs.getString("empFirstName"),
+                        rs.getString("empMiddleInitial"),
+                        rs.getString("empPhoneNum"),
+                        rs.getString("empEmailAddress"),
                         rs.getString("empRole"),
-                        rs.getString("username"),
-                        rs.getString("password")
+                        rs.getString("empUsername"),
+                        rs.getString("empPassword")
                 );
                 employee.setEmpId(rs.getInt("empId"));
                 return employee;
@@ -70,8 +75,11 @@ public class EmployeeDAO {
     }
 
     public String updateEmployee(Employee employee) {
-        String sql = "UPDATE employees SET lastName = ?, firstName = ?, middleInitial = ?, phoneNum = ?, emailAddress = ?, empRole = ?, username = ?, password = ? WHERE empId = ?";
-        try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        String sql = "UPDATE employee SET empLastName = ?, empFirstName = ?, "
+                + "empMiddleInitial = ?, empPhoneNum = ?, empEmailAddress = ?, "
+                + "empRole = ?, empUsername = ?, empPassword = ? WHERE empId = ?";
+        try (Connection conn = DatabaseUtil.getConnection(); 
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, employee.getLastName());
             stmt.setString(2, employee.getFirstName());
             stmt.setString(3, employee.getMiddleInitial());
@@ -90,20 +98,21 @@ public class EmployeeDAO {
     }
 
     public Employee getEmployeeByUsername(String username) {
-        String sql = "SELECT * FROM employees WHERE username = ?";
-        try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        String sql = "SELECT * FROM employee WHERE username = ?";
+        try (Connection conn = DatabaseUtil.getConnection(); 
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, username);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 Employee employee = new Employee(
-                        rs.getString("lastName"),
-                        rs.getString("firstName"),
-                        rs.getString("middleInitial"),
-                        rs.getString("phoneNum"),
-                        rs.getString("emailAddress"),
+                        rs.getString("empLastName"),
+                        rs.getString("empFirstName"),
+                        rs.getString("empMiddleInitial"),
+                        rs.getString("empPhoneNum"),
+                        rs.getString("empEmailAddress"),
                         rs.getString("empRole"),
-                        rs.getString("username"),
-                        rs.getString("password")
+                        rs.getString("empUsername"),
+                        rs.getString("empPassword")
                 );
                 employee.setEmpId(rs.getInt("empId"));
                 return employee;

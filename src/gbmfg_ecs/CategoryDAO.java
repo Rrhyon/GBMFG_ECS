@@ -11,10 +11,13 @@ import java.util.List;
 public class CategoryDAO {
 
     public String addCategory(Category category) {
-        String sql = "INSERT INTO categories (name, description) VALUES (?, ?)";
-        try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, category.getName());
-            stmt.setString(2, category.getDescription());
+        String sql = "INSERT INTO category (categoryId, catName, "
+                + "catDesc) VALUES (?, ?, ?)";
+        try (Connection conn = DatabaseUtil.getConnection(); 
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, category.getCategoryId());
+            stmt.setString(2, category.getName());
+            stmt.setString(3, category.getDescription());
             stmt.executeUpdate();
             return "Category added successfully.";
         } catch (SQLException e) {
@@ -24,8 +27,9 @@ public class CategoryDAO {
     }
 
     public String removeCategory(int categoryId) {
-        String sql = "DELETE FROM categories WHERE categoryId = ?";
-        try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        String sql = "DELETE FROM category WHERE categoryId = ?";
+        try (Connection conn = DatabaseUtil.getConnection(); 
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, categoryId);
             int rowsAffected = stmt.executeUpdate();
             if (rowsAffected > 0) {
@@ -40,14 +44,16 @@ public class CategoryDAO {
     }
 
     public Category getCategory(int categoryId) {
-        String sql = "SELECT * FROM categories WHERE categoryId = ?";
-        try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        String sql = "SELECT * FROM category WHERE categoryId = ?";
+        try (Connection conn = DatabaseUtil.getConnection(); 
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, categoryId);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 Category category = new Category(
-                        rs.getString("name"),
-                        rs.getString("description")
+                        rs.getInt(categoryId),
+                        rs.getString("catName"),
+                        rs.getString("catDesc")
                 );
                 category.setCategoryId(rs.getInt("categoryId"));
                 return category;
@@ -60,8 +66,10 @@ public class CategoryDAO {
     }
 
     public String updateCategory(Category category) {
-        String sql = "UPDATE categories SET name = ?, description = ? WHERE categoryId = ?";
-        try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        String sql = "UPDATE category SET categoryId = ?, catName = ?, "
+                + "catDesc = ? WHERE categoryId = ?";
+        try (Connection conn = DatabaseUtil.getConnection(); 
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, category.getName());
             stmt.setString(2, category.getDescription());
             stmt.setInt(3, category.getCategoryId());
@@ -74,14 +82,16 @@ public class CategoryDAO {
     }
 
     public List<Category> getAllCategories() {
-        String sql = "SELECT * FROM categories";
+        String sql = "SELECT * FROM category";
         List<Category> categories = new ArrayList<>();
-        try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseUtil.getConnection(); 
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 Category category = new Category(
-                        rs.getString("name"),
-                        rs.getString("description")
+                        rs.getInt("categoryId"),
+                        rs.getString("catName"),
+                        rs.getString("catDesc")
                 );
                 category.setCategoryId(rs.getInt("categoryId"));
                 categories.add(category);

@@ -14,8 +14,8 @@ public class LocationService {
         this.locationDAO = new LocationDAO();
     }
 
-    public String addLocation(String name, String description) {
-        Location location = new Location(name, description);
+    public String addLocation(int locationId, String name, String description) {
+        Location location = new Location(locationId, name, description);
         return locationDAO.addLocation(location);
     }
 
@@ -28,7 +28,7 @@ public class LocationService {
     }
 
     public String updateLocation(int locationId, String name, String description) {
-        Location location = new Location(name, description);
+        Location location = new Location(locationId, name, description);
         location.setLocationId(locationId);
         return locationDAO.updateLocation(location);
     }

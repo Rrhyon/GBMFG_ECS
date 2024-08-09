@@ -11,10 +11,13 @@ import java.util.List;
 public class LocationDAO {
 
     public String addLocation(Location location) {
-        String sql = "INSERT INTO locations (name, description) VALUES (?, ?)";
-        try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, location.getName());
-            stmt.setString(2, location.getDescription());
+        String sql = "INSERT INTO location (locationId, locationName, "
+                + "locationDesc) VALUES (?, ?, ?)";
+        try (Connection conn = DatabaseUtil.getConnection(); 
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, location.getLocationId());
+            stmt.setString(2, location.getName());
+            stmt.setString(3, location.getDescription());
             stmt.executeUpdate();
             return "Location added successfully.";
         } catch (SQLException e) {
@@ -24,7 +27,7 @@ public class LocationDAO {
     }
 
     public String removeLocation(int locationId) {
-        String sql = "DELETE FROM locations WHERE locationId = ?";
+        String sql = "DELETE FROM location WHERE locationId = ?";
         try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, locationId);
             int rowsAffected = stmt.executeUpdate();
@@ -40,14 +43,15 @@ public class LocationDAO {
     }
 
     public Location getLocation(int locationId) {
-        String sql = "SELECT * FROM locations WHERE locationId = ?";
+        String sql = "SELECT * FROM location WHERE locationId = ?";
         try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, locationId);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 Location location = new Location(
-                        rs.getString("name"),
-                        rs.getString("description")
+                        rs.getInt(locationId),
+                        rs.getString("locationName"),
+                        rs.getString("locationDesc")
                 );
                 location.setLocationId(rs.getInt("locationId"));
                 return location;
@@ -60,7 +64,7 @@ public class LocationDAO {
     }
 
     public String updateLocation(Location location) {
-        String sql = "UPDATE locations SET name = ?, description = ? WHERE locationId = ?";
+        String sql = "UPDATE location SET locationId = ?, locationName = ?, locationDesc = ? WHERE locationId = ?";
         try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, location.getName());
             stmt.setString(2, location.getDescription());
@@ -74,14 +78,15 @@ public class LocationDAO {
     }
 
     public List<Location> getAllLocations() {
-        String sql = "SELECT * FROM locations";
+        String sql = "SELECT * FROM location";
         List<Location> locations = new ArrayList<>();
         try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 Location location = new Location(
-                        rs.getString("name"),
-                        rs.getString("description")
+                        rs.getInt("locationId"),
+                        rs.getString("locationName"),
+                        rs.getString("locationDesc")
                 );
                 location.setLocationId(rs.getInt("locationId"));
                 locations.add(location);
