@@ -12,8 +12,10 @@ import java.util.List;
 public class MaintenanceRecordDAO {
 
     public String addMaintenanceRecord(MaintenanceRecord record) {
-        String sql = "INSERT INTO maintenance_records (toolId, empId, maintenanceDate, description, status) VALUES (?, ?, ?, ?, ?)";
-        try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        String sql = "INSERT INTO maintenance_record (toolId, empId, maintDate, "
+                + "maintDesc, maintStatus) VALUES (?, ?, ?, ?, ?)";
+        try (Connection conn = DatabaseUtil.getConnection(); 
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, record.getToolId());
             stmt.setInt(2, record.getEmpId());
             stmt.setTimestamp(3, Timestamp.valueOf(record.getMaintenanceDate()));
@@ -27,10 +29,11 @@ public class MaintenanceRecordDAO {
         }
     }
 
-    public String removeMaintenanceRecord(int recordId) {
-        String sql = "DELETE FROM maintenance_records WHERE recordId = ?";
-        try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, recordId);
+    public String removeMaintenanceRecord(int maintRecordId) {
+        String sql = "DELETE FROM maintenance_record WHERE maintRecordId = ?";
+        try (Connection conn = DatabaseUtil.getConnection(); 
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, maintRecordId);
             int rowsAffected = stmt.executeUpdate();
             if (rowsAffected > 0) {
                 return "Maintenance record removed successfully.";
@@ -43,20 +46,21 @@ public class MaintenanceRecordDAO {
         }
     }
 
-    public MaintenanceRecord getMaintenanceRecord(int recordId) {
-        String sql = "SELECT * FROM maintenance_records WHERE recordId = ?";
-        try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, recordId);
+    public MaintenanceRecord getMaintenanceRecord(int maintRecordId) {
+        String sql = "SELECT * FROM maintenance_record WHERE maintRecordId = ?";
+        try (Connection conn = DatabaseUtil.getConnection(); 
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, maintRecordId);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 MaintenanceRecord record = new MaintenanceRecord(
                         rs.getInt("toolId"),
                         rs.getInt("empId"),
-                        rs.getTimestamp("maintenanceDate").toLocalDateTime(),
-                        rs.getString("description"),
-                        rs.getString("status")
+                        rs.getTimestamp("maintDate").toLocalDateTime(),
+                        rs.getString("maintDesc"),
+                        rs.getString("maintStatus")
                 );
-                record.setRecordId(rs.getInt("recordId"));
+                record.setRecordId(rs.getInt("maintRecordId"));
                 return record;
             }
             return null;
@@ -67,8 +71,11 @@ public class MaintenanceRecordDAO {
     }
 
     public String updateMaintenanceRecord(MaintenanceRecord record) {
-        String sql = "UPDATE maintenance_records SET toolId = ?, empId = ?, maintenanceDate = ?, description = ?, status = ? WHERE recordId = ?";
-        try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        String sql = "UPDATE maintenance_record SET toolId = ?, empId = ?, "
+                + "maintDate = ?, maintDesc = ?, maintStatus = ? "
+                + "WHERE maintRecordId = ?";
+        try (Connection conn = DatabaseUtil.getConnection(); 
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, record.getToolId());
             stmt.setInt(2, record.getEmpId());
             stmt.setTimestamp(3, Timestamp.valueOf(record.getMaintenanceDate()));
@@ -84,19 +91,20 @@ public class MaintenanceRecordDAO {
     }
 
     public List<MaintenanceRecord> getAllMaintenanceRecords() {
-        String sql = "SELECT * FROM maintenance_records";
+        String sql = "SELECT * FROM maintenance_record";
         List<MaintenanceRecord> records = new ArrayList<>();
-        try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseUtil.getConnection(); 
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 MaintenanceRecord record = new MaintenanceRecord(
                         rs.getInt("toolId"),
                         rs.getInt("empId"),
-                        rs.getTimestamp("maintenanceDate").toLocalDateTime(),
-                        rs.getString("description"),
-                        rs.getString("status")
+                        rs.getTimestamp("maintDate").toLocalDateTime(),
+                        rs.getString("maintDesc"),
+                        rs.getString("maintStatus")
                 );
-                record.setRecordId(rs.getInt("recordId"));
+                record.setRecordId(rs.getInt("maintRecordId"));
                 records.add(record);
             }
         } catch (SQLException e) {

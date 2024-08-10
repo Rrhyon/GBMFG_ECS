@@ -7,14 +7,20 @@ package gbmfg_ecs;
 import java.util.List;
 
 public class EmployeeService {
+
     private EmployeeDAO employeeDAO;
 
     public EmployeeService() {
         this.employeeDAO = new EmployeeDAO();
     }
 
-    public String addEmployee(String lastName, String firstName, String middleInitial, String phoneNum, String emailAddress, String empRole, String username, String password) {
-        Employee employee = new Employee(lastName, firstName, middleInitial, phoneNum, emailAddress, empRole, username, password);
+    public String addEmployee(String lastName, String firstName,
+            String middleInitial, String phoneNum, String emailAddress,
+            String empRole, String username, String password) {
+        String hashedPassword = PasswordHashUtil.hashPassword(password);
+        Employee employee = new Employee(lastName, firstName,
+                middleInitial, phoneNum, emailAddress, empRole, username,
+                hashedPassword);
         return employeeDAO.addEmployee(employee);
     }
 
@@ -26,8 +32,12 @@ public class EmployeeService {
         return employeeDAO.getEmployee(empId);
     }
 
-    public String updateEmployee(int empId, String lastName, String firstName, String middleInitial, String phoneNum, String emailAddress, String empRole, String username, String password) {
-        Employee employee = new Employee(lastName, firstName, middleInitial, phoneNum, emailAddress, empRole, username, password);
+    // Remove references to password and create a separate updatePassword method
+    public String updateEmployee(int empId, String lastName, String firstName, 
+            String middleInitial, String phoneNum, String emailAddress, 
+            String empRole, String username, String password) {
+        Employee employee = new Employee(lastName, firstName, middleInitial, 
+                phoneNum, emailAddress, empRole, username, password);
         employee.setEmpId(empId);
         return employeeDAO.updateEmployee(employee);
     }

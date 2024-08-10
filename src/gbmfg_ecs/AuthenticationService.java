@@ -19,9 +19,11 @@ public class AuthenticationService {
     public String login(String username, String password) {
         Employee employee = employeeService.getEmployeeByUsername(username);
         if (employee != null && employee.checkPassword(password)) {
-            Session activeSession = authenticationDAO.getActiveSessionByEmployeeId(employee.getEmpId());
+            Session activeSession = authenticationDAO.
+                    getActiveSessionByEmployeeId(employee.getEmpId());
             if (activeSession == null) {
-                Session newSession = new Session(employee.getEmpId(), true, LocalDateTime.now(), LocalDateTime.now().plusHours(1));
+                Session newSession = new Session(employee.getEmpId(), true, 
+                        LocalDateTime.now(), LocalDateTime.now().plusHours(1));
                 authenticationDAO.createSession(newSession);
                 return "Login successful.";
             } else {
@@ -41,7 +43,10 @@ public class AuthenticationService {
         }
     }
 
-    public String register(String lastName, String firstName, String middleInitial, String phoneNum, String emailAddress, String empRole, String username, String password) {
-        return employeeService.addEmployee(lastName, firstName, middleInitial, phoneNum, emailAddress, empRole, username, password);
+    public String register(String lastName, String firstName, 
+            String middleInitial, String phoneNum, String emailAddress, 
+            String empRole, String username, String password) {
+        return employeeService.addEmployee(lastName, firstName, middleInitial, 
+                phoneNum, emailAddress, empRole, username, password);
     }
 }

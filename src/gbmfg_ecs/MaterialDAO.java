@@ -11,7 +11,7 @@ import java.util.List;
 public class MaterialDAO {
 
     public String addMaterial(Material material) {
-        String sql = "INSERT INTO materials (name, description, quantity, unit) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO material (matName, matDesc, matQuantity, matUnit) VALUES (?, ?, ?, ?)";
         try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, material.getName());
             stmt.setString(2, material.getDescription());
@@ -26,7 +26,7 @@ public class MaterialDAO {
     }
 
     public String removeMaterial(int materialId) {
-        String sql = "DELETE FROM materials WHERE materialId = ?";
+        String sql = "DELETE FROM material WHERE materialId = ?";
         try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, materialId);
             int rowsAffected = stmt.executeUpdate();
@@ -42,16 +42,16 @@ public class MaterialDAO {
     }
 
     public Material getMaterial(int materialId) {
-        String sql = "SELECT * FROM materials WHERE materialId = ?";
+        String sql = "SELECT * FROM material WHERE materialId = ?";
         try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, materialId);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 Material material = new Material(
-                        rs.getString("name"),
-                        rs.getString("description"),
-                        rs.getDouble("quantity"),
-                        rs.getString("unit")
+                        rs.getString("matName"),
+                        rs.getString("matDesc"),
+                        rs.getDouble("matQuantity"),
+                        rs.getString("matUnit")
                 );
                 material.setMaterialId(rs.getInt("materialId"));
                 return material;
@@ -64,7 +64,7 @@ public class MaterialDAO {
     }
 
     public String updateMaterial(Material material) {
-        String sql = "UPDATE materials SET name = ?, description = ?, quantity = ?, unit = ? WHERE materialId = ?";
+        String sql = "UPDATE material SET matName = ?, matDesc = ?, matQuantity = ?, matUnit = ? WHERE materialId = ?";
         try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, material.getName());
             stmt.setString(2, material.getDescription());
@@ -80,16 +80,16 @@ public class MaterialDAO {
     }
 
     public List<Material> getAllMaterials() {
-        String sql = "SELECT * FROM materials";
+        String sql = "SELECT * FROM material";
         List<Material> materials = new ArrayList<>();
         try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 Material material = new Material(
-                        rs.getString("name"),
-                        rs.getString("description"),
-                        rs.getDouble("quantity"),
-                        rs.getString("unit")
+                        rs.getString("matName"),
+                        rs.getString("matDesc"),
+                        rs.getDouble("matQuantity"),
+                        rs.getString("matUnit")
                 );
                 material.setMaterialId(rs.getInt("materialId"));
                 materials.add(material);

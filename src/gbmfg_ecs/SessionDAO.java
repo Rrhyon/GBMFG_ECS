@@ -5,15 +5,16 @@ package gbmfg_ecs;
  * @author phillip.tette
  */
 import java.sql.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SessionDAO {
 
     public String addSession(Session session) {
-        String sql = "INSERT INTO sessions (empId, isActive, createdAt, expiresAt) VALUES (?, ?, ?, ?)";
-        try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        String sql = "INSERT INTO session (empId, isActive, createdAt, expiresAt) "
+                + "VALUES (?, ?, ?, ?)";
+        try (Connection conn = DatabaseUtil.getConnection(); 
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, session.getEmpId());
             stmt.setBoolean(2, session.isActive());
             stmt.setTimestamp(3, Timestamp.valueOf(session.getCreatedAt()));
@@ -27,8 +28,9 @@ public class SessionDAO {
     }
 
     public String removeSession(int sessionId) {
-        String sql = "DELETE FROM sessions WHERE sessionId = ?";
-        try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        String sql = "DELETE FROM session WHERE sessionId = ?";
+        try (Connection conn = DatabaseUtil.getConnection(); 
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, sessionId);
             int rowsAffected = stmt.executeUpdate();
             if (rowsAffected > 0) {
@@ -43,8 +45,9 @@ public class SessionDAO {
     }
 
     public Session getSession(int sessionId) {
-        String sql = "SELECT * FROM sessions WHERE sessionId = ?";
-        try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        String sql = "SELECT * FROM session WHERE sessionId = ?";
+        try (Connection conn = DatabaseUtil.getConnection(); 
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, sessionId);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
@@ -65,8 +68,10 @@ public class SessionDAO {
     }
 
     public String updateSession(Session session) {
-        String sql = "UPDATE sessions SET empId = ?, isActive = ?, createdAt = ?, expiresAt = ? WHERE sessionId = ?";
-        try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        String sql = "UPDATE session SET empId = ?, isActive = ?, createdAt = ?, "
+                + "expiresAt = ? WHERE sessionId = ?";
+        try (Connection conn = DatabaseUtil.getConnection(); 
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, session.getEmpId());
             stmt.setBoolean(2, session.isActive());
             stmt.setTimestamp(3, Timestamp.valueOf(session.getCreatedAt()));
@@ -81,9 +86,10 @@ public class SessionDAO {
     }
 
     public List<Session> getAllSessions() {
-        String sql = "SELECT * FROM sessions";
+        String sql = "SELECT * FROM session";
         List<Session> sessions = new ArrayList<>();
-        try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseUtil.getConnection(); 
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 Session session = new Session(

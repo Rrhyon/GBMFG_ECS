@@ -9,20 +9,21 @@ import java.sql.*;
 public class AuthenticationDAO {
 
     public Employee getEmployeeByUsername(String username) {
-        String sql = "SELECT * FROM employees WHERE username = ?";
-        try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        String sql = "SELECT * FROM employee WHERE empUsername = ?";
+        try (Connection conn = DatabaseUtil.getConnection(); 
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, username);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 Employee employee = new Employee(
-                        rs.getString("lastName"),
-                        rs.getString("firstName"),
-                        rs.getString("middleInitial"),
-                        rs.getString("phoneNum"),
-                        rs.getString("emailAddress"),
+                        rs.getString("empLastName"),
+                        rs.getString("empFirstName"),
+                        rs.getString("empMiddleInitial"),
+                        rs.getString("empPhoneNum"),
+                        rs.getString("empEmailAddress"),
                         rs.getString("empRole"),
-                        rs.getString("username"),
-                        rs.getString("password")
+                        rs.getString("empUsername"),
+                        rs.getString("empPassword")
                 );
                 employee.setEmpId(rs.getInt("empId"));
                 return employee;
@@ -35,8 +36,10 @@ public class AuthenticationDAO {
     }
 
     public void createSession(Session session) {
-        String sql = "INSERT INTO sessions (empId, isActive, createdAt, expiresAt) VALUES (?, ?, ?, ?)";
-        try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        String sql = "INSERT INTO session (empId, isActive, createdAt, expiresAt) "
+                + "VALUES (?, ?, ?, ?)";
+        try (Connection conn = DatabaseUtil.getConnection(); 
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, session.getEmpId());
             stmt.setBoolean(2, session.isActive());
             stmt.setTimestamp(3, Timestamp.valueOf(session.getCreatedAt()));
@@ -48,8 +51,9 @@ public class AuthenticationDAO {
     }
 
     public Session getActiveSessionByEmployeeId(int empId) {
-        String sql = "SELECT * FROM sessions WHERE empId = ? AND isActive = true";
-        try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        String sql = "SELECT * FROM session WHERE empId = ? AND isActive = true";
+        try (Connection conn = DatabaseUtil.getConnection(); 
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, empId);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
@@ -70,8 +74,9 @@ public class AuthenticationDAO {
     }
 
     public void deactivateSession(int sessionId) {
-        String sql = "UPDATE sessions SET isActive = false WHERE sessionId = ?";
-        try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        String sql = "UPDATE session SET isActive = false WHERE sessionId = ?";
+        try (Connection conn = DatabaseUtil.getConnection(); 
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, sessionId);
             stmt.executeUpdate();
         } catch (SQLException e) {

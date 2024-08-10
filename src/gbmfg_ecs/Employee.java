@@ -20,7 +20,9 @@ public class Employee {
     public Employee() {
     }
 
-    public Employee(String lastName, String firstName, String middleInitial, String phoneNum, String emailAddress, String empRole, String username, String password) {
+    public Employee(String lastName, String firstName, String middleInitial, 
+            String phoneNum, String emailAddress, String empRole, 
+            String username, String password) {
         this.lastName = lastName;
         this.firstName = firstName;
         this.middleInitial = middleInitial;
@@ -28,7 +30,7 @@ public class Employee {
         this.emailAddress = emailAddress;
         this.empRole = empRole;
         this.username = username;
-        this.password = PasswordHashUtil.hashPassword(password);
+        this.password = password;
     }
 
     public int getEmpId() {

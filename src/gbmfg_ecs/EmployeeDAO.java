@@ -74,6 +74,7 @@ public class EmployeeDAO {
         }
     }
 
+    // Remove references to password and create a separate updatePassword method
     public String updateEmployee(Employee employee) {
         String sql = "UPDATE employee SET empLastName = ?, empFirstName = ?, "
                 + "empMiddleInitial = ?, empPhoneNum = ?, empEmailAddress = ?, "
@@ -98,7 +99,7 @@ public class EmployeeDAO {
     }
 
     public Employee getEmployeeByUsername(String username) {
-        String sql = "SELECT * FROM employee WHERE username = ?";
+        String sql = "SELECT * FROM employee WHERE empUsername = ?";
         try (Connection conn = DatabaseUtil.getConnection(); 
                 PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, username);
