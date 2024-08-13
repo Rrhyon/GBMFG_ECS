@@ -23,15 +23,7 @@ public class EmployeeService {
                 hashedPassword);
         return employeeDAO.addEmployee(employee);
     }
-
-    public String removeEmployee(int empId) {
-        return employeeDAO.removeEmployee(empId);
-    }
-
-    public Employee getEmployee(int empId) {
-        return employeeDAO.getEmployee(empId);
-    }
-
+    
     // Remove references to password and create a separate updatePassword method
     public String updateEmployee(int empId, String lastName, String firstName, 
             String middleInitial, String phoneNum, String emailAddress, 
@@ -42,9 +34,19 @@ public class EmployeeService {
         return employeeDAO.updateEmployee(employee);
     }
 
+    public Employee getEmployee(int empId) {
+        return employeeDAO.getEmployee(empId);
+    }
+
     public Employee getEmployeeByUsername(String username) {
         return employeeDAO.getEmployeeByUsername(username);
     }
+    
+    public String removeEmployee(int empId) {
+        return employeeDAO.removeEmployee(empId);
+    }
+
+
 
     List<Employee> getAllEmployees() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
