@@ -1,8 +1,11 @@
 package gbmfg_ecs;
 
 /**
- *
- * @author phillip.tette
+ * Program: Gigabyte Manufacturing - Equipment Checkout Service
+ * Course: CEIS 400 - Software Engineering II
+ * Author: Phillip Tette
+ * Program Description: Provides framework for Maintenance Record object creation.
+ * Date: August 13, 2024
  */
 import java.time.LocalDateTime;
 
@@ -15,11 +18,12 @@ public class MaintenanceRecord {
     private String description;
     private String status;
 
-    // Constructors, getters, and setters
+    // Constructors
     public MaintenanceRecord() {
     }
 
-    public MaintenanceRecord(int toolId, int empId, LocalDateTime maintenanceDate, String description, String status) {
+    public MaintenanceRecord(int toolId, int empId, 
+            LocalDateTime maintenanceDate, String description, String status) {
         this.toolId = toolId;
         this.empId = empId;
         this.maintenanceDate = maintenanceDate;
@@ -27,48 +31,50 @@ public class MaintenanceRecord {
         this.status = status;
     }
 
+    // Getters
     public int getRecordId() {
         return recordId;
     }
-
-    public void setRecordId(int recordId) {
-        this.recordId = recordId;
-    }
-
+    
     public int getToolId() {
         return toolId;
+    }
+    
+    public int getEmpId() {
+        return empId;
+    }
+    
+    public LocalDateTime getMaintenanceDate() {
+        return maintenanceDate;
+    }
+    
+    public String getDescription() {
+        return description;
+    }
+    
+    public String getStatus() {
+        return status;
+    }   
+    
+    // Setters
+    public void setRecordId(int recordId) {
+        this.recordId = recordId;
     }
 
     public void setToolId(int toolId) {
         this.toolId = toolId;
     }
 
-    public int getEmpId() {
-        return empId;
-    }
-
     public void setEmpId(int empId) {
         this.empId = empId;
-    }
-
-    public LocalDateTime getMaintenanceDate() {
-        return maintenanceDate;
     }
 
     public void setMaintenanceDate(LocalDateTime maintenanceDate) {
         this.maintenanceDate = maintenanceDate;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getStatus() {
-        return status;
     }
 
     public void setStatus(String status) {

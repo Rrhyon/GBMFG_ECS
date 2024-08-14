@@ -1,8 +1,11 @@
 package gbmfg_ecs;
 
 /**
- *
- * @author phillip.tette
+ * Program: Gigabyte Manufacturing - Equipment Checkout Service
+ * Course: CEIS 400 - Software Engineering II
+ * Author: Phillip Tette
+ * Program Description: Database Access Object for Material class.
+ * Date: August 13, 2024
  */
 import java.sql.*;
 import java.util.ArrayList;
@@ -10,13 +13,20 @@ import java.util.List;
 
 public class MaterialDAO {
 
+    /* Method to create SQL prepared statement to create a material
+     * after entering material information.
+     */
     public String addMaterial(Material material) {
-        String sql = "INSERT INTO material (matName, matDesc, matQuantity, matUnit) VALUES (?, ?, ?, ?)";
-        try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        String sql = "INSERT INTO material (matName, matDesc, matQuantity, "
+                + "matUnit, categoryId, locationId) VALUES (?, ?, ?, ?, ?, ?)";
+        try (Connection conn = DatabaseUtil.getConnection(); 
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, material.getName());
             stmt.setString(2, material.getDescription());
             stmt.setDouble(3, material.getQuantity());
             stmt.setString(4, material.getUnit());
+            stmt.setInt(5, material.getCategoryId());
+            stmt.setInt(6, material.getLocationId());
             stmt.executeUpdate();
             return "Material added successfully.";
         } catch (SQLException e) {
@@ -25,47 +35,15 @@ public class MaterialDAO {
         }
     }
 
-    public String removeMaterial(int materialId) {
-        String sql = "DELETE FROM material WHERE materialId = ?";
-        try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, materialId);
-            int rowsAffected = stmt.executeUpdate();
-            if (rowsAffected > 0) {
-                return "Material removed successfully.";
-            } else {
-                return "Material not found.";
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return "Error removing material.";
-        }
-    }
-
-    public Material getMaterial(int materialId) {
-        String sql = "SELECT * FROM material WHERE materialId = ?";
-        try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, materialId);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                Material material = new Material(
-                        rs.getString("matName"),
-                        rs.getString("matDesc"),
-                        rs.getDouble("matQuantity"),
-                        rs.getString("matUnit")
-                );
-                material.setMaterialId(rs.getInt("materialId"));
-                return material;
-            }
-            return null;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
+    /* Method to create SQL prepared statement to update materials
+     * after entering material information.
+     */
     public String updateMaterial(Material material) {
-        String sql = "UPDATE material SET matName = ?, matDesc = ?, matQuantity = ?, matUnit = ? WHERE materialId = ?";
-        try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        String sql = "UPDATE material SET matName = ?, matDesc = ?, "
+                + "matQuantity = ?, matUnit = ?, categoryId = ?, "
+                + "locationId = ? WHERE materialId = ?";
+        try (Connection conn = DatabaseUtil.getConnection(); 
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, material.getName());
             stmt.setString(2, material.getDescription());
             stmt.setDouble(3, material.getQuantity());
@@ -79,17 +57,51 @@ public class MaterialDAO {
         }
     }
 
+    /* Method to create SQL prepared statement to retrieve material
+     * after entering material ID.
+     */
+    public Material getMaterial(int materialId) {
+        String sql = "SELECT * FROM material WHERE materialId = ?";
+        try (Connection conn = DatabaseUtil.getConnection(); 
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, materialId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                Material material = new Material(
+                    rs.getString("matName"),
+                    rs.getString("matDesc"),
+                    rs.getDouble("matQuantity"),
+                    rs.getString("matUnit"),
+                    rs.getInt("categoryId"),
+                    rs.getInt("locationId")
+                );
+                material.setMaterialId(rs.getInt("materialId"));
+                return material;
+            }
+            return null;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /* Method to create SQL prepared statement to create a new ArrayList called
+     * 'materials' and add all materials to the array.
+     */
     public List<Material> getAllMaterials() {
         String sql = "SELECT * FROM material";
         List<Material> materials = new ArrayList<>();
-        try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseUtil.getConnection(); 
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 Material material = new Material(
-                        rs.getString("matName"),
-                        rs.getString("matDesc"),
-                        rs.getDouble("matQuantity"),
-                        rs.getString("matUnit")
+                    rs.getString("matName"),
+                    rs.getString("matDesc"),
+                    rs.getDouble("matQuantity"),
+                    rs.getString("matUnit"),
+                    rs.getInt("categoryId"),
+                    rs.getInt("locationId")
                 );
                 material.setMaterialId(rs.getInt("materialId"));
                 materials.add(material);
@@ -98,5 +110,25 @@ public class MaterialDAO {
             e.printStackTrace();
         }
         return materials;
+    }
+    
+    /* Method to create SQL prepared statement to remove a material record
+     * after entering material ID.
+     */
+     public String removeMaterial(int materialId) {
+        String sql = "DELETE FROM material WHERE materialId = ?";
+        try (Connection conn = DatabaseUtil.getConnection(); 
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, materialId);
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected > 0) {
+                return "Material removed successfully.";
+            } else {
+                return "Material not found.";
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return "Error removing material.";
+        }
     }
 }

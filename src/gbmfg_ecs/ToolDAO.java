@@ -1,8 +1,11 @@
 package gbmfg_ecs;
 
 /**
- *
- * @author phillip.tette
+ * Program: Gigabyte Manufacturing - Equipment Checkout Service
+ * Course: CEIS 400 - Software Engineering II
+ * Author: Phillip Tette
+ * Program Description: Database Access Object for Tool class.
+ * Date: August 13, 2024
  */
 import java.sql.*;
 import java.util.ArrayList;
@@ -10,6 +13,9 @@ import java.util.List;
 
 public class ToolDAO {
 
+    /* Method to create SQL prepared statement to create a tool after entering
+     * tool information.
+     */
     public String addTool(Tool tool) {
         String sql = "INSERT INTO tool (toolName, toolDesc, toolCondition, "
                 + "isAvailable, toolSerial, categoryId, locationId) "
@@ -31,23 +37,34 @@ public class ToolDAO {
         }
     }
 
-    public String removeTool(int toolId) {
-        String sql = "DELETE FROM tool WHERE toolId = ?";
+    /* Method to create SQL prepared statement to update tool after entering
+     * new tool information.
+     */
+    public String updateTool(Tool tool) {
+        String sql = "UPDATE tool SET toolName = ?, toolDesc = ?, "
+                + "toolCondition = ?, isAvailable = ?, toolSerial = ?, "
+                + "categoryId = ?, locationId = ? WHERE toolId = ?";
         try (Connection conn = DatabaseUtil.getConnection(); 
                 PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, toolId);
-            int rowsAffected = stmt.executeUpdate();
-            if (rowsAffected > 0) {
-                return "Tool removed successfully.";
-            } else {
-                return "Tool not found.";
-            }
+            stmt.setString(1, tool.getName());
+            stmt.setString(2, tool.getDescription());
+            stmt.setString(3, tool.getCondition());
+            stmt.setBoolean(4, tool.isAvailable());
+            stmt.setString(5, tool.getSerialNum());
+            stmt.setInt(6, tool.getCategoryId());
+            stmt.setInt(7, tool.getLocationId());
+            stmt.setInt(8, tool.getToolId());
+            stmt.executeUpdate();
+            return "Tool updated successfully.";
         } catch (SQLException e) {
             e.printStackTrace();
-            return "Error removing tool.";
+            return "Error updating tool.";
         }
     }
-
+       
+    /* Method to create SQL prepared statement to retrieve tool after entering 
+     * tool ID.
+     */
     public Tool getTool(int toolId) {
         String sql = "SELECT * FROM tool WHERE toolId = ?";
         try (Connection conn = DatabaseUtil.getConnection(); 
@@ -74,28 +91,9 @@ public class ToolDAO {
         }
     }
 
-    public String updateTool(Tool tool) {
-        String sql = "UPDATE tool SET toolName = ?, toolDesc = ?, "
-                + "toolCondition = ?, isAvailable = ?, toolSerial = ?, "
-                + "categoryId = ?, locationId = ? WHERE toolId = ?";
-        try (Connection conn = DatabaseUtil.getConnection(); 
-                PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, tool.getName());
-            stmt.setString(2, tool.getDescription());
-            stmt.setString(3, tool.getCondition());
-            stmt.setBoolean(4, tool.isAvailable());
-            stmt.setString(5, tool.getSerialNum());
-            stmt.setInt(6, tool.getCategoryId());
-            stmt.setInt(7, tool.getLocationId());
-            stmt.setInt(8, tool.getToolId());
-            stmt.executeUpdate();
-            return "Tool updated successfully.";
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return "Error updating tool.";
-        }
-    }
-
+    /* Method to create SQL prepared statement to create a new ArrayList called
+     * 'tools' and add all tools to the array.
+     */
     public List<Tool> getAllTools() {
         String sql = "SELECT * FROM tool";
         List<Tool> tools = new ArrayList<>();
@@ -119,5 +117,25 @@ public class ToolDAO {
             e.printStackTrace();
         }
         return tools;
+    }
+    
+    /* Method to create SQL prepared statement to remove a tool 
+     * after entering tool ID.
+     */
+    public String removeTool(int toolId) {
+        String sql = "DELETE FROM tool WHERE toolId = ?";
+        try (Connection conn = DatabaseUtil.getConnection(); 
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, toolId);
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected > 0) {
+                return "Tool removed successfully.";
+            } else {
+                return "Tool not found.";
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return "Error removing tool.";
+        }
     }
 }

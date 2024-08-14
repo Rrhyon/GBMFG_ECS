@@ -1,13 +1,17 @@
 package gbmfg_ecs;
 
 /**
- *
- * @author phillip.tette
+ * Program: Gigabyte Manufacturing - Equipment Checkout Service
+ * Course: CEIS 400 - Software Engineering II
+ * Author: Phillip Tette
+ * Program Description: Database Access Object for Authentication class.
+ * Date: August 13, 2024
  */
 import java.sql.*;
 
 public class AuthenticationDAO {
 
+    // Retrieves the usersname from the database.
     public Employee getEmployeeByUsername(String username) {
         String sql = "SELECT * FROM employee WHERE empUsername = ?";
         try (Connection conn = DatabaseUtil.getConnection(); 
@@ -35,9 +39,10 @@ public class AuthenticationDAO {
         }
     }
 
+    // Adds a temporary session to the DB to track user connections.
     public void createSession(Session session) {
-        String sql = "INSERT INTO session (empId, isActive, createdAt, expiresAt) "
-                + "VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO session (empId, isActive, createdAt, "
+                + "expiresAt)" + "VALUES (?, ?, ?, ?)";
         try (Connection conn = DatabaseUtil.getConnection(); 
                 PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, session.getEmpId());
@@ -50,8 +55,10 @@ public class AuthenticationDAO {
         }
     }
 
+    // Retrieves active session from the DB based on the employee ID.
     public Session getActiveSessionByEmployeeId(int empId) {
-        String sql = "SELECT * FROM session WHERE empId = ? AND isActive = true";
+        String sql = "SELECT * FROM session "
+                + "WHERE empId = ? AND isActive = true";
         try (Connection conn = DatabaseUtil.getConnection(); 
                 PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, empId);
@@ -73,6 +80,7 @@ public class AuthenticationDAO {
         }
     }
 
+    // Terminates the selected session.
     public void deactivateSession(int sessionId) {
         String sql = "UPDATE session SET isActive = false WHERE sessionId = ?";
         try (Connection conn = DatabaseUtil.getConnection(); 

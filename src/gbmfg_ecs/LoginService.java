@@ -1,8 +1,11 @@
 package gbmfg_ecs;
 
 /**
- *
- * @author phillip.tette
+ * Program: Gigabyte Manufacturing - Equipment Checkout Service
+ * Course: CEIS 400 - Software Engineering II
+ * Author: Phillip Tette
+ * Program Description: Abstract class for handling login/logout/registrations.
+ * Date: August 13, 2024
  */
 public class LoginService {
 

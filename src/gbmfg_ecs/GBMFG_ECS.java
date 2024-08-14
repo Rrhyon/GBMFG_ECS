@@ -1,9 +1,16 @@
 package gbmfg_ecs;
 
 /**
- *
- * @author phillip.tette
+ * Program: Gigabyte Manufacturing - Equipment Checkout Service
+ * Course: CEIS 400 - Software Engineering II
+ * Author: Phillip Tette
+ * Program Description: This program tracks tools using a checkout transaction
+ * system that is associated with employee identification. Other features include
+ * employee management, tool and material inventory management, maintenance
+ * management, and generates reports for inspections and other purposes.
+ * Date: August 13, 2024
  */
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -15,8 +22,10 @@ public class GBMFG_ECS {
         ToolService toolService = new ToolService();
         MaterialService materialService = new MaterialService();
         SessionService sessionService = new SessionService();
-        MaintenanceRecordService maintenanceRecordService = new MaintenanceRecordService();
-        CheckoutTransactionService checkoutTransactionService = new CheckoutTransactionService();
+        MaintenanceRecordService maintenanceRecordService = 
+                new MaintenanceRecordService();
+        CheckoutTransactionService checkoutTransactionService = 
+                new CheckoutTransactionService();
         CategoryService categoryService = new CategoryService();
         LocationService locationService = new LocationService();
         ReportService reportService = new ReportService();

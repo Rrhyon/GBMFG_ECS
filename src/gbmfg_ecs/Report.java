@@ -1,8 +1,11 @@
 package gbmfg_ecs;
 
 /**
- *
- * @author phillip.tette
+ * Program: Gigabyte Manufacturing - Equipment Checkout Service
+ * Course: CEIS 400 - Software Engineering II
+ * Author: Phillip Tette
+ * Program Description: Provides framework for report object creation.
+ * Date: August 13, 2024
  */
 import java.time.LocalDateTime;
 
@@ -14,51 +17,54 @@ public class Report {
     private LocalDateTime createdDate;
     private String reportType;
 
-    // Constructors, getters, and setters
+    // Constructors
     public Report() {
     }
 
-    public Report(String title, String content, LocalDateTime createdDate, String reportType) {
+    public Report(String title, String content, LocalDateTime createdDate, 
+            String reportType) {
         this.title = title;
         this.content = content;
         this.createdDate = createdDate;
         this.reportType = reportType;
     }
 
+    // Getters
     public int getReportId() {
         return reportId;
     }
 
-    public void setReportId(int reportId) {
-        this.reportId = reportId;
-    }
-
     public String getTitle() {
         return title;
+    }
+    
+    public String getContent() {
+        return content;
+    }
+    
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
+    }
+    
+    public String getReportType() {
+        return reportType;
+    }
+    
+    // Setters
+    public void setReportId(int reportId) {
+        this.reportId = reportId;
     }
 
     public void setTitle(String title) {
         this.title = title;
     }
 
-    public String getContent() {
-        return content;
-    }
-
     public void setContent(String content) {
         this.content = content;
     }
 
-    public LocalDateTime getCreatedDate() {
-        return createdDate;
-    }
-
     public void setCreatedDate(LocalDateTime createdDate) {
         this.createdDate = createdDate;
-    }
-
-    public String getReportType() {
-        return reportType;
     }
 
     public void setReportType(String reportType) {

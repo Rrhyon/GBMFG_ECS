@@ -1,8 +1,11 @@
 package gbmfg_ecs;
 
 /**
- *
- * @author phillip.tette
+ * Program: Gigabyte Manufacturing - Equipment Checkout Service
+ * Course: CEIS 400 - Software Engineering II
+ * Author: Phillip Tette
+ * Program Description: Provides framework for category class object creation.
+ * Date: August 13, 2024
  */
 public class Category {
 
@@ -10,7 +13,7 @@ public class Category {
     private String name;
     private String description;
 
-    // Constructors, getters, and setters
+    // Constructors
     public Category() {
     }
 
@@ -19,25 +22,28 @@ public class Category {
         this.name = name;
         this.description = description;
     }
-
+    
+    // Getters
     public int getCategoryId() {
         return categoryId;
     }
 
+    public String getName() {
+    return name;
+    } 
+    
+    public String getDescription() {
+    return description;
+    }
+    
+    
+    // Setters
     public void setCategoryId(int categoryId) {
         this.categoryId = categoryId;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
     }
 
     public void setDescription(String description) {

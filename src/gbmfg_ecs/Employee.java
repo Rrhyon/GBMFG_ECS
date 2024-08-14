@@ -1,8 +1,11 @@
 package gbmfg_ecs;
 
 /**
- *
- * @author phillip.tette
+ * Program: Gigabyte Manufacturing - Equipment Checkout Service 
+ * Course: CEIS 400 - Software Engineering II
+ * Author: Phillip Tette 
+ * Program Description: Provides framework for employee object creation.
+ * Date: August 13, 2024
  */
 public class Employee {
 
@@ -16,12 +19,13 @@ public class Employee {
     private String username;
     private String password;
 
-    // Constructors, getters, and setters
+    // Constructors
     public Employee() {
+
     }
 
-    public Employee(String lastName, String firstName, String middleInitial, 
-            String phoneNum, String emailAddress, String empRole, 
+    public Employee(String lastName, String firstName, String middleInitial,
+            String phoneNum, String emailAddress, String empRole,
             String username, String password) {
         this.lastName = lastName;
         this.firstName = firstName;
@@ -33,78 +37,79 @@ public class Employee {
         this.password = password;
     }
 
+    // Getters
     public int getEmpId() {
         return empId;
-    }
-
-    public void setEmpId(int empId) {
-        this.empId = empId;
     }
 
     public String getLastName() {
         return lastName;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
     public String getFirstName() {
         return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
     }
 
     public String getMiddleInitial() {
         return middleInitial;
     }
 
-    public void setMiddleInitial(String middleInitial) {
-        this.middleInitial = middleInitial;
-    }
-
     public String getPhoneNum() {
         return phoneNum;
-    }
-
-    public void setPhoneNum(String phoneNum) {
-        this.phoneNum = phoneNum;
     }
 
     public String getEmailAddress() {
         return emailAddress;
     }
 
-    public void setEmailAddress(String emailAddress) {
-        this.emailAddress = emailAddress;
-    }
-
     public String getEmpRole() {
         return empRole;
-    }
-
-    public void setEmpRole(String empRole) {
-        this.empRole = empRole;
     }
 
     public String getUsername() {
         return username;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = PasswordHashUtil.hashPassword(password);
+    // Setters
+    public void setEmpId(int empId) {
+        this.empId = empId;
     }
 
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setMiddleInitial(String middleInitial) {
+        this.middleInitial = middleInitial;
+    }
+
+    public void setPhoneNum(String phoneNum) {
+        this.phoneNum = phoneNum;
+    }
+
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
+    }
+
+    public void setEmpRole(String empRole) {
+        this.empRole = empRole;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    //Behaviors
+    
+    // Method calls check password from the PasswordHashUtil class
     public boolean checkPassword(String password) {
         return PasswordHashUtil.checkPassword(password, this.password);
     }

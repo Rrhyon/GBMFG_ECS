@@ -1,13 +1,17 @@
 package gbmfg_ecs;
 
 /**
- *
- * @author phillip.tette
+ * Program: Gigabyte Manufacturing - Equipment Checkout Service
+ * Course: CEIS 400 - Software Engineering II
+ * Author: Phillip Tette
+ * Program Description: Intermediary class to pass object information to the DAO.
+ * Date: August 13, 2024
  */
 import java.time.LocalDateTime;
 
 public class AuthenticationService {
 
+    // mapping the classes to variables for calls
     private AuthenticationDAO authenticationDAO;
     private EmployeeService employeeService;
 
@@ -16,6 +20,11 @@ public class AuthenticationService {
         this.employeeService = new EmployeeService();
     }
 
+    /* When clicking login, the program will search for the username in the DB.
+     * If not null and the entered password's hash matches the hash saved in the
+     * DB, the program will search for an active session. If a session does not 
+     * already exist, a new session will be created using the employees ID.
+     */
     public String login(String username, String password) {
         Employee employee = employeeService.getEmployeeByUsername(username);
         if (employee != null && employee.checkPassword(password)) {
@@ -33,8 +42,11 @@ public class AuthenticationService {
         return "Invalid username or password.";
     }
 
+    // When a user finishes their work and click logout, the program will search
+    // for the sessionId and terminate the session.
     public String logout(int sessionId) {
-        Session session = authenticationDAO.getActiveSessionByEmployeeId(sessionId);
+        Session session = authenticationDAO.
+                getActiveSessionByEmployeeId(sessionId);
         if (session != null) {
             authenticationDAO.deactivateSession(session.getSessionId());
             return "Logout successful.";
@@ -43,6 +55,9 @@ public class AuthenticationService {
         }
     }
 
+    /* Pending additional security controls for effectiveness, this method will
+     * allow a new employee to register for an account.
+     */
     public String register(String lastName, String firstName, 
             String middleInitial, String phoneNum, String emailAddress, 
             String empRole, String username, String password) {

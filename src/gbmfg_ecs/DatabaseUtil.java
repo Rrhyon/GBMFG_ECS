@@ -1,8 +1,11 @@
 package gbmfg_ecs;
 
 /**
- *
- * @author phillip.tette
+ * Program: Gigabyte Manufacturing - Equipment Checkout Service
+ * Course: CEIS 400 - Software Engineering II
+ * Author: Phillip Tette
+ * Program Description: Handles connections to the DB.
+ * Date: August 13, 2024
  */
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -48,6 +51,7 @@ public class DatabaseUtil {
         }
     }
 
+    // Using the provided properties, attemps to connect to the DB.
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
     }
