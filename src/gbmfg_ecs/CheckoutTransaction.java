@@ -1,15 +1,13 @@
 package gbmfg_ecs;
 
-/**
- * Program: Gigabyte Manufacturing - Equipment Checkout Service
- * Course: CEIS 400 - Software Engineering II
- * Author: Phillip Tette
- * Program Description: Provides framework for Checkout Transaction object 
- * creation.
- * Date: August 13, 2024
- */
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
+/**
+ * Program: Gigabyte Manufacturing - Equipment Checkout Service Course: CEIS 400
+ * - Software Engineering II Author: Phillip Tette Program Description: Provides
+ * framework for Checkout Transaction object creation. Date: August 13, 2024
+ */
 public class CheckoutTransaction {
 
     private int transactionId;
@@ -22,11 +20,11 @@ public class CheckoutTransaction {
 
     // Constructors
     public CheckoutTransaction() {
-        
+
     }
 
-    public CheckoutTransaction(int empId, int toolId, 
-            LocalDateTime checkoutDate, LocalDateTime dueDate, 
+    public CheckoutTransaction(int empId, int toolId,
+            LocalDateTime checkoutDate, LocalDateTime dueDate,
             LocalDateTime returnDate, String status) {
         this.empId = empId;
         this.toolId = toolId;
@@ -42,29 +40,29 @@ public class CheckoutTransaction {
     }
 
     public int getEmpId() {
-    return empId;
+        return empId;
     }
-    
+
     public int getToolId() {
-    return toolId;
+        return toolId;
     }
 
     public LocalDateTime getCheckoutDate() {
-    return checkoutDate;
+        return checkoutDate;
     }
-    
+
     public LocalDateTime getDueDate() {
-    return dueDate;
+        return dueDate;
     }
-    
+
     public LocalDateTime getReturnDate() {
-    return returnDate;
+        return returnDate;
     }
-    
+
     public String getStatus() {
-    return status;
+        return status;
     }
-    
+
     // Setters
     public void setTransactionId(int transactionId) {
         this.transactionId = transactionId;
@@ -92,5 +90,38 @@ public class CheckoutTransaction {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    // Method to calculate the number of days overdue
+    public long calculateOverdueDays() {
+        if (returnDate != null && returnDate.isAfter(dueDate)) {
+            return ChronoUnit.DAYS.between(dueDate, returnDate);
+        }
+        return 0;
+    }
+
+    // Method to update the status based on returnDate and dueDate
+    public void updateStatus() {
+        if (returnDate != null) {
+            if (returnDate.isAfter(dueDate)) {
+                status = "Overdue";
+            } else {
+                status = "Returned";
+            }
+        } else {
+            status = "Checked Out";
+        }
+    }
+
+    // Overriding toString() method to display transaction information
+    @Override
+    public String toString() {
+        return "CheckoutTransaction [Transaction ID=" + transactionId
+                + ", Employee ID=" + empId
+                + ", Tool ID=" + toolId
+                + ", Checkout Date=" + checkoutDate
+                + ", Due Date=" + dueDate
+                + ", Return Date=" + returnDate
+                + ", Status=" + status + "]";
     }
 }
