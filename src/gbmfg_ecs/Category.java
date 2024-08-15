@@ -29,11 +29,11 @@ public class Category {
     }
 
     public String getName() {
-    return name;
+        return name;
     } 
     
     public String getDescription() {
-    return description;
+        return description;
     }
     
     

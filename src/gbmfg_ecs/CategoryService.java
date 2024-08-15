@@ -35,6 +35,11 @@ public class CategoryService {
     public Category getCategory(int categoryId) {
         return categoryDAO.getCategory(categoryId);
     }
+    
+    // Retrieves specific category by Name
+    public Category getCategoryByName(String catName) {
+        return categoryDAO.getCategoryByName(catName);
+    }
 
     // Creates a list and retrieves all available categories
     public List<Category> getAllCategories() {

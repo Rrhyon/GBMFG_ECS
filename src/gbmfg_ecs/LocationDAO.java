@@ -62,11 +62,34 @@ public class LocationDAO {
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 Location location = new Location(
-                        rs.getInt(locationId),
+                        locationId,
                         rs.getString("locationName"),
                         rs.getString("locationDesc")
                 );
-                location.setLocationId(rs.getInt("locationId"));
+                return location;
+            }
+            return null;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
+    /* Method to create SQL prepared statement to retrieve a location record
+     * after entering location information.
+     */
+    public Location getLocationByName(String locationName) {
+        String sql = "SELECT * FROM location WHERE locationName = ?";
+        try (Connection conn = DatabaseUtil.getConnection(); 
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, locationName);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                Location location = new Location(
+                        rs.getInt("locationId"),
+                        locationName,
+                        rs.getString("locationDesc")
+                );
                 return location;
             }
             return null;

@@ -62,11 +62,34 @@ public class CategoryDAO {
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 Category category = new Category(
-                        rs.getInt(categoryId),
+                        categoryId,
                         rs.getString("catName"),
                         rs.getString("catDesc")
                 );
-                category.setCategoryId(rs.getInt("categoryId"));
+                return category;
+            }
+            return null;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
+    /* Method to create SQL prepared statement to retrieve a category record
+     * after entering category information.
+     */
+    public Category getCategoryByName(String catName) {
+        String sql = "SELECT * FROM category WHERE catName = ?";
+        try (Connection conn = DatabaseUtil.getConnection(); 
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, catName);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                Category category = new Category(
+                        rs.getInt("categoryId"),
+                        catName,
+                        rs.getString("catDesc")
+                );
                 return category;
             }
             return null;

@@ -35,6 +35,11 @@ public class LocationService {
     public Location getLocation(int locationId) {
         return locationDAO.getLocation(locationId);
     }
+    
+    // Retrieves specific location by Name
+    public Location getLocationByName(String locationName) {
+        return locationDAO.getLocationByName(locationName);
+    }
 
     // Creates a list and retrieves all available locations
     public List<Location> getAllLocations() {
