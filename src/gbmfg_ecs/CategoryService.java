@@ -18,17 +18,13 @@ public class CategoryService {
     }
 
     // Adds a new unique category for tools or materials
-    public String addCategory(int categoryId, String name, String description) {
-        Category category = new Category(categoryId, name, description);
-        return categoryDAO.addCategory(category);
+    public String saveCategory(Category category) {
+        return categoryDAO.saveCategory(category);
     }
     
     // Update category information
-    public String updateCategory(int categoryId, String name, 
-            String description) {
-        Category category = new Category(categoryId, name, description);
-        category.setCategoryId(categoryId);
-        return categoryDAO.updateCategory(category);
+    public String saveCategoryUpdates(Category category) {
+        return categoryDAO.saveCategoryUpdates(category);
     }
     
     // Retrieves specific category by ID

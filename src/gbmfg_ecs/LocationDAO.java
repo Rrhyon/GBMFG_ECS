@@ -16,7 +16,7 @@ public class LocationDAO {
     /* Method to create SQL prepared statement to create a location record
      * after entering location information.
      */
-    public String addLocation(Location location) {
+    public String saveLocation(Location location) {
         String sql = "INSERT INTO location (locationId, locationName, "
                 + "locationDesc) VALUES (?, ?, ?)";
         try (Connection conn = DatabaseUtil.getConnection(); 
@@ -35,8 +35,8 @@ public class LocationDAO {
     /* Method to create SQL prepared statement to update a location record
      * after entering location information.
      */
-    public String updateLocation(Location location) {
-        String sql = "UPDATE location SET locationId = ?, locationName = ?, "
+    public String saveLocationUpdates(Location location) {
+        String sql = "UPDATE location SET locationName = ?, "
                 + "locationDesc = ? WHERE locationId = ?";
         try (Connection conn = DatabaseUtil.getConnection(); 
                 PreparedStatement stmt = conn.prepareStatement(sql)) {

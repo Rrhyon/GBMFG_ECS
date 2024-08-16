@@ -17,8 +17,15 @@ public class Category {
     public Category() {
     }
 
+    // Constructor with all parameters
     public Category(int categoryId, String name, String description) {
         this.categoryId = categoryId;
+        this.name = name;
+        this.description = description;
+    }
+
+    // Constructor for use in updating (if no categoryId needed)
+    public Category(String name, String description) {
         this.name = name;
         this.description = description;
     }
@@ -35,8 +42,7 @@ public class Category {
     public String getDescription() {
         return description;
     }
-    
-    
+        
     // Setters
     public void setCategoryId(int categoryId) {
         this.categoryId = categoryId;

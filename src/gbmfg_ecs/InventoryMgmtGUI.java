@@ -1,5 +1,6 @@
 package gbmfg_ecs;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.util.ArrayList;
@@ -23,6 +24,9 @@ public class InventoryMgmtGUI extends javax.swing.JFrame {
 
     // Service to interact with the DB.
     private ToolService toolService = new ToolServiceImpl();
+    private MaterialService materialService = new MaterialServiceImpl();
+    private CategoryManager categoryManager;
+    private LocationManager locationManager;
     private CategoryService catService = new CategoryService();
     private LocationService locService = new LocationService();
     
@@ -30,9 +34,12 @@ public class InventoryMgmtGUI extends javax.swing.JFrame {
     public InventoryMgmtGUI() {
         initComponents();
         
-        displayTools(toolService.getAllTools(), 
-                catService.getAllCategories(),
-                locService.getAllLocations());
+        // Initialize the MaterialManager with this frame as the parent
+        categoryManager = new CategoryManager(this);
+        locationManager = new LocationManager(this);
+        
+        displayToolsWithCatAndLocNames();
+        displayMaterialsWithCatAndLocNames();
                 
         // Centers the application form
         this.setLocationRelativeTo(null);
@@ -67,6 +74,8 @@ public class InventoryMgmtGUI extends javax.swing.JFrame {
         btnSearchMaterial = new javax.swing.JButton();
         txtMaterialSearch = new javax.swing.JTextField();
         lblToolsTitle = new javax.swing.JLabel();
+        btnManageCategories = new javax.swing.JButton();
+        btnManageLocations = new javax.swing.JButton();
         mnbInventory = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
@@ -141,18 +150,9 @@ public class InventoryMgmtGUI extends javax.swing.JFrame {
         txtToolSearch.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         txtToolSearch.setToolTipText("Enter text here");
         txtToolSearch.setPreferredSize(new java.awt.Dimension(165, 32));
-        txtToolSearch.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtToolSearchActionPerformed(evt);
-            }
-        });
 
         btnUpdateToolInfo.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         btnUpdateToolInfo.setText("Update Tool Info");
-        btnUpdateToolInfo.setActionCommand("Update Tool Info");
-        btnUpdateToolInfo.setMaximumSize(new java.awt.Dimension(165, 32));
-        btnUpdateToolInfo.setMinimumSize(new java.awt.Dimension(165, 32));
-        btnUpdateToolInfo.setPreferredSize(new java.awt.Dimension(165, 32));
         btnUpdateToolInfo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnUpdateToolInfoActionPerformed(evt);
@@ -174,22 +174,24 @@ public class InventoryMgmtGUI extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(btnToolSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtToolSearch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(txtToolSearch, javax.swing.GroupLayout.DEFAULT_SIZE, 218, Short.MAX_VALUE)
                 .addContainerGap())
         );
         pnlToolActionsLayout.setVerticalGroup(
             pnlToolActionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlToolActionsLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(pnlToolActionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(pnlToolActionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(pnlToolActionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(pnlToolActionsLayout.createSequentialGroup()
+                        .addComponent(txtToolSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(1, 1, 1))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlToolActionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btnAddTool, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(btnGetAllTools, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(btnRemoveTool, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(btnToolSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnUpdateToolInfo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(txtToolSearch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(btnUpdateToolInfo)))
+                .addGap(7, 7, 7))
         );
 
         btnAddMaterial.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -197,6 +199,11 @@ public class InventoryMgmtGUI extends javax.swing.JFrame {
         btnAddMaterial.setMaximumSize(new java.awt.Dimension(165, 32));
         btnAddMaterial.setMinimumSize(new java.awt.Dimension(165, 32));
         btnAddMaterial.setPreferredSize(new java.awt.Dimension(165, 32));
+        btnAddMaterial.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddMaterialActionPerformed(evt);
+            }
+        });
 
         btnUpdateMaterialInfo.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         btnUpdateMaterialInfo.setText("Update Material Info");
@@ -214,18 +221,33 @@ public class InventoryMgmtGUI extends javax.swing.JFrame {
         btnGetAllMaterials.setMaximumSize(new java.awt.Dimension(165, 32));
         btnGetAllMaterials.setMinimumSize(new java.awt.Dimension(165, 32));
         btnGetAllMaterials.setPreferredSize(new java.awt.Dimension(165, 32));
+        btnGetAllMaterials.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGetAllMaterialsActionPerformed(evt);
+            }
+        });
 
         btnRemoveMaterials.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         btnRemoveMaterials.setText("Remove Material");
         btnRemoveMaterials.setMaximumSize(new java.awt.Dimension(165, 32));
         btnRemoveMaterials.setMinimumSize(new java.awt.Dimension(165, 32));
         btnRemoveMaterials.setPreferredSize(new java.awt.Dimension(165, 32));
+        btnRemoveMaterials.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRemoveMaterialsActionPerformed(evt);
+            }
+        });
 
         btnSearchMaterial.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         btnSearchMaterial.setText("Search Materials");
         btnSearchMaterial.setMaximumSize(new java.awt.Dimension(165, 32));
         btnSearchMaterial.setMinimumSize(new java.awt.Dimension(165, 32));
         btnSearchMaterial.setPreferredSize(new java.awt.Dimension(165, 32));
+        btnSearchMaterial.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSearchMaterialActionPerformed(evt);
+            }
+        });
 
         txtMaterialSearch.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         txtMaterialSearch.setToolTipText("Enter text here");
@@ -253,7 +275,7 @@ public class InventoryMgmtGUI extends javax.swing.JFrame {
             .addGroup(pnlMaterialActionsLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlMaterialActionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(txtMaterialSearch, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtMaterialSearch, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(pnlMaterialActionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btnUpdateMaterialInfo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(btnGetAllMaterials, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -268,9 +290,24 @@ public class InventoryMgmtGUI extends javax.swing.JFrame {
         lblToolsTitle.setText("Tool Inventory");
         lblToolsTitle.setFocusable(false);
         lblToolsTitle.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        lblToolsTitle.setMaximumSize(new java.awt.Dimension(229, 48));
-        lblToolsTitle.setMinimumSize(new java.awt.Dimension(229, 48));
-        lblToolsTitle.setPreferredSize(new java.awt.Dimension(229, 48));
+
+        btnManageCategories.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        btnManageCategories.setText("Manage Categories");
+        btnManageCategories.setPreferredSize(new java.awt.Dimension(185, 32));
+        btnManageCategories.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnManageCategoriesActionPerformed(evt);
+            }
+        });
+
+        btnManageLocations.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        btnManageLocations.setLabel("Manage Locations");
+        btnManageLocations.setPreferredSize(new java.awt.Dimension(185, 32));
+        btnManageLocations.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnManageLocationsActionPerformed(evt);
+            }
+        });
 
         mnbInventory.setName(""); // NOI18N
 
@@ -299,13 +336,19 @@ public class InventoryMgmtGUI extends javax.swing.JFrame {
                             .addComponent(pnlMaterialActions, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(scrollPaneMaterials, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(scollPaneTools))
-                        .addContainerGap())))
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(100, 100, 100)
+                        .addComponent(btnManageCategories, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(212, 212, 212)
+                        .addComponent(btnManageLocations, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(100, 100, 100))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lblToolsTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblToolsTitle)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(scollPaneTools, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -316,7 +359,11 @@ public class InventoryMgmtGUI extends javax.swing.JFrame {
                 .addComponent(scrollPaneMaterials, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnlMaterialActions, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(165, 165, 165))
+                .addGap(63, 63, 63)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnManageCategories, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnManageLocations, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(79, 79, 79))
         );
 
         pack();
@@ -333,7 +380,7 @@ public class InventoryMgmtGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAddToolActionPerformed
 
     private void btnToolSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnToolSearchActionPerformed
-                String inquiry = txtToolSearch.getText().trim();
+        String inquiry = txtToolSearch.getText().trim();
         if(!txtToolSearch.getText().isEmpty()){
             // Execute the search
             JOptionPane.showMessageDialog(this, inquiry,
@@ -346,6 +393,7 @@ public class InventoryMgmtGUI extends javax.swing.JFrame {
         }else{
         
         displayToolsWithCatAndLocNames();
+        displayMaterialsWithCatAndLocNames();
         }
     }//GEN-LAST:event_btnToolSearchActionPerformed
 
@@ -353,17 +401,54 @@ public class InventoryMgmtGUI extends javax.swing.JFrame {
         deleteTool();
     }//GEN-LAST:event_btnRemoveToolActionPerformed
 
-    private void txtToolSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtToolSearchActionPerformed
-
-    }//GEN-LAST:event_txtToolSearchActionPerformed
-
-    private void btnUpdateMaterialInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateMaterialInfoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnUpdateMaterialInfoActionPerformed
-
     private void btnUpdateToolInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateToolInfoActionPerformed
         toolUpdater();
     }//GEN-LAST:event_btnUpdateToolInfoActionPerformed
+
+    private void btnAddMaterialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddMaterialActionPerformed
+        enterMaterialData();
+    }//GEN-LAST:event_btnAddMaterialActionPerformed
+
+    private void btnUpdateMaterialInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateMaterialInfoActionPerformed
+        materialUpdater();
+    }//GEN-LAST:event_btnUpdateMaterialInfoActionPerformed
+
+    private void btnGetAllMaterialsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGetAllMaterialsActionPerformed
+        displayMaterialsWithCatAndLocNames();
+    }//GEN-LAST:event_btnGetAllMaterialsActionPerformed
+
+    private void btnRemoveMaterialsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveMaterialsActionPerformed
+        deleteMaterial();
+    }//GEN-LAST:event_btnRemoveMaterialsActionPerformed
+
+    private void btnSearchMaterialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchMaterialActionPerformed
+        String inquiry = txtMaterialSearch.getText().trim();
+        if(!txtMaterialSearch.getText().isEmpty()){
+            // Execute the search
+            JOptionPane.showMessageDialog(this, inquiry,
+                    "Notice", JOptionPane.WARNING_MESSAGE);
+            List<Material> results = materialService.searchMaterials(inquiry);
+            
+                displayMaterials(results, 
+                        catService.getAllCategories(),
+                        locService.getAllLocations());
+        }else{
+        
+        displayToolsWithCatAndLocNames();
+        } 
+    }//GEN-LAST:event_btnSearchMaterialActionPerformed
+
+    private void btnManageCategoriesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageCategoriesActionPerformed
+        // ActionListener to the "Manage Categories" button
+        btnManageCategories.addActionListener(e -> 
+                categoryManager.showCategoryManagerDialog());
+    }//GEN-LAST:event_btnManageCategoriesActionPerformed
+
+    private void btnManageLocationsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageLocationsActionPerformed
+        // ActionListener to the "Manage Categories" button
+        btnManageLocations.addActionListener(e -> 
+                locationManager.showLocationManagerDialog());
+    }//GEN-LAST:event_btnManageLocationsActionPerformed
 
     /**
      * @param args the command line arguments
@@ -407,6 +492,8 @@ public class InventoryMgmtGUI extends javax.swing.JFrame {
     private javax.swing.JButton btnAddTool;
     private javax.swing.JButton btnGetAllMaterials;
     private javax.swing.JButton btnGetAllTools;
+    private javax.swing.JButton btnManageCategories;
+    private javax.swing.JButton btnManageLocations;
     private javax.swing.JButton btnRemoveMaterials;
     private javax.swing.JButton btnRemoveTool;
     private javax.swing.JButton btnSearchMaterial;
@@ -648,6 +735,256 @@ public class InventoryMgmtGUI extends javax.swing.JFrame {
             }
         }else{
             JOptionPane.showMessageDialog(this, "No tools are selected.",
+                    "Notice", JOptionPane.WARNING_MESSAGE);
+        }
+    }
+    
+    public void enterMaterialData(){
+        // Creates vectors for category and location names
+        List<String> catNames = new ArrayList<>();
+        List<String> locNames = new ArrayList<>();
+        
+        // Iterates through categories and locations adding them to the lists
+        for (Category category : catService.getAllCategories()){
+            catNames.add(category.getName());
+        }
+        for (Location location : locService.getAllLocations()){
+            locNames.add(location.getName());
+        }
+
+        // Creates the JComboBoxes
+        JComboBox<String> catComboBox = 
+                new JComboBox<>(catNames.toArray(new String[0]));
+        JComboBox<String> locComboBox = 
+                new JComboBox<>(locNames.toArray(new String[0]));
+
+        // Show a dialog to collect mat details
+        JTextField matName = new JTextField();
+        JTextField matDesc = new JTextField();
+        JTextField matQuantity = new JTextField();
+        JTextField matUnit = new JTextField();
+        JComboBox categoryNames = catComboBox;
+        JComboBox locationNames = locComboBox;
+        
+       // Create a JPanel to hold the input fields
+        JPanel panel = new JPanel(new GridLayout(0, 2, 5, 5));
+        panel.add(new JLabel("Material Name:"));
+        panel.add(matName);
+        panel.add(new JLabel("Material Description:"));
+        panel.add(matDesc);
+        panel.add(new JLabel("Material Quantity:"));
+        panel.add(matQuantity);
+        panel.add(new JLabel("Material Unit:"));
+        panel.add(matUnit);
+        panel.add(new JLabel("Category:"));
+        panel.add(categoryNames);
+        panel.add(new JLabel("Location:"));
+        panel.add(locationNames);
+
+        // Sets the preferred size of the panel
+        panel.setPreferredSize(new Dimension(400, 300));
+
+        // Create the JOptionPane using the custom panel
+        int option = JOptionPane.showConfirmDialog(null, panel, "Add New Material", 
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+        // Handles the input data
+        if (option == JOptionPane.OK_OPTION) {
+            try{
+                double quantity = Double.parseDouble(matQuantity.getText());
+                        
+            Material newMaterial = new Material(
+                matName.getText(),
+                matDesc.getText(),
+                quantity,
+                matUnit.getText(),
+                catService.getCategoryByName(
+                        catComboBox.getSelectedItem().toString()).getCategoryId(),
+                locService.getLocationByName(
+                        locComboBox.getSelectedItem().toString()).getLocationId()
+            );
+
+            // Save the new mat using the ToolService
+            materialService.saveMaterial(newMaterial);
+            
+            // Reload the tool list to include the new tool
+            displayToolsWithCatAndLocNames();
+            }catch(NumberFormatException e){
+                JOptionPane.showMessageDialog(null, 
+                        "Please enter a valid number for quantity", 
+                        "Invalid Input", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+        
+public void materialUpdater() {
+    // Creates lists for category and location names
+    List<String> catNames = new ArrayList<>();
+    List<String> locNames = new ArrayList<>();
+
+    // Iterates through categories and locations adding them to the lists
+    for (Category category : catService.getAllCategories()) {
+        catNames.add(category.getName());
+    }
+    for (Location location : locService.getAllLocations()) {
+        locNames.add(location.getName());
+    }
+
+    // Get the selected row index
+    int selectedRow = tblMaterials.getSelectedRow();
+    if (selectedRow != -1) {
+        // Get the material ID from the selected row
+        int materialId = (int) tblMaterials.getValueAt(selectedRow, 0);
+        Material material = materialService.getMaterial(materialId);
+
+        // Creates the JComboBoxes and pre-select the current values
+        JComboBox<String> catComboBox = 
+                new JComboBox<>(catNames.toArray(new String[0]));
+        JComboBox<String> locComboBox = 
+                new JComboBox<>(locNames.toArray(new String[0]));
+
+        // Set the current category and location as selected items
+        catComboBox.setSelectedItem(catService.getCategoryById(material.
+                getCategoryId()).getName());
+        locComboBox.setSelectedItem(locService.getLocationById(material.
+                getLocationId()).getName());
+
+        // Pre-populate the text fields with existing material data
+        JTextField matName = new JTextField(material.getName());
+        JTextField matDesc = new JTextField(material.getDescription());
+        JTextField matQuantity = new JTextField(String.valueOf
+                (material.getQuantity()));
+        JTextField matUnit = new JTextField(material.getUnit());
+        catComboBox.setSelectedItem(catService.getCategoryById(material.
+                getCategoryId()).getName());
+        locComboBox.setSelectedItem(locService.getLocationById(material.
+                getLocationId()).getName());
+
+        // Create a JPanel to hold the input fields
+        JPanel panel = new JPanel(new GridLayout(0, 2, 5, 5));
+        panel.add(new JLabel("Material Name:"));
+        panel.add(matName);
+        panel.add(new JLabel("Material Description:"));
+        panel.add(matDesc);
+        panel.add(new JLabel("Material Quantity:"));
+        panel.add(matQuantity);
+        panel.add(new JLabel("Material Unit:"));
+        panel.add(matUnit);
+        panel.add(new JLabel("Category:"));
+        panel.add(catComboBox);
+        panel.add(new JLabel("Location:"));
+        panel.add(locComboBox);
+
+        // Sets the preferred size of the panel
+        panel.setPreferredSize(new Dimension(400, 300));
+
+        // Create the JOptionPane using the custom panel
+        int option = JOptionPane.showConfirmDialog(null, panel, "Update Material",
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+        // Handles the input data
+        if (option == JOptionPane.OK_OPTION) {
+            try {
+                double quantity = Double.parseDouble(matQuantity.getText());
+
+                // Create an updated Material object
+                Material updatedMaterial = new Material(
+                    material.getMaterialId(),
+                    matName.getText(),
+                    matDesc.getText(),
+                    quantity,
+                    matUnit.getText(),
+                    catService.getCategoryByName(catComboBox.getSelectedItem().
+                            toString()).getCategoryId(),
+                    locService.getLocationByName(locComboBox.getSelectedItem().
+                            toString()).getLocationId()
+                );
+
+                // Save the updated material using the MaterialService
+                materialService.saveMaterialUpdates(updatedMaterial);
+
+                // Reload the material list to reflect the changes
+                displayToolsWithCatAndLocNames();
+
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null,
+                        "Please enter a valid number for quantity",
+                        "Invalid Input", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    } else {
+        JOptionPane.showMessageDialog(null,
+                "Please select a material to update.", 
+                "No Selection", JOptionPane.WARNING_MESSAGE);
+    }
+}
+    
+    public void displayMaterials(List<Material> materials, 
+            List<Category> categories,
+            List<Location> locations){
+               
+        String[] columnNames = {"Material ID", "Name", "Description", "Quantity", 
+            "Unit", "Category", "Location"};
+        
+        Object[][] data = new Object[materials.size()][7];
+        
+        for (int i = 0; i < materials.size(); i++) {
+            Material material = materials.get(i);
+            String categoryName = "Uncategorized";
+            String locationName = "Nowhere, where you goin?";
+            for (int j = 0; j < categories.size(); j++) {
+                if (material.getCategoryId() == categories.get(j).getCategoryId()){
+                    categoryName = categories.get(j).getName();
+                }
+            }
+            for (int j = 0; j < locations.size(); j++){
+                if (material.getLocationId() == locations.get(j).getLocationId()){
+                    locationName = locations.get(j).getName();
+                }
+            }
+            data[i][0] = material.getMaterialId();
+            data[i][1] = material.getName();
+            data[i][2] = material.getDescription();
+            data[i][3] = material.getQuantity();
+            data[i][4] = material.getUnit();
+            data[i][5] = categoryName;
+            data[i][6] = locationName;
+        }
+        tblMaterials.setModel(new DefaultTableModel(data, columnNames));
+    }
+    
+    public void displayMaterialsWithCatAndLocNames(){
+            displayMaterials(materialService.getAllMaterials(), 
+                catService.getAllCategories(),
+                locService.getAllLocations());
+    }
+    
+    public void deleteMaterial(){
+        // Gets the selected row's index
+        int[] selectedRows = tblMaterials.getSelectedRows();
+        
+        // Validates that at least one row is selected
+        if (selectedRows.length > 0){
+                                    
+            // Confirm material deletion
+            int confirm = JOptionPane.showConfirmDialog(this, 
+                    "Are you sure you want to remove selected material(s)?", 
+                    "Confirm DELETE", JOptionPane.YES_NO_OPTION);
+            
+            // Removes the material from the database and refreshes
+            if(confirm == JOptionPane.YES_OPTION){
+                // Loop through the selected row(s), deleting each material
+                // Looping backward to avoid potential index errors
+                for(int i = selectedRows.length - 1; i >= 0; i--){
+                    // Gets the material ID for each material
+                    int materialId = (int) tblTools.getValueAt(selectedRows[i], 0);
+                    materialService.removeMaterial(materialId);
+                }
+                // Refreshes the material list table
+                displayToolsWithCatAndLocNames();
+            }
+        }else{
+            JOptionPane.showMessageDialog(this, "No materials are selected.",
                     "Notice", JOptionPane.WARNING_MESSAGE);
         }
     }

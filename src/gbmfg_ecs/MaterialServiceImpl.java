@@ -9,7 +9,7 @@ package gbmfg_ecs;
  */
 import java.util.List;
 
-public class MaterialServiceImpl {
+public class MaterialServiceImpl implements MaterialService{
 
     private MaterialDAOImpl materialDAO;
 
@@ -18,8 +18,8 @@ public class MaterialServiceImpl {
     }
 
     // Creates the object and returns the object to the DAO method for DB Entry.
-    public String saveMaterial(Material material) {
-        return materialDAO.saveMaterial(material);
+    public void saveMaterial(Material material) {
+        materialDAO.saveMaterial(material);
     }
 
     /* Creates the object, retrieves the existing ID and returns the updates to

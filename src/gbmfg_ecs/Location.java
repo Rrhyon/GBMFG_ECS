@@ -23,6 +23,11 @@ public class Location {
         this.name = name;
         this.description = description;
     }
+    
+        public Location(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
 
     // Getters
     public int getLocationId() {

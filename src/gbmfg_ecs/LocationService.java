@@ -18,17 +18,13 @@ public class LocationService {
     }
 
     // Adds a new unique location for tools or materials
-    public String addLocation(int locationId, String name, String description) {
-        Location location = new Location(locationId, name, description);
-        return locationDAO.addLocation(location);
+    public String saveLocation(Location location) {
+        return locationDAO.saveLocation(location);
     }
     
     // Update location information
-    public String updateLocation(int locationId, String name, 
-            String description) {
-        Location location = new Location(locationId, name, description);
-        location.setLocationId(locationId);
-        return locationDAO.updateLocation(location);
+    public String saveLocationUpdates(Location location) {
+        return locationDAO.saveLocationUpdates(location);
     }
 
     // Retrieves specific location by ID

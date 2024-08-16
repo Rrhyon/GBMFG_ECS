@@ -11,7 +11,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MaterialDAOImpl {
+public class MaterialDAOImpl implements MaterialDAO{
 
     /* Method to create SQL prepared statement to create a material
      * after entering material information.
@@ -49,7 +49,8 @@ public class MaterialDAOImpl {
             stmt.setDouble(3, material.getQuantity());
             stmt.setString(4, material.getUnit());
             stmt.setInt(5, material.getCategoryId());
-            stmt.setInt(6, material.getMaterialId());
+            stmt.setInt(6, material.getLocationId());
+            stmt.setInt(7, material.getMaterialId());
             stmt.executeUpdate();
             return "Material updated successfully.";
         } catch (SQLException e) {

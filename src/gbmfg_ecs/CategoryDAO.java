@@ -16,7 +16,7 @@ public class CategoryDAO {
     /* Method to create SQL prepared statement to create a category record
      * after entering category information.
      */
-    public String addCategory(Category category) {
+    public String saveCategory(Category category) {
         String sql = "INSERT INTO category (categoryId, catName, "
                 + "catDesc) VALUES (?, ?, ?)";
         try (Connection conn = DatabaseUtil.getConnection(); 
@@ -35,8 +35,8 @@ public class CategoryDAO {
     /* Method to create SQL prepared statement to update a category record
      * after entering category information.
      */
-    public String updateCategory(Category category) {
-        String sql = "UPDATE category SET categoryId = ?, catName = ?, "
+    public String saveCategoryUpdates(Category category) {
+        String sql = "UPDATE category Set catName = ?, "
                 + "catDesc = ? WHERE categoryId = ?";
         try (Connection conn = DatabaseUtil.getConnection(); 
                 PreparedStatement stmt = conn.prepareStatement(sql)) {
