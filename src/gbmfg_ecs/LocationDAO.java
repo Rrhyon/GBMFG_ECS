@@ -54,7 +54,7 @@ public class LocationDAO {
     /* Method to create SQL prepared statement to retrieve a location record
      * after entering location information.
      */
-    public Location getLocation(int locationId) {
+    public Location getLocationById(int locationId) {
         String sql = "SELECT * FROM location WHERE locationId = ?";
         try (Connection conn = DatabaseUtil.getConnection(); 
                 PreparedStatement stmt = conn.prepareStatement(sql)) {

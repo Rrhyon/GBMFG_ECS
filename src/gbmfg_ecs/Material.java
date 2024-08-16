@@ -22,8 +22,21 @@ public class Material {
     public Material() {
     }
 
+    // Constructor without toolId (for new tools)
     public Material(String name, String description, double quantity, 
             String unit, int categoryId, int locationId) {
+        this.name = name;
+        this.description = description;
+        this.quantity = quantity;
+        this.unit = unit;
+        this.categoryId = categoryId;
+        this.locationId = locationId;
+    }
+    
+    // Constructor including materialId (for existing tools)
+    public Material(int materialId, String name, String description, double quantity, 
+            String unit, int categoryId, int locationId) {
+        this.materialId = materialId;
         this.name = name;
         this.description = description;
         this.quantity = quantity;

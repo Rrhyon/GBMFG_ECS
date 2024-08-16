@@ -9,7 +9,6 @@ package gbmfg_ecs;
  */
 import java.util.List;
 
-
 public class ToolServiceImpl implements ToolService {
 
     private ToolDAOImpl toolDAOImpl;
@@ -26,8 +25,8 @@ public class ToolServiceImpl implements ToolService {
     /* Creates the object, retrieves the existing ID and returns the updates to
      * the DAO method for DB Entry.
      */
-    public void updateTool(Tool tool){
-        toolDAOImpl.updateTool(tool);
+    public String saveToolUpdates(Tool tool){
+        return toolDAOImpl.saveToolUpdates(tool);
     }
 
     // Retrieves the tool record by ID.
@@ -38,6 +37,10 @@ public class ToolServiceImpl implements ToolService {
     // Creates a list and retrieves all available tools.
     public List<Tool> getAllTools() {
         return toolDAOImpl.getAllTools();
+    }
+    
+    public List<Tool> searchTools(String inquiry) {
+        return toolDAOImpl.searchTools(inquiry);
     }
      
     // Removes selected tools.

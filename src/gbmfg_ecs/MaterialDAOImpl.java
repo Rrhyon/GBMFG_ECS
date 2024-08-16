@@ -16,7 +16,7 @@ public class MaterialDAOImpl {
     /* Method to create SQL prepared statement to create a material
      * after entering material information.
      */
-    public String addMaterial(Material material) {
+    public String saveMaterial(Material material) {
         String sql = "INSERT INTO material (matName, matDesc, matQuantity, "
                 + "matUnit, categoryId, locationId) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection conn = DatabaseUtil.getConnection(); 
@@ -38,7 +38,7 @@ public class MaterialDAOImpl {
     /* Method to create SQL prepared statement to update materials
      * after entering material information.
      */
-    public String updateMaterial(Material material) {
+    public String saveMaterialUpdates(Material material) {
         String sql = "UPDATE material SET matName = ?, matDesc = ?, "
                 + "matQuantity = ?, matUnit = ?, categoryId = ?, "
                 + "locationId = ? WHERE materialId = ?";
@@ -48,7 +48,8 @@ public class MaterialDAOImpl {
             stmt.setString(2, material.getDescription());
             stmt.setDouble(3, material.getQuantity());
             stmt.setString(4, material.getUnit());
-            stmt.setInt(5, material.getMaterialId());
+            stmt.setInt(5, material.getCategoryId());
+            stmt.setInt(6, material.getMaterialId());
             stmt.executeUpdate();
             return "Material updated successfully.";
         } catch (SQLException e) {
@@ -107,6 +108,39 @@ public class MaterialDAOImpl {
                 materials.add(material);
             }
         } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return materials;
+    }
+    
+    /* Method to create SQL prepared statement to search for material 
+     * after entering material information.
+     */
+    public List<Material> searchMaterials(String inquiry) {
+        String sql = "SELECT * FROM material WHERE matName LIKE ? OR "
+                + "matDesc LIKE ?";
+        List<Material> materials = new ArrayList<>();
+        try (Connection conn = DatabaseUtil.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
+            String query = "%" + inquiry + "%";
+            stmt.setString(1, query);
+            stmt.setString(2, query);
+            stmt.setString(3, query);
+            stmt.setString(4, query);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Material material = new Material(
+                    rs.getString("matName"),
+                    rs.getString("matDesc"),
+                    rs.getDouble("matQuantity"),
+                    rs.getString("matUnit"),
+                    rs.getInt("categoryId"),
+                    rs.getInt("locationId")
+                );
+            material.setMaterialId(rs.getInt("matId"));
+            materials.add(material);
+            }
+        }catch (SQLException e) {
             e.printStackTrace();
         }
         return materials;

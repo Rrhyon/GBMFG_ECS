@@ -18,22 +18,15 @@ public class MaterialServiceImpl {
     }
 
     // Creates the object and returns the object to the DAO method for DB Entry.
-    public String addMaterial(String name, String description, double quantity,
-            String unit, int categoryId, int locationId) {
-        Material material = new Material(name, description, quantity, unit, 
-                categoryId, locationId);
-        return materialDAO.addMaterial(material);
+    public String saveMaterial(Material material) {
+        return materialDAO.saveMaterial(material);
     }
 
     /* Creates the object, retrieves the existing ID and returns the updates to
      * the DAO method for DB Entry.
      */
-    public String updateMaterial(int materialId, String name, String description,
-            double quantity, String unit, int categoryId, int locationId) {
-        Material material = new Material(name, description, quantity, unit, 
-                categoryId, locationId);
-        material.setMaterialId(materialId);
-        return materialDAO.updateMaterial(material);
+    public String saveMaterialUpdates(Material material) {
+        return materialDAO.saveMaterialUpdates(material);
     }
     
     // Retrieves the material by ID.
@@ -44,6 +37,10 @@ public class MaterialServiceImpl {
     // Creates a list and retrieves all available materials.
     public List<Material> getAllMaterials() {
         return materialDAO.getAllMaterials();
+    }
+    
+    public List<Material> searchMaterials(String inquiry){
+        return materialDAO.searchMaterials(inquiry);
     }
     
     // Removes selected materials.

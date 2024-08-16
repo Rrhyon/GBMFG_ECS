@@ -32,8 +32,8 @@ public class LocationService {
     }
 
     // Retrieves specific location by ID
-    public Location getLocation(int locationId) {
-        return locationDAO.getLocation(locationId);
+    public Location getLocationById(int locationId) {
+        return locationDAO.getLocationById(locationId);
     }
     
     // Retrieves specific location by Name

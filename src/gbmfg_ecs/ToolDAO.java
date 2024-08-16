@@ -8,8 +8,9 @@ import java.util.List;
  */
 public interface ToolDAO {
     String saveTool(Tool tool);
-    String updateTool(Tool tool);
+    String saveToolUpdates(Tool tool);
     Tool getTool(int toolId);
     List<Tool> getAllTools();
+    List<Tool> searchTools(String inquiry);
     String removeTool(int toolId);
 }

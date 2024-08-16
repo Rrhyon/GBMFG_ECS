@@ -8,9 +8,10 @@ import java.util.List;
  */
 public interface ToolService {
     void saveTool(Tool tool);
-    void updateTool(Tool tool);
+    String saveToolUpdates(Tool tool);
     Tool getTool(int toolId);
     List<Tool> getAllTools();
+    List<Tool> searchTools(String inquiry);
     String removeTool(int toolId);
 }
     

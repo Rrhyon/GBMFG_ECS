@@ -40,7 +40,7 @@ public class ToolDAOImpl implements ToolDAO {
     /* Method to create SQL prepared statement to update tool after entering
      * new tool information.
      */
-    public String updateTool(Tool tool) {
+    public String saveToolUpdates(Tool tool) {
         String sql = "UPDATE tool SET toolName = ?, toolDesc = ?, "
                 + "toolCondition = ?, isAvailable = ?, toolSerial = ?, "
                 + "categoryId = ?, locationId = ? WHERE toolId = ?";
@@ -55,7 +55,7 @@ public class ToolDAOImpl implements ToolDAO {
             stmt.setInt(7, tool.getLocationId());
             stmt.setInt(8, tool.getToolId());
             stmt.executeUpdate();
-            return "Tool updated successfully.";
+                return "Tool updated successfully.";
         } catch (SQLException e) {
             e.printStackTrace();
             return "Error updating tool.";
@@ -119,6 +119,41 @@ public class ToolDAOImpl implements ToolDAO {
         return tools;
     }
     
+    /* Method to create SQL prepared statement to search for a tool 
+     * after entering tool information.
+     */
+    public List<Tool> searchTools(String inquiry) {
+        String sql = "SELECT * FROM tool WHERE toolName LIKE ? OR "
+                + "toolDesc LIKE ? OR "
+                + "toolCondition LIKE ? OR "
+                + "toolSerial LIKE ?";
+        List<Tool> tools = new ArrayList<>();
+        try (Connection conn = DatabaseUtil.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
+            String query = "%" + inquiry + "%";
+            stmt.setString(1, query);
+            stmt.setString(2, query);
+            stmt.setString(3, query);
+            stmt.setString(4, query);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Tool tool = new Tool(
+                    rs.getString("toolName"),
+                    rs.getString("toolDesc"),
+                    rs.getString("toolCondition"),
+                    rs.getBoolean("isAvailable"),
+                    rs.getString("toolSerial"),
+                    rs.getInt("categoryId"),
+                    rs.getInt("locationId")
+                );
+            tool.setToolId(rs.getInt("toolId"));
+            tools.add(tool);
+            }
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return tools;
+    }
     
     /* Method to create SQL prepared statement to remove a tool 
      * after entering tool ID.

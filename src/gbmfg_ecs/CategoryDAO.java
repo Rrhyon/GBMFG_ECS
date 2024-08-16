@@ -54,7 +54,7 @@ public class CategoryDAO {
     /* Method to create SQL prepared statement to retrieve a category record
      * after entering category information.
      */
-    public Category getCategory(int categoryId) {
+    public Category getCategoryById(int categoryId) {
         String sql = "SELECT * FROM category WHERE categoryId = ?";
         try (Connection conn = DatabaseUtil.getConnection(); 
                 PreparedStatement stmt = conn.prepareStatement(sql)) {

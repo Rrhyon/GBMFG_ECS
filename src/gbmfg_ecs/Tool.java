@@ -22,12 +22,27 @@ public class Tool {
     public Tool() {
     }
 
-    public Tool(String name, String description, String condition, 
-            boolean isAvailable, String serialNum, int categoryId, 
-            int locationId) {
-        this.name = name;
-        this.description = description;
-        this.condition = condition;
+    // Constructor without toolId (for new tools)
+    public Tool(String toolName, String toolDesc, String toolCondition, 
+                boolean isAvailable, String serialNum, int categoryId, 
+                int locationId) {
+        this.name = toolName;
+        this.description = toolDesc;
+        this.condition = toolCondition;
+        this.isAvailable = isAvailable;
+        this.serialNum = serialNum;
+        this.categoryId = categoryId;
+        this.locationId = locationId;
+    }
+    
+    // Constructor including toolId (for existing tools)
+    public Tool(int toolId, String toolName, String toolDesc,
+            String toolCondition, boolean isAvailable, String serialNum, 
+            int categoryId, int locationId) {
+        this.toolId = toolId;
+        this.name = toolName;
+        this.description = toolDesc;
+        this.condition = toolCondition;
         this.isAvailable = isAvailable;
         this.serialNum = serialNum;
         this.categoryId = categoryId;

@@ -32,8 +32,8 @@ public class CategoryService {
     }
     
     // Retrieves specific category by ID
-    public Category getCategory(int categoryId) {
-        return categoryDAO.getCategory(categoryId);
+    public Category getCategoryById(int categoryId) {
+        return categoryDAO.getCategoryById(categoryId);
     }
     
     // Retrieves specific category by Name
