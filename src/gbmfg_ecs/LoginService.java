@@ -15,9 +15,17 @@ public class LoginService {
         this.authenticationService = new AuthenticationService();
     }
 
-    public String login(String username, String password) {
-        return authenticationService.login(username, password);
+    public int login(String username, String password) {
+    // Assuming authenticationService.login returns a session ID or -1 for failure
+    int sessionId = authenticationService.login(username, password);
+    
+    if (sessionId != -1) {
+        return sessionId; // Successful login, return session ID
+    } else {
+        return -1; // Indicate login failure
     }
+}
+
 
     public String logout(int sessionId) {
         return authenticationService.logout(sessionId);

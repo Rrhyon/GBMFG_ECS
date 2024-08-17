@@ -7,60 +7,53 @@ package gbmfg_ecs;
  * Program Description: Database Access Object for Session class.
  * Date: August 13, 2024
  */
-import java.sql.*;
-import java.util.ArrayList;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 public class SessionDAO {
 
-    /* Method to create SQL prepared statement to create a session
-     * after entering session information.
-     */
+    // Adds a session to the DB
     public String addSession(Session session) {
-        String sql = "INSERT INTO session (empId, isActive, createdAt, "
-                + "expiresAt) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO session (empId, isActive, createdAt, expiresAt) VALUES (?, ?, ?, ?)";
         try (Connection conn = DatabaseUtil.getConnection(); 
-                PreparedStatement stmt = conn.prepareStatement(sql)) {
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, session.getEmpId());
             stmt.setBoolean(2, session.isActive());
-            stmt.setTimestamp(3, Timestamp.valueOf(session.getCreatedAt()));
-            stmt.setTimestamp(4, Timestamp.valueOf(session.getExpiresAt()));
+            stmt.setTimestamp(3, java.sql.Timestamp.valueOf(session.getCreatedAt()));
+            stmt.setTimestamp(4, java.sql.Timestamp.valueOf(session.getExpiresAt()));
             stmt.executeUpdate();
             return "Session added successfully.";
         } catch (SQLException e) {
             e.printStackTrace();
-            return "Error adding session.";
+            return "Failed to add session.";
         }
     }
 
-    /* Method to create SQL prepared statement to update sessions
-     * after entering session information.
-     */
+    // Updates a session in the DB
     public String updateSession(Session session) {
-        String sql = "UPDATE session SET empId = ?, isActive = ?, "
-                + "createdAt = ?, expiresAt = ? WHERE sessionId = ?";
+        String sql = "UPDATE session SET isActive = ?, createdAt = ?, expiresAt = ? WHERE sessionId = ?";
         try (Connection conn = DatabaseUtil.getConnection(); 
-                PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, session.getEmpId());
-            stmt.setBoolean(2, session.isActive());
-            stmt.setTimestamp(3, Timestamp.valueOf(session.getCreatedAt()));
-            stmt.setTimestamp(4, Timestamp.valueOf(session.getExpiresAt()));
-            stmt.setInt(5, session.getSessionId());
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setBoolean(1, session.isActive());
+            stmt.setTimestamp(2, java.sql.Timestamp.valueOf(session.getCreatedAt()));
+            stmt.setTimestamp(3, java.sql.Timestamp.valueOf(session.getExpiresAt()));
+            stmt.setInt(4, session.getSessionId());
             stmt.executeUpdate();
             return "Session updated successfully.";
         } catch (SQLException e) {
             e.printStackTrace();
-            return "Error updating session.";
+            return "Failed to update session.";
         }
     }
 
-    /* Method to create SQL prepared statement to retrieve session
-     * after entering session ID.
-     */
+    // Retrieves the session by ID
     public Session getSession(int sessionId) {
         String sql = "SELECT * FROM session WHERE sessionId = ?";
         try (Connection conn = DatabaseUtil.getConnection(); 
-                PreparedStatement stmt = conn.prepareStatement(sql)) {
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, sessionId);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
@@ -80,16 +73,14 @@ public class SessionDAO {
         }
     }
 
-    /* Method to create SQL prepared statement to create a new ArrayList called
-     * 'sessions' and add all sessions to the array.
-     */
-    public List<Session> getAllSessions() {
-        String sql = "SELECT * FROM session";
-        List<Session> sessions = new ArrayList<>();
+    // Retrieves the active session by employee ID
+    public Session getActiveSessionByEmployeeId(int empId) {
+        String sql = "SELECT * FROM session WHERE empId = ? AND isActive = true";
         try (Connection conn = DatabaseUtil.getConnection(); 
-                PreparedStatement stmt = conn.prepareStatement(sql)) {
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, empId);
             ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
+            if (rs.next()) {
                 Session session = new Session(
                         rs.getInt("empId"),
                         rs.getBoolean("isActive"),
@@ -97,31 +88,30 @@ public class SessionDAO {
                         rs.getTimestamp("expiresAt").toLocalDateTime()
                 );
                 session.setSessionId(rs.getInt("sessionId"));
-                sessions.add(session);
+                return session;
             }
+            return null;
         } catch (SQLException e) {
             e.printStackTrace();
+            return null;
         }
-        return sessions;
     }
-    
-    /* Method to create SQL prepared statement to remove a session record
-     * after entering session ID.
-     */
+
+    // Removes a session from the DB
     public String removeSession(int sessionId) {
         String sql = "DELETE FROM session WHERE sessionId = ?";
         try (Connection conn = DatabaseUtil.getConnection(); 
-                PreparedStatement stmt = conn.prepareStatement(sql)) {
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, sessionId);
-            int rowsAffected = stmt.executeUpdate();
-            if (rowsAffected > 0) {
-                return "Session removed successfully.";
-            } else {
-                return "Session not found.";
-            }
+            stmt.executeUpdate();
+            return "Session removed successfully.";
         } catch (SQLException e) {
             e.printStackTrace();
-            return "Error removing session.";
+            return "Failed to remove session.";
         }
+    }
+
+    List<Session> getAllSessions() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

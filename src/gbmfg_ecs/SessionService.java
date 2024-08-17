@@ -49,4 +49,9 @@ public class SessionService {
     public String removeSession(int sessionId) {
         return sessionDAO.removeSession(sessionId);
     }
+
+    // Retrieves the active session by employee ID.
+    public Session getActiveSessionByEmployeeId(int empId) {
+        return sessionDAO.getActiveSessionByEmployeeId(empId);
+    }
 }

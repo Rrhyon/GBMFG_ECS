@@ -23,37 +23,40 @@ public class AuthenticationService {
     /* When clicking login, the program will search for the username in the DB.
      * If not null and the entered password's hash matches the hash saved in the
      * DB, the program will search for an active session. If a session does not 
-     * already exist, a new session will be created using the employees ID.
+     * already exist, a new session will be created using the employee's ID.
      */
-    public String login(String username, String password) {
-        Employee employee = employeeService.getEmployeeByUsername(username);
-        if (employee != null && employee.checkPassword(password)) {
-            Session activeSession = authenticationDAO.
-                    getActiveSessionByEmployeeId(employee.getEmpId());
-            if (activeSession == null) {
-                Session newSession = new Session(employee.getEmpId(), true, 
-                        LocalDateTime.now(), LocalDateTime.now().plusHours(1));
-                authenticationDAO.createSession(newSession);
-                return "Login successful.";
-            } else {
-                return "User already has an active session.";
-            }
+    public int login(String username, String password) {
+    Employee employee = employeeService.getEmployeeByUsername(username);
+    if (employee != null && employee.checkPassword(password)) {
+        Session activeSession = authenticationDAO.getActiveSessionByEmployeeId(employee.getEmpId());
+        if (activeSession == null) {
+            Session newSession = new Session(employee.getEmpId(), true, LocalDateTime.now(), LocalDateTime.now().plusHours(1));
+            authenticationDAO.createSession(newSession);
+            return newSession.getSessionId(); // Return the new session ID
+        } else {
+            return activeSession.getSessionId(); // Return existing session ID
         }
-        return "Invalid username or password.";
     }
+    return -1; // Indicate login failure
+}
 
-    // When a user finishes their work and click logout, the program will search
+
+
+
+
+    // When a user finishes their work and clicks logout, the program will search
     // for the sessionId and terminate the session.
     public String logout(int sessionId) {
-        Session session = authenticationDAO.
-                getActiveSessionByEmployeeId(sessionId);
-        if (session != null) {
-            authenticationDAO.deactivateSession(session.getSessionId());
-            return "Logout successful.";
-        } else {
-            return "No active session found for the given session ID.";
-        }
+    System.out.println("Attempting to logout session ID: " + sessionId);
+    Session session = authenticationDAO.getSessionById(sessionId);
+    if (session != null) {
+        authenticationDAO.deactivateSession(session.getSessionId());
+        return "Logout successful.";
+    } else {
+        return "No active session found for the given session ID.";
     }
+}
+
 
     /* Pending additional security controls for effectiveness, this method will
      * allow a new employee to register for an account.
