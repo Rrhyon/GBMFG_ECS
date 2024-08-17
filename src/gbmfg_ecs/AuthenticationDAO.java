@@ -79,14 +79,44 @@ public class AuthenticationDAO {
             return null;
         }
     }
-
-    // Terminates the selected session.
-    public void deactivateSession(int sessionId) {
-        String sql = "UPDATE session SET isActive = false WHERE sessionId = ?";
+    
+    // Implements the method to retrieve a session by session ID
+    public Session getSessionById(int sessionId) {
+        String sql = "SELECT * FROM session WHERE sessionId = ?";
         try (Connection conn = DatabaseUtil.getConnection(); 
                 PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, sessionId);
-            stmt.executeUpdate();
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                Session session = new Session(
+                        rs.getInt("empId"),
+                        rs.getBoolean("isActive"),
+                        rs.getTimestamp("createdAt").toLocalDateTime(),
+                        rs.getTimestamp("expiresAt").toLocalDateTime()
+                );
+                session.setSessionId(rs.getInt("sessionId"));
+                return session;
+            }
+            return null;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    // Terminates the selected session.
+public void deactivateSession(int sessionId) {
+        String sql = "UPDATE session SET isActive = false WHERE sessionId = ?";
+    System.out.println("Deactivating session ID: " + sessionId);
+    try (Connection conn = DatabaseUtil.getConnection(); 
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setInt(1, sessionId);
+        int rowsUpdated = stmt.executeUpdate();
+        if (rowsUpdated > 0) {
+            System.out.println("Session ID " + sessionId + " deactivated.");
+        } else {
+            System.out.println("No session found with ID " + sessionId);
+        }
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -46,31 +46,33 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" attributes="0">
-              <EmptySpace min="-2" max="-2" attributes="0"/>
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace min="-2" pref="100" max="-2" attributes="0"/>
+              <Component id="btnManageCategories" max="32767" attributes="0"/>
+              <EmptySpace min="-2" pref="200" max="-2" attributes="0"/>
+              <Component id="btnManageLocations" min="-2" pref="400" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="100" max="-2" attributes="0"/>
+          </Group>
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <Component id="lblMaterialTitle" max="32767" attributes="0"/>
-                      <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
-                  </Group>
-                  <Component id="pnlToolActions" alignment="1" pref="1302" max="32767" attributes="0"/>
-                  <Group type="102" alignment="1" attributes="0">
-                      <Group type="103" groupAlignment="1" attributes="0">
+                  <Component id="pnlToolActions" alignment="1" pref="1194" max="32767" attributes="0"/>
+                  <Component id="lblMaterialTitle" alignment="0" max="32767" attributes="0"/>
+                  <Component id="pnlMaterialActions" alignment="0" max="32767" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="scrollPaneMaterials" max="32767" attributes="0"/>
                           <Component id="lblToolsTitle" alignment="0" max="32767" attributes="0"/>
-                          <Component id="pnlMaterialActions" alignment="0" max="32767" attributes="0"/>
-                          <Component id="scrollPaneMaterials" alignment="0" max="32767" attributes="0"/>
                           <Component id="scollPaneTools" alignment="1" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="100" max="-2" attributes="0"/>
-                      <Component id="btnManageCategories" max="32767" attributes="0"/>
-                      <EmptySpace min="-2" pref="212" max="-2" attributes="0"/>
-                      <Component id="btnManageLocations" max="32767" attributes="0"/>
-                      <EmptySpace min="-2" pref="100" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
+          </Group>
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace min="-2" pref="501" max="-2" attributes="0"/>
+              <Component id="btnReturnMainMenu" max="32767" attributes="0"/>
+              <EmptySpace min="501" pref="501" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -83,18 +85,20 @@
               <Component id="scollPaneTools" min="-2" pref="199" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="pnlToolActions" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="lblMaterialTitle" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="scrollPaneMaterials" min="-2" pref="199" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="pnlMaterialActions" max="32767" attributes="0"/>
-              <EmptySpace min="-2" pref="63" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="btnManageCategories" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="btnManageLocations" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" pref="79" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Component id="btnReturnMainMenu" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="71" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -179,7 +183,7 @@
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="btnToolSearch" min="-2" pref="200" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="txtToolSearch" pref="218" max="32767" attributes="0"/>
+                  <Component id="txtToolSearch" pref="0" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -328,23 +332,24 @@
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="btnSearchMaterial" min="-2" pref="200" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="txtMaterialSearch" max="32767" attributes="0"/>
+                  <Component id="txtMaterialSearch" pref="0" max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="0" attributes="0">
+              <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                      <Component id="txtMaterialSearch" alignment="0" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="103" alignment="0" groupAlignment="3" attributes="0">
                           <Component id="btnUpdateMaterialInfo" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btnGetAllMaterials" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btnRemoveMaterials" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btnSearchMaterial" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btnAddMaterial" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
+                      <Component id="txtMaterialSearch" alignment="0" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -502,6 +507,17 @@
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnManageLocationsActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="btnReturnMainMenu">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Segoe UI" size="18" style="0"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="Return to Main Menu"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnReturnMainMenuActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>

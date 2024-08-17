@@ -25,22 +25,22 @@ public class AuthenticationService {
      * DB, the program will search for an active session. If a session does not 
      * already exist, a new session will be created using the employees ID.
      */
-    public String login(String username, String password) {
-        Employee employee = employeeService.getEmployeeByUsername(username);
-        if (employee != null && employee.checkPassword(password)) {
-            Session activeSession = authenticationDAO.
-                    getActiveSessionByEmployeeId(employee.getEmpId());
-            if (activeSession == null) {
-                Session newSession = new Session(employee.getEmpId(), true, 
-                        LocalDateTime.now(), LocalDateTime.now().plusHours(1));
-                authenticationDAO.createSession(newSession);
-                return "Login successful.";
-            } else {
-                return "User already has an active session.";
-            }
+    public int login(String username, String password) {
+    Employee employee = employeeService.getEmployeeByUsername(username);
+    if (employee != null && employee.checkPassword(password)) {
+        Session activeSession = authenticationDAO.
+                getActiveSessionByEmployeeId(employee.getEmpId());
+        if (activeSession == null) {
+            Session newSession = new Session(employee.getEmpId(), true, 
+                    LocalDateTime.now(), LocalDateTime.now().plusHours(1));
+            authenticationDAO.createSession(newSession);
+            return newSession.getSessionId(); // Return the new session ID
+        } else {
+            return activeSession.getSessionId(); // Return existing session ID
         }
-        return "Invalid username or password.";
     }
+    return -1; // Indicate login failure
+}
 
     // When a user finishes their work and click logout, the program will search
     // for the sessionId and terminate the session.
