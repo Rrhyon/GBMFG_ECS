@@ -28,7 +28,7 @@ public class MainMenuUI extends JFrame {
         add(checkoutToolButton);
 
         returnToolButton = new JButton("Maintenance");
-        returnToolButton.addActionListener(e -> returnTool());
+        returnToolButton.addActionListener(e -> maintenance());
         add(returnToolButton);
 
         manageInventoryButton = new JButton("Manage Inventory");
@@ -47,8 +47,9 @@ public class MainMenuUI extends JFrame {
         JOptionPane.showMessageDialog(this, "Tool Checkout Functionality");
     }
 
-    private void returnTool() {
+    private void maintenance() {
         // Placeholder for tool return logic
+        new MaintenanceGUI().setVisible(true);
         JOptionPane.showMessageDialog(this, "Tool Return Functionality");
     }
 
