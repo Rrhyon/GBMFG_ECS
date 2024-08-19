@@ -48,9 +48,8 @@ public class MainMenuUI extends JFrame {
     }
 
     private void maintenance() {
-        // Placeholder for tool return logic
+        // Placeholder for tool maintenance
         new MaintenanceGUI().setVisible(true);
-        JOptionPane.showMessageDialog(this, "Tool Return Functionality");
     }
 
     private void manageInventory() {
@@ -60,7 +59,9 @@ public class MainMenuUI extends JFrame {
 
     private void logout() {
         // Placeholder for logout logic
-        int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to logout?", "Confirm Logout", JOptionPane.YES_NO_OPTION);
+        int confirm = JOptionPane.showConfirmDialog(this, 
+                "Are you sure you want to logout?", "Confirm Logout", 
+                JOptionPane.YES_NO_OPTION);
         if (confirm == JOptionPane.YES_OPTION) {
             // Logic to logout the user and close the application
             dispose();

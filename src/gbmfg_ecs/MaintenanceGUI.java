@@ -1,5 +1,12 @@
 package gbmfg_ecs;
 
+
+
+import java.awt.event.WindowEvent;
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
@@ -10,13 +17,27 @@ package gbmfg_ecs;
  * @author Ylene Pierre
  */
 public class MaintenanceGUI extends javax.swing.JFrame {
-
+    
+    public static void main (String[] args){
+       
+     SwingUtilities.invokeLater(new Runnable() {
+           public void run()
+           {
+               MaintenanceGUI gui = new MaintenanceGUI();
+               gui.setVisible(true);
+           }
+       });
+            
+}
+        
     /**
      * Creates new form MaintenaceUI
      */
     public MaintenanceGUI() {
         initComponents();
         this.setLocationRelativeTo(null);
+        
+        
     }
 
     /**
@@ -154,27 +175,42 @@ public class MaintenanceGUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAddRecordsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddRecordsActionPerformed
-        this.dispose();
-        new Maintenance_AddRecords().setVisible(true);
+               this.setVisible(false);
+              
+              // Maintenance_AddRecords gui = new Maintenance_AddRecords();
+              //new M_AddRecords(this,true);
+              M_AddRecords dialog = new M_AddRecords(new javax.swing.JFrame(), true);
+              dialog.setVisible(true);
+              
+              
+                   
+                   
+              
+   
+                //new Maintenance_AddRecords().setVisible(true);
     }//GEN-LAST:event_btnAddRecordsActionPerformed
 
     private void btnUpdateRecordsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateRecordsActionPerformed
-        this.dispose();
-        new Maintenance_UpdateRecords().setVisible(true);
+            this.setVisible(false);
+            M_UpdateRecords dialog = new M_UpdateRecords(new javax.swing.JFrame(), true);
+            dialog.setVisible(true);
+           
     }//GEN-LAST:event_btnUpdateRecordsActionPerformed
 
     private void btnGetRecordsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGetRecordsActionPerformed
-       this.dispose();
-        new Maintenance_GetRecords().setVisible(true);
+       this.setVisible(false);
+        M_GetRecords dialog = new M_GetRecords(new javax.swing.JFrame(), true);
+            dialog.setVisible(true);
     }//GEN-LAST:event_btnGetRecordsActionPerformed
 
     private void btnRemoveRecordsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveRecordsActionPerformed
-        this.dispose();
-        new Maintenance_RemoveRecords().setVisible(true);
+        this.setVisible(false);
+       M_RemoveRecords dialog = new M_RemoveRecords(new javax.swing.JFrame(), true);
+            dialog.setVisible(true);
     }//GEN-LAST:event_btnRemoveRecordsActionPerformed
 
     private void btnMainMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMainMenuActionPerformed
-        this.dispose();
+        this.setVisible(false);
         // new REPLACE WITH MAIN MENU CLASS().setVisible(true);
     }//GEN-LAST:event_btnMainMenuActionPerformed
 
@@ -194,4 +230,6 @@ public class MaintenanceGUI extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
+
+
 }
