@@ -13,11 +13,11 @@ public class AuthenticationService {
 
     // mapping the classes to variables for calls
     private AuthenticationDAO authenticationDAO;
-    private EmployeeService employeeService;
+    private EmployeeServiceImpl employeeService;
 
     public AuthenticationService() {
         this.authenticationDAO = new AuthenticationDAO();
-        this.employeeService = new EmployeeService();
+        this.employeeService = new EmployeeServiceImpl();
     }
 
     /* When clicking login, the program will search for the username in the DB.
@@ -55,13 +55,13 @@ public class AuthenticationService {
         }
     }
 
-    /* Pending additional security controls for effectiveness, this method will
-     * allow a new employee to register for an account.
-     */
-    public String register(String lastName, String firstName, 
-            String middleInitial, String phoneNum, String emailAddress, 
-            String empRole, String username, String password) {
-        return employeeService.addEmployee(lastName, firstName, middleInitial, 
-                phoneNum, emailAddress, empRole, username, password);
-    }
+//    /* Pending additional security controls for effectiveness, this method will
+//     * allow a new employee to register for an account.
+//     */
+//    public String register(String lastName, String firstName, 
+//            String middleInitial, String phoneNum, String emailAddress, 
+//            String empRole, String username, String password) {
+//        return employeeService.addEmployee(lastName, firstName, middleInitial, 
+//                phoneNum, emailAddress, empRole, username, password);
+//    }
 }

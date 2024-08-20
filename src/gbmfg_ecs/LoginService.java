@@ -30,11 +30,11 @@ public class LoginService {
         return authenticationService.logout(sessionId);
     }
 
-    public String register(String lastName, String firstName, 
-            String middleInitial, String phoneNum, String emailAddress, 
-            String empRole, String username, String password) {
-        return authenticationService.register(lastName, firstName, 
-                middleInitial, phoneNum, emailAddress, empRole, username, 
-                password);
-    }
+//    public String register(String lastName, String firstName, 
+//            String middleInitial, String phoneNum, String emailAddress, 
+//            String empRole, String username, String password) {
+//        return authenticationService.register(lastName, firstName, 
+//                middleInitial, phoneNum, emailAddress, empRole, username, 
+//                password);
+//    }
 }

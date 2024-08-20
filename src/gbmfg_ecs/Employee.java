@@ -24,9 +24,25 @@ public class Employee {
 
     }
 
+    // Constructor is for creating new employees
     public Employee(String lastName, String firstName, String middleInitial,
             String phoneNum, String emailAddress, String empRole,
             String username, String password) {
+        this.lastName = lastName;
+        this.firstName = firstName;
+        this.middleInitial = middleInitial;
+        this.phoneNum = phoneNum;
+        this.emailAddress = emailAddress;
+        this.empRole = empRole;
+        this.username = username;
+        this.password = password;
+    }
+    
+    // Constructor is for updating employees
+    public Employee(int employeeId, String lastName, String firstName, String middleInitial,
+            String phoneNum, String emailAddress, String empRole,
+            String username, String password) {
+        this.empId = employeeId;
         this.lastName = lastName;
         this.firstName = firstName;
         this.middleInitial = middleInitial;
@@ -105,6 +121,10 @@ public class Employee {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+    
+    public void setPassword(String password){
+        this.password = password;
     }
 
     //Behaviors
