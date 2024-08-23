@@ -45,6 +45,7 @@ public class MainMenuUI extends JFrame {
     private void checkOutTool() {
         // Placeholder for tool checkout logic
         JOptionPane.showMessageDialog(this, "Tool Checkout Functionality");
+        new CheckoutGUI().setVisible(true);
     }
 
     private void maintenance() {

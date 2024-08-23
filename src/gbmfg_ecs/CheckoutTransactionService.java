@@ -19,23 +19,14 @@ public class CheckoutTransactionService {
     }
 
     // Creates the object and returns the object to the DAO method for DB Entry.
-    public String addCheckoutTransaction(int empId, int toolId, 
-            LocalDateTime checkoutDate, LocalDateTime dueDate, 
-            LocalDateTime returnDate, String status) {
-        CheckoutTransaction transaction = new CheckoutTransaction(empId, toolId,
-                checkoutDate, dueDate, returnDate, status);
+    public String addCheckoutTransaction(CheckoutTransaction transaction) {
         return checkoutTransactionDAO.addCheckoutTransaction(transaction);
     }
     
     /* Creates the object, retrieves the existing ID and returns the updates to
      * the DAO method for DB Entry.
      */
-    public String updateCheckoutTransaction(int transactionId, int empId, 
-            int toolId, LocalDateTime checkoutDate, LocalDateTime dueDate, 
-            LocalDateTime returnDate, String status) {
-        CheckoutTransaction transaction = new CheckoutTransaction(empId, toolId,
-                checkoutDate, dueDate, returnDate, status);
-        transaction.setTransactionId(transactionId);
+    public String updateCheckoutTransaction(CheckoutTransaction transaction) {
         return checkoutTransactionDAO.updateCheckoutTransaction(transaction);
     }
 

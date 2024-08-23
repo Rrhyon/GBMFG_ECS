@@ -1,22 +1,196 @@
+package gbmfg_ecs;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package gbmfg_ecs;
-
 /**
  *
  * @author mills
  */
 public class CheckoutGUI extends javax.swing.JFrame {
 
+    private ToolService toolService = new ToolServiceImpl();
+    private CheckoutTransactionService cTService = new CheckoutTransactionService();
+    private MaterialService matService = new MaterialServiceImpl();
+    private SessionService sesService = new SessionService();
+
+    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/gbmfg_ecs";
+    private static final String JDBC_USER = "root";
+    private static final String JDBC_PASSWORD = "FunkoPop09!!";
+
+    private void populateToolTable() {
+        String query = "SELECT toolId, toolName, toolDesc, toolCondition, isAvailable, toolSerial, categoryId, locationId FROM tool";
+
+        try (Connection conn = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD); PreparedStatement stmt = conn.prepareStatement(query); ResultSet rs = stmt.executeQuery()) {
+
+            // Create a DefaultTableModel with the appropriate column names
+            DefaultTableModel model = new DefaultTableModel(
+                    new Object[][]{}, // Initial empty data
+                    new String[]{
+                        "Tool ID", "Name", "Description", "Condition", "Available", "Serial", "Category", "Location"
+                    }
+            );
+
+            // Iterate through the result set and add rows to the model
+            while (rs.next()) {
+                Object[] row = new Object[8];
+                row[0] = rs.getString("toolId");
+                row[1] = rs.getString("toolName");
+                row[2] = rs.getString("toolDesc");
+                row[3] = rs.getString("toolCondition");
+                row[4] = rs.getString("isAvailable");
+                row[5] = rs.getString("toolSerial");
+                row[6] = rs.getString("categoryId");
+                row[7] = rs.getString("locationId");
+                model.addRow(row);
+            }
+
+            // Set the model to the table
+            tblTool.setModel(model);
+
+        } catch (SQLException e) {
+            e.printStackTrace(); // Handle the exception appropriately in production code
+        }
+    }
+
     /**
      * Creates new form CheckoutGUI
      */
     public CheckoutGUI() {
         initComponents();
+        populateToolTable();
     }
 
+    private void addToolToCart() {
+        int empId = sesService.getSession(HEIGHT).getEmpId();
+        System.out.println("Employer ID: " + empId); // Debugging Statement DELETE
+        
+        int selectedRow = tblTool.getSelectedRow();
+         toolId = tblTool.getValueAt(selectedRow,0).toString();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Please select a tool to add to the cart.");
+        }
+        
+        LocalDateTime dueDate = LocalDateTime.now().plusDays(14);
+        String status = "Checked Out";
+        System.out.println("Selected row: " + selectedRow);
+        System.out.println("Now: " + LocalDateTime.now());
+        System.out.println("Due: " + dueDate);
+                
+        List<CheckoutTransaction> toolToCheckout = new ArrayList<>();
+
+        for (CheckoutTransaction toCart : toolToCheckout) {
+            CheckoutTransaction transaction = new CheckoutTransaction(
+                    empId,
+                    toolId,
+                    LocalDateTime.now(),
+                    dueDate,
+                    null,
+                    status
+            );
+
+            cTService.addCheckoutTransaction(transaction);
+        }
+    }
+
+//        String toolId = (String) tblTool.getValueAt(selectedRow, 0);
+//        String empId = "EMP123"; 
+//        Date checkoutDate = new Date();
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//        String checkoutDateStr = sdf.format(checkoutDate);
+//
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.setTime(checkoutDate);
+//        calendar.add(Calendar.DAY_OF_MONTH, 30);
+//        Date dueDate = calendar.getTime();
+//        String dueDateStr = sdf.format(dueDate);
+//
+//        String returnDateStr = ""; // To be filled later when the tool is returned
+//        String status = "Checked Out";
+//
+//        String insertQuery = "INSERT INTO cart (transactionId, empId, toolId, checkoutDate, dueDate, returnDate, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
+//
+//        try (Connection conn = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD);
+//             PreparedStatement stmt = conn.prepareStatement(insertQuery, PreparedStatement.RETURN_GENERATED_KEYS)) {
+//
+//            // Generate a new transaction ID
+//            stmt.executeUpdate("SET @last_id = (SELECT IFNULL(MAX(transactionId), 0) FROM cart)");
+//            stmt.executeUpdate("SET @new_id = @last_id + 1");
+//            stmt.setInt(1, getGeneratedTransactionId(conn)); // Implement this method to get a new transaction ID
+//            stmt.setString(2, empId);
+//            stmt.setString(3, toolId);
+//            stmt.setString(4, checkoutDateStr);
+//            stmt.setString(5, dueDateStr);
+//            stmt.setString(6, returnDateStr);
+//            stmt.setString(7, status);
+//
+//            stmt.executeUpdate();
+//
+//            // Refresh the cart table
+//            populateCartTable();
+//
+//        } catch (SQLException e) {
+//            e.printStackTrace(); // Handle the exception appropriately in production code
+//        }
+    private int getGeneratedTransactionId(Connection conn) throws SQLException {
+        String query = "SELECT IFNULL(MAX(transactionId), 0) FROM cart";
+        try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(query)) {
+            if (rs.next()) {
+                return rs.getInt(1) + 1;
+            }
+        }
+        return 1; // Start with 1 if no entries are present
+    }
+
+//    private void populateCartTable() {
+//        String query = "SELECT transactionId, empId, toolId, checkoutDate, dueDate, returnDate, status FROM cart";
+//
+//        try (Connection conn = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD);
+//             PreparedStatement stmt = conn.prepareStatement(query);
+//             ResultSet rs = stmt.executeQuery()) {
+//
+//            DefaultTableModel model = new DefaultTableModel(
+//                new Object[][] {},
+//                new String[] {
+//                    "Transaction ID", "Employee ID", "Tool ID", "Checkout Date", "Due Date", "Return Date", "Status"
+//                }
+//            );
+//
+//            while (rs.next()) {
+//                Object[] row = new Object[7];
+//                row[0] = rs.getString("transactionId");
+//                row[1] = rs.getString("empId");
+//                row[2] = rs.getString("toolId");
+//                row[3] = rs.getString("checkoutDate");
+//                row[4] = rs.getString("dueDate");
+//                row[5] = rs.getString("returnDate");
+//                row[6] = rs.getString("status");
+//                model.addRow(row);
+//            }
+//
+//            tblCart.setModel(model);
+//
+//        } catch (SQLException e) {
+//            e.printStackTrace(); // Handle the exception appropriately in production code
+//        }
+//    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -29,18 +203,18 @@ public class CheckoutGUI extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        tblTool = new javax.swing.JTable();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTable3 = new javax.swing.JTable();
+        tblMaterial = new javax.swing.JTable();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
-        jTable4 = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
+        tblCart = new javax.swing.JTable();
+        btnCheckout = new javax.swing.JButton();
+        btnReset = new javax.swing.JButton();
+        btnMainMenu = new javax.swing.JButton();
+        btnAddToolCart = new javax.swing.JButton();
+        btnMaterial = new javax.swing.JButton();
         jSpinner1 = new javax.swing.JSpinner();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -57,7 +231,7 @@ public class CheckoutGUI extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel3.setText("Tool List");
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        tblTool.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -65,9 +239,9 @@ public class CheckoutGUI extends javax.swing.JFrame {
                 "Tool ID", "Name", "Description", "Condition", "Available", "Serial", "Category", "Location"
             }
         ));
-        jScrollPane2.setViewportView(jTable2);
+        jScrollPane2.setViewportView(tblTool);
 
-        jTable3.setModel(new javax.swing.table.DefaultTableModel(
+        tblMaterial.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -75,7 +249,7 @@ public class CheckoutGUI extends javax.swing.JFrame {
                 "Material ID", "Name", "Description", "Quantity", "Unit", "Category", "Location"
             }
         ));
-        jScrollPane3.setViewportView(jTable3);
+        jScrollPane3.setViewportView(tblMaterial);
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel4.setText("Material List");
@@ -83,7 +257,7 @@ public class CheckoutGUI extends javax.swing.JFrame {
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel5.setText("Cart");
 
-        jTable4.setModel(new javax.swing.table.DefaultTableModel(
+        tblCart.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -91,32 +265,47 @@ public class CheckoutGUI extends javax.swing.JFrame {
                 "Transaction ID", "Employee ID", "Tool ID", "Checkout Date", "Due Date", "Return Date", "Status"
             }
         ));
-        jScrollPane4.setViewportView(jTable4);
+        jScrollPane4.setViewportView(tblCart);
 
-        jButton1.setText("Checkout");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnCheckout.setText("Checkout");
+        btnCheckout.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnCheckoutActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Reset");
+        btnReset.setText("Reset");
+        btnReset.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnResetActionPerformed(evt);
+            }
+        });
 
-        jButton3.setText("Main menu");
+        btnMainMenu.setText("Main menu");
+        btnMainMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMainMenuActionPerformed(evt);
+            }
+        });
 
-        jButton4.setText("Add to cart");
+        btnAddToolCart.setText("Add tool to cart");
+        btnAddToolCart.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddToolCartActionPerformed(evt);
+            }
+        });
 
-        jButton5.setText("Add to cart");
+        btnMaterial.setText("Add material to cart");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(219, 219, 219)
-                .addComponent(jButton4)
+                .addGap(191, 191, 191)
+                .addComponent(btnAddToolCart)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton5)
+                .addComponent(btnMaterial)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(188, 188, 188))
@@ -140,11 +329,11 @@ public class CheckoutGUI extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 639, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnCheckout, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnReset, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(btnMainMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(547, 547, 547)
                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -171,18 +360,18 @@ public class CheckoutGUI extends javax.swing.JFrame {
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton4)
-                    .addComponent(jButton5)
+                    .addComponent(btnAddToolCart)
+                    .addComponent(btnMaterial)
                     .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(27, 27, 27)
+                .addGap(31, 31, 31)
                 .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(42, 42, 42)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3)
-                    .addComponent(jButton1))
+                    .addComponent(btnReset)
+                    .addComponent(btnMainMenu)
+                    .addComponent(btnCheckout))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -193,9 +382,25 @@ public class CheckoutGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jLabel1ComponentShown
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnCheckoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCheckoutActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnCheckoutActionPerformed
+
+    private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnResetActionPerformed
+
+    private void btnMainMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMainMenuActionPerformed
+        this.dispose(); // Close the current window
+
+        // Create and display the MainMenuUI
+        MainMenuUI mainMenu = new MainMenuUI();
+        mainMenu.setVisible(true);
+    }//GEN-LAST:event_btnMainMenuActionPerformed
+
+    private void btnAddToolCartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddToolCartActionPerformed
+        addToolToCart();// TODO add your handling code here:
+    }//GEN-LAST:event_btnAddToolCartActionPerformed
 
     /**
      * @param args the command line arguments
@@ -233,11 +438,11 @@ public class CheckoutGUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
+    private javax.swing.JButton btnAddToolCart;
+    private javax.swing.JButton btnCheckout;
+    private javax.swing.JButton btnMainMenu;
+    private javax.swing.JButton btnMaterial;
+    private javax.swing.JButton btnReset;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -246,8 +451,9 @@ public class CheckoutGUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JSpinner jSpinner1;
-    private javax.swing.JTable jTable2;
-    private javax.swing.JTable jTable3;
-    private javax.swing.JTable jTable4;
+    private javax.swing.JTable tblCart;
+    private javax.swing.JTable tblMaterial;
+    private javax.swing.JTable tblTool;
     // End of variables declaration//GEN-END:variables
+
 }

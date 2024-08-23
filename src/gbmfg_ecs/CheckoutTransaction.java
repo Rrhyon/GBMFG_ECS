@@ -36,6 +36,7 @@ public class CheckoutTransaction {
         this.status = status;
     }
 
+
     // Getters
     public int getTransactionId() {
         return transactionId;
