@@ -1,5 +1,7 @@
 package gbmfg_ecs;
 
+import javax.swing.SwingUtilities;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
@@ -10,6 +12,7 @@ package gbmfg_ecs;
  * @author Ylene Pierre
  */
 public class MaintenaceGUI extends javax.swing.JFrame {
+    
 
     /**
      * Creates new form MaintenaceUI
@@ -155,7 +158,15 @@ public class MaintenaceGUI extends javax.swing.JFrame {
 
     private void btnAddRecordsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddRecordsActionPerformed
         this.dispose();
-        new Maintenance_AddRecords().setVisible(true);
+        
+        // expected to be called on the AWT/Event Dispatch Thread
+            SwingUtilities.invokeLater(new Runnable() {
+           public void run()
+           {
+               Maintenance_AddRecords gui = new Maintenance_AddRecords();
+               gui.setVisible(true);
+           }
+       });
     }//GEN-LAST:event_btnAddRecordsActionPerformed
 
     private void btnUpdateRecordsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateRecordsActionPerformed
@@ -178,8 +189,7 @@ public class MaintenaceGUI extends javax.swing.JFrame {
         // new REPLACE WITH MAIN MENU CLASS().setVisible(true);
     }//GEN-LAST:event_btnMainMenuActionPerformed
 
-    /**
-     * @param args the command line arguments
+   
     
        
 
