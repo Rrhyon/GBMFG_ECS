@@ -1,5 +1,13 @@
 package gbmfg_ecs;
 
+import gbmfg_ecs.CheckoutTransaction;
+import gbmfg_ecs.CheckoutTransactionService;
+import gbmfg_ecs.MainMenuUI;
+import gbmfg_ecs.MaterialService;
+import gbmfg_ecs.MaterialServiceImpl;
+import gbmfg_ecs.SessionService;
+import gbmfg_ecs.ToolService;
+import gbmfg_ecs.ToolServiceImpl;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -27,49 +35,17 @@ import javax.swing.table.DefaultTableModel;
 public class CheckoutGUI extends javax.swing.JFrame {
 
     private ToolService toolService = new ToolServiceImpl();
+
     private CheckoutTransactionService cTService = new CheckoutTransactionService();
     private MaterialService matService = new MaterialServiceImpl();
     private SessionService sesService = new SessionService();
 
-    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/gbmfg_ecs";
+    private CategoryService catService = new CategoryService();
+    private LocationService locService = new LocationService();
+
+    /* private static final String JDBC_URL = "jdbc:mysql://localhost:3306/gbmfg_ecs";
     private static final String JDBC_USER = "root";
-    private static final String JDBC_PASSWORD = "FunkoPop09!!";
-
-    private void populateToolTable() {
-        String query = "SELECT toolId, toolName, toolDesc, toolCondition, isAvailable, toolSerial, categoryId, locationId FROM tool";
-
-        try (Connection conn = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD); PreparedStatement stmt = conn.prepareStatement(query); ResultSet rs = stmt.executeQuery()) {
-
-            // Create a DefaultTableModel with the appropriate column names
-            DefaultTableModel model = new DefaultTableModel(
-                    new Object[][]{}, // Initial empty data
-                    new String[]{
-                        "Tool ID", "Name", "Description", "Condition", "Available", "Serial", "Category", "Location"
-                    }
-            );
-
-            // Iterate through the result set and add rows to the model
-            while (rs.next()) {
-                Object[] row = new Object[8];
-                row[0] = rs.getString("toolId");
-                row[1] = rs.getString("toolName");
-                row[2] = rs.getString("toolDesc");
-                row[3] = rs.getString("toolCondition");
-                row[4] = rs.getString("isAvailable");
-                row[5] = rs.getString("toolSerial");
-                row[6] = rs.getString("categoryId");
-                row[7] = rs.getString("locationId");
-                model.addRow(row);
-            }
-
-            // Set the model to the table
-            tblTool.setModel(model);
-
-        } catch (SQLException e) {
-            e.printStackTrace(); // Handle the exception appropriately in production code
-        }
-    }
-
+    private static final String JDBC_PASSWORD = "FunkoPop09!!";*/
     /**
      * Creates new form CheckoutGUI
      */
@@ -78,22 +54,61 @@ public class CheckoutGUI extends javax.swing.JFrame {
         populateToolTable();
     }
 
+    private void populateToolTable() {
+        actualToolPopulate(toolService.getAllTools(),
+                catService.getAllCategories(),
+                locService.getAllLocations());
+    }
+
+    private void actualToolPopulate(List<Tool> tools, List<Category> categories,
+            List<Location> locations) {
+        String[] columnNames = {"Tool ID", "Name", "Description", "Condition",
+            "Available", "Serial", "Category", "Location"};
+
+        Object[][] data = new Object[tools.size()][8];
+
+        for (int i = 0; i < tools.size(); i++) {
+            Tool tool = tools.get(i);
+            String categoryName = "Uncategorized";
+            String locationName = "Nowhere, where you goin?";
+            for (int j = 0; j < categories.size(); j++) {
+                if (tool.getCategoryId() == categories.get(j).getCategoryId()) {
+                    categoryName = categories.get(j).getName();
+                }
+            }
+            for (int j = 0; j < locations.size(); j++) {
+                if (tool.getLocationId() == locations.get(j).getLocationId()) {
+                    locationName = locations.get(j).getName();
+                }
+            }
+            data[i][0] = tool.getToolId();
+            data[i][1] = tool.getName();
+            data[i][2] = tool.getDescription();
+            data[i][3] = tool.getCondition();
+            data[i][4] = tool.isAvailable();
+            data[i][5] = tool.getSerialNum();
+            data[i][6] = categoryName;
+            data[i][7] = locationName;
+        }
+        tblTool.setModel(new DefaultTableModel(data, columnNames));
+    }
+
     private void addToolToCart() {
         int empId = sesService.getSession(HEIGHT).getEmpId();
         System.out.println("Employer ID: " + empId); // Debugging Statement DELETE
-        
+
         int selectedRow = tblTool.getSelectedRow();
-         toolId = tblTool.getValueAt(selectedRow,0).toString();
+        int toolId = (int) tblTool.getValueAt(selectedRow, 0);
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this, "Please select a tool to add to the cart.");
         }
-        
+
         LocalDateTime dueDate = LocalDateTime.now().plusDays(14);
         String status = "Checked Out";
         System.out.println("Selected row: " + selectedRow);
         System.out.println("Now: " + LocalDateTime.now());
         System.out.println("Due: " + dueDate);
-                
+
         List<CheckoutTransaction> toolToCheckout = new ArrayList<>();
 
         for (CheckoutTransaction toCart : toolToCheckout) {
@@ -106,7 +121,8 @@ public class CheckoutGUI extends javax.swing.JFrame {
                     status
             );
 
-            cTService.addCheckoutTransaction(transaction);
+            cTService.addCheckoutTransaction(transaction.getEmpId(), transaction.getToolId(), transaction.getCheckoutDate(),
+                    transaction.getDueDate(), transaction.getReturnDate(), transaction.getStatus());
         }
     }
 
@@ -359,10 +375,11 @@ public class CheckoutGUI extends javax.swing.JFrame {
                         .addGap(137, 137, 137)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnAddToolCart)
-                    .addComponent(btnMaterial)
-                    .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnMaterial)
+                        .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(31, 31, 31)
                 .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -399,7 +416,7 @@ public class CheckoutGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_btnMainMenuActionPerformed
 
     private void btnAddToolCartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddToolCartActionPerformed
-        addToolToCart();// TODO add your handling code here:
+        addToolToCart();
     }//GEN-LAST:event_btnAddToolCartActionPerformed
 
     /**
