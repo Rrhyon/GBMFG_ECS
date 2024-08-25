@@ -12,17 +12,16 @@ import java.util.List;
 
 public class LocationManager {
 
-    private JFrame frame;
+    private JFrame locFrame;
     private JTable locationTable;
     private LocationService locationService; // Assume this is initialized
 
-    public LocationManager(JFrame frame) {
-        this.frame = frame;
+    public LocationManager() {
         locationService = new LocationService(); // Or use dependency injection
     }
 
-    public void showLocationManagerDialog() {
-        JDialog dialog = new JDialog(frame, "Manage Locations", true);
+    public void showLocationManagerDialog(JFrame locFrame) {
+        JDialog dialog = new JDialog(locFrame, "Manage Locations", true);
         dialog.setLayout(new BorderLayout());
         dialog.setSize(500, 300);
 
@@ -99,7 +98,7 @@ public class LocationManager {
     }
 
     private void showLocationDialog(String action, Location location) {
-        JDialog locationDialog = new JDialog(frame, action + " Location", true);
+        JDialog locationDialog = new JDialog(locFrame, action + " Location", true);
         locationDialog.setLayout(new GridLayout(0, 2, 5, 5));
         locationDialog.setSize(400, 250);
 

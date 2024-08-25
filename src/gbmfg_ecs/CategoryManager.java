@@ -12,17 +12,16 @@ import java.util.List;
 
 public class CategoryManager {
 
-    private JFrame frame;
+    private JFrame catFrame;
     private JTable categoryTable;
     private CategoryService categoryService; // Assume this is initialized
 
-    public CategoryManager(JFrame frame) {
-        this.frame = frame;
+    public CategoryManager() {
         categoryService = new CategoryService(); // Or use dependency injection
     }
 
-    public void showCategoryManagerDialog() {
-        JDialog dialog = new JDialog(frame, "Manage Categories", true);
+    public void showCategoryManagerDialog(JFrame catFrame) {
+        JDialog dialog = new JDialog(catFrame, "Manage Categories", true);
         dialog.setLayout(new BorderLayout());
         dialog.setSize(400, 300);
 
@@ -83,7 +82,7 @@ public class CategoryManager {
         dialog.setVisible(true);
     }
 
-        private void refreshCategoryTable() {
+    private void refreshCategoryTable() {
         List<Category> categories = categoryService.getAllCategories();
         String[] columnNames = {"Category ID", "Name", "Description"};
         Object[][] data = new Object[categories.size()][3];
@@ -99,7 +98,7 @@ public class CategoryManager {
     }
 
     private void showCategoryDialog(String action, Category category) {
-        JDialog categoryDialog = new JDialog(frame, action + " Category", true);
+        JDialog categoryDialog = new JDialog(catFrame, action + " Category", true);
         categoryDialog.setLayout(new GridLayout(0, 2, 5, 5));
         categoryDialog.setSize(400, 250);
 

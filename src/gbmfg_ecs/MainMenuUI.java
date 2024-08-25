@@ -7,6 +7,7 @@ import javax.swing.JOptionPane;
 
 public class MainMenuUI extends JFrame {
 
+    private InventoryManager invManager;
     private JButton checkoutToolButton;
     private JButton returnToolButton;
     private JButton manageInventoryButton;
@@ -14,9 +15,12 @@ public class MainMenuUI extends JFrame {
 
     public MainMenuUI() {
         initializeUI();
+        
+        // Initialize the InventoryManager with this frame at the parent
+        invManager = new InventoryManager(this);
     }
 
-    private void initializeUI() {
+    void initializeUI() {
         setTitle("Main Menu");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1792, 898);
@@ -32,7 +36,7 @@ public class MainMenuUI extends JFrame {
         add(returnToolButton);
 
         manageInventoryButton = new JButton("Manage Inventory");
-        manageInventoryButton.addActionListener(e -> manageInventory());
+        manageInventoryButton.addActionListener(e -> inventory());
         add(manageInventoryButton);
 
         logoutButton = new JButton("Logout");
@@ -52,9 +56,10 @@ public class MainMenuUI extends JFrame {
         new MaintenanceGUI().setVisible(true);
     }
 
-    private void manageInventory() {
-        // Placeholder for managing inventory logic
-        new InventoryMgmtGUI().setVisible(true);
+    private void inventory() {
+        this.getContentPane().removeAll();  // Clear existing components (main menu buttons)
+        this.repaint();  // Refresh the frame
+        invManager.showInventoryManagerDialog(this);
     }
 
     private void logout() {

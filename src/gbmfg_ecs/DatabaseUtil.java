@@ -16,11 +16,11 @@ import java.io.InputStream;
 public class DatabaseUtil {
 
     // constants
-    private static String propFileName = "db.properties";
-    private static String dbUrl;
-    private static String dbUsername;
-    private static String dbPassword;
-    private static String dbDriverClassName;
+    private static final String propFileName = "db.properties";
+    private static String dbUrl = null;
+    private static String dbUsername = null;
+    private static String dbPassword = null;
+    private static String dbDriverClassName = null;
 
     static {
         try (InputStream input = DatabaseUtil.class.getClassLoader()
