@@ -1,10 +1,16 @@
 package gbmfg_ecs;
 
 
+import com.sun.jdi.connect.spi.Connection;
 import java.awt.Dimension;
 import java.awt.List;
 import java.awt.Toolkit;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -171,23 +177,32 @@ public class M_GetRecords extends javax.swing.JDialog {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        //jTextArea2.setText(" ");
-        MaintenanceRecordService getAllRecs = new MaintenanceRecordService();
+         jTextArea1.setText(" ");
+        // Validate that no fields are empty
+    if (txtRecordID.getText().trim().isEmpty())
+         {
+        
+        JOptionPane.showMessageDialog(null, "Please enter a Record ID!", "Input Error", JOptionPane.ERROR_MESSAGE);
+        return; // Exit the method if any field is empty
+         }
+     int textRecID = Integer.parseInt(txtRecordID.getText());
+    
+    // Check if the record exists in the database
+    if (recordExists(textRecID)) {
+        JOptionPane.showMessageDialog(null, "Record with ID " + textRecID + " is already being displayed!", "Error", JOptionPane.ERROR_MESSAGE);
+        return; // Exit the method if the record does not exist
+    }
+        
+        MaintenanceRecordService getrecs = new MaintenanceRecordService();
+   
 
-        // jTextArea2.setText(getAllRecs.getAllMaintenanceRecords());
-
-        // Sample list
-        ArrayList<String> recList = new ArrayList<String>();
-
-        // Convert the list to a single string with new lines
-        StringBuilder sb = new StringBuilder();
-        for (String item : recList) {
-            sb.append(item).append("\n");
-        }
-
-        // Set JTextArea equal to List/String
-
-        jTextArea2.setText(sb.toString());
+        jTextArea1.setText(String.valueOf(getrecs.getMaintenanceRecord(textRecID)));
+        // Check if the record exists in the database
+    if (!recordExists(textRecID)) {
+        JOptionPane.showMessageDialog(null, "Record with ID " + textRecID + " does not exist!", "Error", JOptionPane.ERROR_MESSAGE);
+        return; // Exit the method if the record does not exist
+    
+    }
 
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -251,4 +266,27 @@ public class M_GetRecords extends javax.swing.JDialog {
     private javax.swing.JTextArea jTextArea2;
     private javax.swing.JTextField txtRecordID;
     // End of variables declaration//GEN-END:variables
+// Helper method to check if a record exists in the database
+private boolean recordExists(int recID) {
+    boolean exists = false;
+
+
+    String query = "SELECT 1 FROM maintenance_records WHERE record_id = ?";
+
+    try (java.sql.Connection conn = DatabaseUtil.getConnection();
+         PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+        pstmt.setInt(1, recID);
+        try (ResultSet rs = pstmt.executeQuery()) {
+            exists = rs.next(); // If a result is returned, the record exists
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Database error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
+    return exists;
+}
+
 }

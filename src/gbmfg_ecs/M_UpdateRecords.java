@@ -1,10 +1,15 @@
 package gbmfg_ecs;
 
 
+import com.sun.jdi.connect.spi.Connection;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.time.LocalDateTime;
 import javax.swing.JOptionPane;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -195,16 +200,36 @@ public class M_UpdateRecords extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnUpdateRecordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateRecordActionPerformed
-        int texttoolId = Integer.parseInt(txtToolId.getText());
-        int textEmpId = Integer.parseInt(txtEmpId.getText());
-        int textRecID = Integer.parseInt(txtRecID.getText());
-        LocalDateTime maintenanceDateNow = LocalDateTime.now();
-        String desc = strDescription.getText();
-        String stat = txtStatus.getText();
-        MaintenanceRecordService uprecs = new MaintenanceRecordService();
+         
+        // Validate that no fields are empty
+    if (txtToolId.getText().trim().isEmpty() || 
+        txtEmpId.getText().trim().isEmpty() || 
+        txtRecID.getText().trim().isEmpty() || 
+        strDescription.getText().trim().isEmpty() || 
+        txtStatus.getText().trim().isEmpty()) {
+        
+        JOptionPane.showMessageDialog(null, "All fields must be filled out!", "Input Error", JOptionPane.ERROR_MESSAGE);
+        return; // Exit the method if any field is empty
+    }
+    int textRecID = Integer.parseInt(txtRecID.getText());
+    
+    // Check if the record exists in the database
+    if (!recordExists(textRecID)) {
+        JOptionPane.showMessageDialog(null, "Record with ID " + textRecID + " does not exist!", "Error", JOptionPane.ERROR_MESSAGE);
+        return; // Exit the method if the record does not exist
+    }
+    
+            
+        // Proceed with the update if validation passes
+    int texttoolId = Integer.parseInt(txtToolId.getText());
+    int textEmpId = Integer.parseInt(txtEmpId.getText());
+    LocalDateTime maintenanceDateNow = LocalDateTime.now();
+    String desc = strDescription.getText();
+    String stat = txtStatus.getText();
+    MaintenanceRecordService uprecs = new MaintenanceRecordService();
 
-        uprecs.updateMaintenanceRecord(textRecID, texttoolId, textEmpId, maintenanceDateNow, desc, stat);
-        JOptionPane.showMessageDialog(null, "Maintenance Record Added Succesfully!");
+    uprecs.updateMaintenanceRecord(textRecID, texttoolId, textEmpId, maintenanceDateNow, desc, stat);
+    JOptionPane.showMessageDialog(null, "Maintenance Record Updated Successfully!");
     }//GEN-LAST:event_btnUpdateRecordActionPerformed
 
     private void btnMMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMMenuActionPerformed
@@ -274,4 +299,27 @@ public class M_UpdateRecords extends javax.swing.JDialog {
     private javax.swing.JTextField txtStatus;
     private javax.swing.JTextField txtToolId;
     // End of variables declaration//GEN-END:variables
+// Helper method to check if a record exists in the database
+private boolean recordExists(int recID) {
+    boolean exists = false;
+
+
+    String query = "SELECT 1 FROM maintenance_records WHERE record_id = ?";
+
+    try (java.sql.Connection conn = DatabaseUtil.getConnection();
+         PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+        pstmt.setInt(1, recID);
+        try (ResultSet rs = pstmt.executeQuery()) {
+            exists = rs.next(); // If a result is returned, the record exists
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Database error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
+    return exists;
+}
+
 }

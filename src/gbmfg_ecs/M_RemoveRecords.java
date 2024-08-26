@@ -1,8 +1,14 @@
 package gbmfg_ecs;
 
 
+import com.sun.jdi.connect.spi.Connection;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import javax.swing.JOptionPane;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -120,11 +126,22 @@ public class M_RemoveRecords extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnRemoveRecordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveRecordActionPerformed
-
+       if (txtRecordID.getText().trim().isEmpty())
+         {
+        
+        JOptionPane.showMessageDialog(null, "Please enter a Record ID!", "Input Error", JOptionPane.ERROR_MESSAGE);
+        return; // Exit the method if any field is empty
+         }
+       
         MaintenanceRecordService rmrecs = new MaintenanceRecordService();
         int recID = Integer.parseInt(txtRecordID.getText());
 
         rmrecs.removeMaintenanceRecord(recID);
+         // Check if the record exists in the database
+    if (!recordExists(recID)) {
+        JOptionPane.showMessageDialog(null, "Record with ID " + recID + " does not exist!", "Error", JOptionPane.ERROR_MESSAGE);
+        return; // Exit the method if the record does not exist
+    }
 
     }//GEN-LAST:event_btnRemoveRecordActionPerformed
 
@@ -183,4 +200,26 @@ public class M_RemoveRecords extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JTextField txtRecordID;
     // End of variables declaration//GEN-END:variables
+// Helper method to check if a record exists in the database
+private boolean recordExists(int recID) {
+    boolean exists = false;
+
+    String query = "SELECT 1 FROM maintenance_records WHERE record_id = ?";
+
+    try (java.sql.Connection conn = DatabaseUtil.getConnection();
+         PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+        pstmt.setInt(1, recID);
+        try (ResultSet rs = pstmt.executeQuery()) {
+            exists = rs.next(); // If a result is returned, the record exists
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Database error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
+    return exists;
+}
+
 }

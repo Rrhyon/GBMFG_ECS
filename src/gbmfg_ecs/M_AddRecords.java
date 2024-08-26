@@ -1,11 +1,15 @@
 package gbmfg_ecs;
 
 
+import com.sun.jdi.connect.spi.Connection;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.time.LocalDateTime;
 import javax.swing.JOptionPane;
-
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
@@ -16,7 +20,7 @@ import javax.swing.JOptionPane;
  * @author Ylene Pierre
  */
 public class M_AddRecords extends javax.swing.JDialog {
-
+        
     /**
      * Creates new form M_AddRecords
      */
@@ -175,13 +179,32 @@ public class M_AddRecords extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAddRecordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddRecordActionPerformed
-        int texttoolId = Integer.parseInt(txtToolId.getText());
-        int textEmpId = Integer.parseInt(txtEmpId.getText());
-        LocalDateTime maintenanceDateNow = LocalDateTime.now();
-        String desc = strDescription.getText();
-        String stat = txtStatus.getText();
-        MaintenanceRecordService addrecs = new MaintenanceRecordService();
-
+            // Validate that no fields are empty
+    if (txtToolId.getText().trim().isEmpty() || 
+        txtEmpId.getText().trim().isEmpty() ||  
+        strDescription.getText().trim().isEmpty() || 
+        txtStatus.getText().trim().isEmpty()) {
+        
+        JOptionPane.showMessageDialog(null, "All fields must be filled out!", "Input Error", JOptionPane.ERROR_MESSAGE);
+        return; // Exit the method if any field is empty
+      
+    }
+         // Proceed with the update if validation passes
+    int texttoolId = Integer.parseInt(txtToolId.getText());
+    int textEmpId = Integer.parseInt(txtEmpId.getText());
+    LocalDateTime maintenanceDateNow = LocalDateTime.now();
+    String desc = strDescription.getText();
+    String stat = txtStatus.getText();
+    MaintenanceRecordService addrecs = new MaintenanceRecordService();
+    
+     // Check for duplicate records
+     boolean isDuplicate = checkIfRecordExists(texttoolId);
+    
+    if (isDuplicate) {
+        JOptionPane.showMessageDialog(null, "Record already exists!", "Duplicate Error", JOptionPane.ERROR_MESSAGE);
+        return; // Exit the method if the record is a duplicate
+    }
+       
         addrecs.addMaintenanceRecord(texttoolId, textEmpId, maintenanceDateNow, desc, stat);
         JOptionPane.showMessageDialog(null, "Maintenance Record Added Succesfully!");
     }//GEN-LAST:event_btnAddRecordActionPerformed
@@ -251,4 +274,35 @@ public class M_AddRecords extends javax.swing.JDialog {
     private javax.swing.JTextField txtStatus;
     private javax.swing.JTextField txtToolId;
     // End of variables declaration//GEN-END:variables
+
+// Method to check if a record exists
+    public boolean checkIfRecordExists(int toolId) {
+        // SQL query to check for existence of the record
+        String query = "SELECT COUNT(*) FROM maintenance_records WHERE tool_id = ?";
+
+        try (java.sql.Connection conn = DatabaseUtil.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            // Set parameters for the query
+            stmt.setInt(1, toolId);
+            
+            
+            
+           
+
+            // Execute the query and check the result
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    // If the count is greater than 0, a record exists
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle exceptions appropriately
+        }
+
+        // Return false if no record is found or if an error occurs
+        return false;
+    }
 }
