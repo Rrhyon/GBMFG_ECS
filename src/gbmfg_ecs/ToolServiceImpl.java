@@ -47,4 +47,8 @@ public class ToolServiceImpl implements ToolService {
     public String removeTool(int toolId) {
         return toolDAOImpl.removeTool(toolId);
     }
+
+    String addTool(String heavy_Drill, String craftsman, String good, boolean b, String string, int i, int i0) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }

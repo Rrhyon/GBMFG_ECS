@@ -4,6 +4,9 @@ import java.awt.GridLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import java.time.LocalDateTime;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainMenuUI extends JFrame {
 
@@ -11,9 +14,19 @@ public class MainMenuUI extends JFrame {
     private JButton returnToolButton;
     private JButton manageInventoryButton;
     private JButton logoutButton;
+    private int sessionId;
+    private LocalDateTime sessionExpiry;
+    private Timer sessionTimer;
 
-    public MainMenuUI() {
+    public MainMenuUI(int sessionId) {
+        this.sessionId = sessionId;
+        this.sessionExpiry = LocalDateTime.now().plusMinutes(10); // Set session timeout to 10 minutes
         initializeUI();
+        startSessionTimer();
+    }
+
+    MainMenuUI() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     private void initializeUI() {
@@ -21,7 +34,7 @@ public class MainMenuUI extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1792, 898);
         setLocationRelativeTo(null);
-        setLayout(new GridLayout(4, 1)); // Adjust layout to add more buttons if needed
+        setLayout(new GridLayout(4, 1));
 
         checkoutToolButton = new JButton("Check Out Tool");
         checkoutToolButton.addActionListener(e -> checkOutTool());
@@ -42,34 +55,47 @@ public class MainMenuUI extends JFrame {
         setVisible(true);
     }
 
+    private void startSessionTimer() {
+        sessionTimer = new Timer(true);
+        sessionTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                checkSessionTimeout();
+            }
+        }, 60 * 1000, 60 * 1000); // Check every minute
+    }
+
+    private void checkSessionTimeout() {
+        if (LocalDateTime.now().isAfter(sessionExpiry)) {
+            JOptionPane.showMessageDialog(this, "Session timed out. Please log in again.", "Session Timeout", JOptionPane.WARNING_MESSAGE);
+            dispose(); 
+            new LoginUI().setVisible(true);
+        }
+    }
+
     private void checkOutTool() {
-        // Placeholder for tool checkout logic
         JOptionPane.showMessageDialog(this, "Tool Checkout Functionality");
     }
 
     private void returnTool() {
-        // Placeholder for tool return logic
         JOptionPane.showMessageDialog(this, "Tool Return Functionality");
     }
 
     private void manageInventory() {
-        // Placeholder for managing inventory logic
         new InventoryMgmtGUI().setVisible(true);
     }
 
     private void logout() {
-        // Placeholder for logout logic
         int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to logout?", "Confirm Logout", JOptionPane.YES_NO_OPTION);
         if (confirm == JOptionPane.YES_OPTION) {
-            // Logic to logout the user and close the application
             dispose();
-            new LoginUI().setVisible(true); // Reopen the login screen after logout
+            new LoginUI().setVisible(true);
         }
     }
 
     public static void main(String[] args) {
         javax.swing.SwingUtilities.invokeLater(() -> {
-            new MainMenuUI();
+            new MainMenuUI(-1); // Replace with actual sessionId if needed
         });
     }
 }

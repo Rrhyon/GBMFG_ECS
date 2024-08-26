@@ -46,4 +46,8 @@ public class LocationService {
     public String removeLocation(int locationId) {
         return locationDAO.removeLocation(locationId);
     }
+
+    String addLocation(int i, String warehouse_1, String main_storage_warehouse) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }

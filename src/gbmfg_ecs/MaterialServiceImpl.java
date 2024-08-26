@@ -9,41 +9,40 @@ package gbmfg_ecs;
  */
 import java.util.List;
 
-public class MaterialServiceImpl implements MaterialService{
-
-    private MaterialDAOImpl materialDAO;
+public class MaterialServiceImpl implements MaterialService {
+    private MaterialDAO materialDAO;
 
     public MaterialServiceImpl() {
         this.materialDAO = new MaterialDAOImpl();
     }
 
-    // Creates the object and returns the object to the DAO method for DB Entry.
-    public void saveMaterial(Material material) {
+    @Override
+    public String saveMaterial(Material material) {
         materialDAO.saveMaterial(material);
+        return "Material saved successfully."; // Return a success message or any relevant string
     }
 
-    /* Creates the object, retrieves the existing ID and returns the updates to
-     * the DAO method for DB Entry.
-     */
+    @Override
     public String saveMaterialUpdates(Material material) {
         return materialDAO.saveMaterialUpdates(material);
     }
-    
-    // Retrieves the material by ID.
+
+    @Override
     public Material getMaterial(int materialId) {
         return materialDAO.getMaterial(materialId);
     }
 
-    // Creates a list and retrieves all available materials.
+    @Override
     public List<Material> getAllMaterials() {
         return materialDAO.getAllMaterials();
     }
-    
-    public List<Material> searchMaterials(String inquiry){
+
+    @Override
+    public List<Material> searchMaterials(String inquiry) {
         return materialDAO.searchMaterials(inquiry);
     }
-    
-    // Removes selected materials.
+
+    @Override
     public String removeMaterial(int materialId) {
         return materialDAO.removeMaterial(materialId);
     }

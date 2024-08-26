@@ -46,4 +46,8 @@ public class CategoryService {
     public String removeCategory(int categoryId) {
         return categoryDAO.removeCategory(categoryId);
     }
+
+    String addCategory(int i, String tools, String various_tools) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }
