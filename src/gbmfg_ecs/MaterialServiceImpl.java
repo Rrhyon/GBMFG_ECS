@@ -18,6 +18,7 @@ public class MaterialServiceImpl implements MaterialService{
     }
 
     // Creates the object and returns the object to the DAO method for DB Entry.
+    @Override
     public void saveMaterial(Material material) {
         materialDAO.saveMaterial(material);
     }
@@ -25,25 +26,30 @@ public class MaterialServiceImpl implements MaterialService{
     /* Creates the object, retrieves the existing ID and returns the updates to
      * the DAO method for DB Entry.
      */
+    @Override
     public String saveMaterialUpdates(Material material) {
         return materialDAO.saveMaterialUpdates(material);
     }
     
     // Retrieves the material by ID.
+    @Override
     public Material getMaterial(int materialId) {
         return materialDAO.getMaterial(materialId);
     }
 
     // Creates a list and retrieves all available materials.
+    @Override
     public List<Material> getAllMaterials() {
         return materialDAO.getAllMaterials();
     }
     
+    @Override
     public List<Material> searchMaterials(String inquiry){
         return materialDAO.searchMaterials(inquiry);
     }
     
     // Removes selected materials.
+    @Override
     public String removeMaterial(int materialId) {
         return materialDAO.removeMaterial(materialId);
     }

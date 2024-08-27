@@ -1,8 +1,5 @@
 package gbmfg_ecs;
 
-import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -16,13 +13,16 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 
 /**
- * Program: Gigabyte Manufacturing - Equipment Checkout Service Course: CEIS 400
- * - Software Engineering II Author: Phillip Tette Program Description: Provides
- * an Inventory GUI for customers. Date: August 13, 2024
+ * Program: Gigabyte Manufacturing - Equipment Checkout Service
+ * Course: CEIS 400 - Software Engineering II
+ * Author: Phillip Tette
+ * Program Description: Provides an Inventory GUI for customers.
+ * Date: August 13, 2024
  */
 public class InventoryManager {
 
@@ -238,6 +238,9 @@ public class InventoryManager {
         mainMenu.setAlignmentX(JButton.CENTER_ALIGNMENT);
         invFrame.add(mainMenu);
 
+        displayToolsWithCatAndLocNames();
+        displayMaterialsWithCatAndLocNames();
+
         // ActionListeners for buttons
         btnAddTool.addActionListener(new ActionListener() {
             @Override
@@ -354,15 +357,11 @@ public class InventoryManager {
                 String inquiry = txtSearchMaterial.getText().trim();
                 if (!txtSearchMaterial.getText().isEmpty()) {
                     // Execute the search
-                    JOptionPane.showMessageDialog(invFrame, inquiry,
-                            "Notice", JOptionPane.WARNING_MESSAGE);
                     List<Material> results = matService.searchMaterials(inquiry);
-
                     displayMaterials(results,
                             catService.getAllCategories(),
                             locService.getAllLocations());
                 } else {
-
                     displayToolsWithCatAndLocNames();
                 }
             }
@@ -564,8 +563,10 @@ public class InventoryManager {
             Tool tool = toolService.getTool(toolId);
 
             // Creates the JComboBoxes
-            JComboBox<String> catComboBox = new JComboBox<>(catNames.toArray(new String[0]));
-            JComboBox<String> locComboBox = new JComboBox<>(locNames.toArray(new String[0]));
+            JComboBox<String> catComboBox = new JComboBox<>(catNames.
+                    toArray(new String[0]));
+            JComboBox<String> locComboBox = new JComboBox<>(locNames.
+                    toArray(new String[0]));
 
             // Show a dialog to collect tool details
             JTextField toolName = new JTextField(tool.getName());
@@ -573,8 +574,10 @@ public class InventoryManager {
             JTextField toolCondition = new JTextField(tool.getCondition());
             JCheckBox isAvailable = new JCheckBox("Available", tool.isAvailable());
             JTextField serialNum = new JTextField(tool.getSerialNum());
-            catComboBox.setSelectedItem(catService.getCategoryById(tool.getCategoryId()).getName());
-            locComboBox.setSelectedItem(locService.getLocationById(tool.getLocationId()).getName());
+            catComboBox.setSelectedItem(catService.getCategoryById(tool.
+                    getCategoryId()).getName());
+            locComboBox.setSelectedItem(locService.getLocationById(tool.
+                    getLocationId()).getName());
 
             // Input validation loop
             boolean validInput = false;
@@ -633,7 +636,8 @@ public class InventoryManager {
                     } else {
                         // Passes validation test
                         validInput = true;
-                        Tool newTool = new Tool(
+
+                        Tool toolUpdates = new Tool(
                                 toolName.getText(),
                                 toolDesc.getText(),
                                 toolCondition.getText(),
@@ -646,9 +650,10 @@ public class InventoryManager {
                                         locComboBox.getSelectedItem().toString())
                                         .getLocationId()
                         );
+                        toolUpdates.setToolId(tool.getToolId());
 
                         // Save the new tool data to the DB
-                        toolService.saveToolUpdates(newTool);
+                        toolService.saveToolUpdates(toolUpdates);
 
                         // Reload the tool list to include the updated tool
                         displayToolsWithCatAndLocNames();
@@ -691,7 +696,7 @@ public class InventoryManager {
     }
 
     public void enterMaterialData() {
-        // Creates vectors for category and location names
+        // Creates lists for category and location names
         List<String> catNames = new ArrayList<>();
         List<String> locNames = new ArrayList<>();
 
@@ -709,61 +714,98 @@ public class InventoryManager {
         JComboBox<String> locComboBox
                 = new JComboBox<>(locNames.toArray(new String[0]));
 
-        // Show a dialog to collect mat details
+        // Show a dialog to collect material details
         JTextField matName = new JTextField();
         JTextField matDesc = new JTextField();
         JTextField matQuantity = new JTextField();
         JTextField matUnit = new JTextField();
-        JComboBox categoryNames = catComboBox;
-        JComboBox locationNames = locComboBox;
 
-        // Create a JPanel to hold the input fields
-        JPanel panel = new JPanel(new GridLayout(0, 2, 5, 5));
-        panel.add(new JLabel("Material Name:"));
-        panel.add(matName);
-        panel.add(new JLabel("Material Description:"));
-        panel.add(matDesc);
-        panel.add(new JLabel("Material Quantity:"));
-        panel.add(matQuantity);
-        panel.add(new JLabel("Material Unit:"));
-        panel.add(matUnit);
-        panel.add(new JLabel("Category:"));
-        panel.add(categoryNames);
-        panel.add(new JLabel("Location:"));
-        panel.add(locationNames);
+        // Input validation loop
+        boolean validInput = false;
 
-        // Sets the preferred size of the panel
-        panel.setPreferredSize(new Dimension(400, 300));
+        while (!validInput) {
+            // Create a JPanel to hold the input fields
+            JPanel panel = new JPanel(new GridLayout(0, 2, 5, 5));
+            panel.add(new JLabel("Material Name:"));
+            panel.add(matName);
+            panel.add(new JLabel("Material Description:"));
+            panel.add(matDesc);
+            panel.add(new JLabel("Material Quantity:"));
+            panel.add(matQuantity);
+            panel.add(new JLabel("Material Unit:"));
+            panel.add(matUnit);
+            panel.add(new JLabel("Category:"));
+            panel.add(catComboBox);
+            panel.add(new JLabel("Location:"));
+            panel.add(locComboBox);
 
-        // Create the JOptionPane using the custom panel
-        int option = JOptionPane.showConfirmDialog(null, panel, "Add New Material",
-                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+            // Sets the preferred size of the panel
+            panel.setPreferredSize(new Dimension(400, 300));
 
-        // Handles the input data
-        if (option == JOptionPane.OK_OPTION) {
-            try {
-                double quantity = Double.parseDouble(matQuantity.getText());
+            // Create the JOptionPane using the custom panel
+            int option = JOptionPane.showConfirmDialog(null, panel, "Add New Material",
+                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
-                Material newMaterial = new Material(
-                        matName.getText(),
-                        matDesc.getText(),
-                        quantity,
-                        matUnit.getText(),
-                        catService.getCategoryByName(
-                                catComboBox.getSelectedItem().toString()).getCategoryId(),
-                        locService.getLocationByName(
-                                locComboBox.getSelectedItem().toString()).getLocationId()
-                );
+            if (option == JOptionPane.OK_OPTION) {
+                // Validate input fields
+                if (matName.getText().trim().isEmpty()) {
+                    JOptionPane.showMessageDialog(null,
+                            "Material Name is required.",
+                            "Input Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    matName.requestFocus();
+                } else if (matDesc.getText().trim().isEmpty()) {
+                    JOptionPane.showMessageDialog(null,
+                            "Material Description is required.",
+                            "Input Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    matDesc.requestFocus();
+                } else if (matQuantity.getText().trim().isEmpty()) {
+                    JOptionPane.showMessageDialog(null,
+                            "Material Quantity is required.",
+                            "Input Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    matQuantity.requestFocus();
+                } else if (matUnit.getText().trim().isEmpty()) {
+                    JOptionPane.showMessageDialog(null,
+                            "Material Unit is required.",
+                            "Input Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    matUnit.requestFocus();
+                } else {
+                    try {
+                        double quantity = Double.parseDouble(matQuantity.getText());
+                        validInput = true;
 
-                // Save the new mat using the ToolService
-                matService.saveMaterial(newMaterial);
+                        // Handles the input data
+                        Material newMaterial = new Material(
+                                matName.getText(),
+                                matDesc.getText(),
+                                quantity,
+                                matUnit.getText(),
+                                catService.getCategoryByName(catComboBox.
+                                        getSelectedItem().toString())
+                                        .getCategoryId(),
+                                locService.getLocationByName(locComboBox.
+                                        getSelectedItem().toString())
+                                        .getLocationId()
+                        );
 
-                // Reload the tool list to include the new tool
-                displayToolsWithCatAndLocNames();
-            } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(null,
-                        "Please enter a valid number for quantity",
-                        "Invalid Input", JOptionPane.ERROR_MESSAGE);
+                        // Save the new material using the MaterialService
+                        matService.saveMaterial(newMaterial);
+
+                        // Reload the material list to include the new material
+                        displayMaterialsWithCatAndLocNames();
+
+                    } catch (NumberFormatException e) {
+                        JOptionPane.showMessageDialog(null,
+                                "Please enter a valid number for quantity",
+                                "Invalid Input", JOptionPane.ERROR_MESSAGE);
+                        matQuantity.requestFocus();  // Keep the focus on the quantity field
+                    }
+                }
+            } else {
+                break;  // Exit loop if Cancel is clicked
             }
         }
     }
@@ -803,69 +845,106 @@ public class InventoryManager {
             // Pre-populate the text fields with existing material data
             JTextField matName = new JTextField(material.getName());
             JTextField matDesc = new JTextField(material.getDescription());
-            JTextField matQuantity = new JTextField(String.valueOf(material.getQuantity()));
+            JTextField matQuantity = new JTextField(String.valueOf(material.
+                    getQuantity()));
             JTextField matUnit = new JTextField(material.getUnit());
             catComboBox.setSelectedItem(catService.getCategoryById(material.
                     getCategoryId()).getName());
             locComboBox.setSelectedItem(locService.getLocationById(material.
                     getLocationId()).getName());
 
-            // Create a JPanel to hold the input fields
-            JPanel panel = new JPanel(new GridLayout(0, 2, 5, 5));
-            panel.add(new JLabel("Material Name:"));
-            panel.add(matName);
-            panel.add(new JLabel("Material Description:"));
-            panel.add(matDesc);
-            panel.add(new JLabel("Material Quantity:"));
-            panel.add(matQuantity);
-            panel.add(new JLabel("Material Unit:"));
-            panel.add(matUnit);
-            panel.add(new JLabel("Category:"));
-            panel.add(catComboBox);
-            panel.add(new JLabel("Location:"));
-            panel.add(locComboBox);
+            // Input validation loop
+            boolean validInput = false;
 
-            // Sets the preferred size of the panel
-            panel.setPreferredSize(new Dimension(400, 300));
+            while (!validInput) {
+                // Create a JPanel to hold the input fields
+                JPanel panel = new JPanel(new GridLayout(0, 2, 5, 5));
+                panel.add(new JLabel("Material Name:"));
+                panel.add(matName);
+                panel.add(new JLabel("Material Description:"));
+                panel.add(matDesc);
+                panel.add(new JLabel("Material Quantity:"));
+                panel.add(matQuantity);
+                panel.add(new JLabel("Material Unit:"));
+                panel.add(matUnit);
+                panel.add(new JLabel("Category:"));
+                panel.add(catComboBox);
+                panel.add(new JLabel("Location:"));
+                panel.add(locComboBox);
 
-            // Create the JOptionPane using the custom panel
-            int option = JOptionPane.showConfirmDialog(null, panel, "Update Material",
-                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+                // Sets the preferred size of the panel
+                panel.setPreferredSize(new Dimension(400, 300));
 
-            // Handles the input data
-            if (option == JOptionPane.OK_OPTION) {
-                try {
-                    double quantity = Double.parseDouble(matQuantity.getText());
+                // Create the JOptionPane using the custom panel
+                int option = JOptionPane.showConfirmDialog(null, panel, "Update Material",
+                        JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
-                    // Create an updated Material object
-                    Material updatedMaterial = new Material(
-                            material.getMaterialId(),
-                            matName.getText(),
-                            matDesc.getText(),
-                            quantity,
-                            matUnit.getText(),
-                            catService.getCategoryByName(catComboBox.getSelectedItem().
-                                    toString()).getCategoryId(),
-                            locService.getLocationByName(locComboBox.getSelectedItem().
-                                    toString()).getLocationId()
-                    );
+                if (option == JOptionPane.OK_OPTION) {
+                    // Validate input fields
+                    if (matName.getText().trim().isEmpty()) {
+                        JOptionPane.showMessageDialog(null,
+                                "Material Name is required.",
+                                "Input Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        matName.requestFocus();
+                    } else if (matDesc.getText().trim().isEmpty()) {
+                        JOptionPane.showMessageDialog(null,
+                                "Material Description is required.",
+                                "Input Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        matDesc.requestFocus();
+                    } else if (matQuantity.getText().trim().isEmpty()) {
+                        JOptionPane.showMessageDialog(null,
+                                "Material Quantity is required.",
+                                "Input Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        matQuantity.requestFocus();
+                    } else {
+                        try {
+                            Double.parseDouble(matQuantity.getText());
+                            validInput = true;  // Set validInput to true only if the input is valid
+                        } catch (NumberFormatException e) {
+                            JOptionPane.showMessageDialog(null,
+                                    "Please enter a valid number for quantity",
+                                    "Invalid Input", JOptionPane.ERROR_MESSAGE);
+                            matQuantity.requestFocus();
+                        }
+                    }
 
-                    // Save the updated material using the MaterialService
-                    matService.saveMaterialUpdates(updatedMaterial);
+                    if (validInput && matUnit.getText().trim().isEmpty()) {
+                        JOptionPane.showMessageDialog(null,
+                                "Material Unit is required.",
+                                "Input Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        matUnit.requestFocus();
+                        validInput = false; // Revert to false since this field is invalid
+                    }
 
-                    // Reload the material list to reflect the changes
-                    displayToolsWithCatAndLocNames();
+                    if (validInput) {
+                        // Create an updated Material object
+                        Material materialUpdates = new Material(
+                                material.getMaterialId(),
+                                matName.getText(),
+                                matDesc.getText(),
+                                Double.parseDouble(matQuantity.getText()),
+                                matUnit.getText(),
+                                catService.getCategoryByName(catComboBox.
+                                        getSelectedItem().toString()).getCategoryId(),
+                                locService.getLocationByName(locComboBox.
+                                        getSelectedItem().toString()).getLocationId()
+                        );
+                        materialUpdates.setMaterialId(material.getMaterialId());
 
-                } catch (NumberFormatException e) {
-                    JOptionPane.showMessageDialog(null,
-                            "Please enter a valid number for quantity",
-                            "Invalid Input", JOptionPane.ERROR_MESSAGE);
+                        // Save the updated material using the MaterialService
+                        matService.saveMaterialUpdates(materialUpdates);
+
+                        // Reload the material list to reflect the changes
+                        displayToolsWithCatAndLocNames();
+                    }
+                } else {
+                    break;  // Exit loop if Cancel is clicked
                 }
             }
-        } else {
-            JOptionPane.showMessageDialog(null,
-                    "Please select a material to update.",
-                    "No Selection", JOptionPane.WARNING_MESSAGE);
         }
     }
 

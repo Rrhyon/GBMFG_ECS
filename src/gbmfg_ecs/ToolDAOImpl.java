@@ -16,6 +16,7 @@ public class ToolDAOImpl implements ToolDAO {
     /* Method to create SQL prepared statement to create a tool after entering
      * tool information.
      */
+    @Override
     public String saveTool(Tool tool) {
         String sql = "INSERT INTO tool (toolName, toolDesc, toolCondition, "
                 + "isAvailable, toolSerial, categoryId, locationId) "
@@ -32,7 +33,6 @@ public class ToolDAOImpl implements ToolDAO {
             stmt.executeUpdate();
             return "Tool added successfully.";
         } catch (SQLException e) {
-            e.printStackTrace();
             return "Error adding tool.";
         }
     }
@@ -40,6 +40,7 @@ public class ToolDAOImpl implements ToolDAO {
     /* Method to create SQL prepared statement to update tool after entering
      * new tool information.
      */
+    @Override
     public String saveToolUpdates(Tool tool) {
         String sql = "UPDATE tool SET toolName = ?, toolDesc = ?, "
                 + "toolCondition = ?, isAvailable = ?, toolSerial = ?, "
@@ -57,7 +58,6 @@ public class ToolDAOImpl implements ToolDAO {
             stmt.executeUpdate();
                 return "Tool updated successfully.";
         } catch (SQLException e) {
-            e.printStackTrace();
             return "Error updating tool.";
         }
     }
@@ -65,6 +65,7 @@ public class ToolDAOImpl implements ToolDAO {
     /* Method to create SQL prepared statement to retrieve tool after entering 
      * tool ID.
      */
+    @Override
     public Tool getTool(int toolId) {
         String sql = "SELECT * FROM tool WHERE toolId = ? ";
         try (Connection conn = DatabaseUtil.getConnection(); 
@@ -86,7 +87,6 @@ public class ToolDAOImpl implements ToolDAO {
             }
             return null;
         } catch (SQLException e) {
-            e.printStackTrace();
             return null;
         }
     }
@@ -94,6 +94,7 @@ public class ToolDAOImpl implements ToolDAO {
     /* Method to create SQL prepared statement to create a new ArrayList called
      * 'tools' and add all tools to the array.
      */
+    @Override
     public List<Tool> getAllTools() {
         String sql = "SELECT * FROM tool";
         List<Tool> tools = new ArrayList<>();
@@ -114,7 +115,6 @@ public class ToolDAOImpl implements ToolDAO {
                 tools.add(tool);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
         }
         return tools;
     }
@@ -122,6 +122,7 @@ public class ToolDAOImpl implements ToolDAO {
     /* Method to create SQL prepared statement to search for a tool 
      * after entering tool information.
      */
+    @Override
     public List<Tool> searchTools(String inquiry) {
         String sql = "SELECT * FROM tool WHERE toolName LIKE ? OR "
                 + "toolDesc LIKE ? OR "
@@ -150,7 +151,6 @@ public class ToolDAOImpl implements ToolDAO {
             tools.add(tool);
             }
         }catch (SQLException e) {
-            e.printStackTrace();
         }
         return tools;
     }
@@ -158,6 +158,7 @@ public class ToolDAOImpl implements ToolDAO {
     /* Method to create SQL prepared statement to remove a tool 
      * after entering tool ID.
      */
+    @Override
     public String removeTool(int toolId) {
         String sql = "DELETE FROM tool WHERE toolId = ?";
         try (Connection conn = DatabaseUtil.getConnection(); 
@@ -170,7 +171,6 @@ public class ToolDAOImpl implements ToolDAO {
                 return "Tool not found.";
             }
         } catch (SQLException e) {
-            e.printStackTrace();
             return "Error removing tool.";
         }
     }
