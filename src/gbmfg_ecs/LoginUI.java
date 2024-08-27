@@ -21,11 +21,11 @@ public class LoginUI extends JFrame {
     private JPasswordField passwordField;
     private JCheckBox rememberMeCheckBox;
     private LoginService loginService;
-    private int currentSessionId = -1; // To store the session ID after login
     private Preferences preferences;
+    private int currentSessionId = -1; // Track the session ID
 
     public LoginUI() {
-        this.mainMenu = new MainMenuUI();
+        this.mainMenu = new MainMenuUI();  // Initialize main menu here once
         loginService = new LoginService();
         preferences = Preferences.userRoot().node(getClass().getName());
         initializeUI();
@@ -94,14 +94,15 @@ public class LoginUI extends JFrame {
     private void toggleLoginButton() {
         String username = usernameField.getText();
         String password = new String(passwordField.getPassword());
-        // Enable login button if either field is filled
-        loginButton.setEnabled(!username.isEmpty() || !password.isEmpty());
+        // Enable login button if both fields are filled
+        loginButton.setEnabled(!username.isEmpty() && !password.isEmpty());
     }
 
     private void performLogin() {
         String username = usernameField.getText();
         String password = new String(passwordField.getPassword());
 
+        // Validate username and password input
         if (username.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Username is required.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
@@ -119,8 +120,8 @@ public class LoginUI extends JFrame {
 
         int sessionId = loginService.login(username, password);
 
-        if (sessionId != -1) {
-            currentSessionId = sessionId;
+        if (sessionId != -1) {  // Check if login was successful
+            currentSessionId = sessionId;  // Store session ID
             JOptionPane.showMessageDialog(this, "Login successful. Welcome!", "Success", JOptionPane.INFORMATION_MESSAGE);
 
             // Save credentials if 'Remember Me' is checked
@@ -132,13 +133,17 @@ public class LoginUI extends JFrame {
                 preferences.remove("password");
             }
 
+            // Show main menu and hide login screen
             mainMenu.getContentPane().removeAll();  // Clear the InventoryManager components
             mainMenu.initializeUI();  // Reinitialize the MainMenuUI components
             mainMenu.revalidate();    // Revalidate to apply the new components
             mainMenu.repaint();       // Repaint to make sure the UI is refreshed
             mainMenu.setVisible(true);
+            this.setVisible(false);  // Hide the login screen
         } else {
             JOptionPane.showMessageDialog(this, "Invalid username or password.", "Error", JOptionPane.ERROR_MESSAGE);
+            passwordField.setText("");  // Clear password field
+            passwordField.requestFocus();  // Focus on the password field
         }
     }
 
@@ -153,10 +158,22 @@ public class LoginUI extends JFrame {
 
     private void performLogout() {
         if (currentSessionId != -1) {
+            // Perform logout through the login service
             String result = loginService.logout(currentSessionId);
+
+            // Display logout result to the user
             JOptionPane.showMessageDialog(this, result, "Logout", JOptionPane.INFORMATION_MESSAGE);
+
+            // Reset session ID to indicate no active session
             currentSessionId = -1;
+
+            // Optionally, clear the user interface or navigate to a login screen
+            mainMenu.dispose();  // Close the main menu window
+
+            // Show the login screen again
+            new LoginUI().setVisible(true);  // Show the login screen
         } else {
+            // Inform the user that there's no active session
             JOptionPane.showMessageDialog(this, "No active session to logout.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
