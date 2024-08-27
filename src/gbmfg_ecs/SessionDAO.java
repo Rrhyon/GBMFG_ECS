@@ -1,66 +1,53 @@
 package gbmfg_ecs;
 
-/**
- * Program: Gigabyte Manufacturing - Equipment Checkout Service
- * Course: CEIS 400 - Software Engineering II
- * Author: Phillip Tette
- * Program Description: Database Access Object for Session class.
- * Date: August 13, 2024
- */
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class SessionDAO {
 
-    /* Method to create SQL prepared statement to create a session
-     * after entering session information.
-     */
-    public String addSession(Session session) {
-        String sql = "INSERT INTO session (empId, isActive, createdAt, "
-                + "expiresAt) VALUES (?, ?, ?, ?)";
-        try (Connection conn = DatabaseUtil.getConnection(); 
-                PreparedStatement stmt = conn.prepareStatement(sql)) {
+    private static final Logger logger = Logger.getLogger(SessionDAO.class.getName());
+
+    public void addSession(Session session) throws SQLException {
+        String sql = "INSERT INTO session (empId, isActive, createdAt, expiresAt) "
+                + "VALUES (?, ?, ?, ?)";
+        try (Connection conn = DatabaseUtil.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, session.getEmpId());
             stmt.setBoolean(2, session.isActive());
             stmt.setTimestamp(3, Timestamp.valueOf(session.getCreatedAt()));
             stmt.setTimestamp(4, Timestamp.valueOf(session.getExpiresAt()));
             stmt.executeUpdate();
-            return "Session added successfully.";
         } catch (SQLException e) {
-            e.printStackTrace();
-            return "Error adding session.";
+            logger.log(Level.SEVERE, "Error adding session: {0}", e.getMessage());
+            throw e;
         }
     }
 
-    /* Method to create SQL prepared statement to update sessions
-     * after entering session information.
-     */
-    public String updateSession(Session session) {
-        String sql = "UPDATE session SET empId = ?, isActive = ?, "
-                + "createdAt = ?, expiresAt = ? WHERE sessionId = ?";
-        try (Connection conn = DatabaseUtil.getConnection(); 
-                PreparedStatement stmt = conn.prepareStatement(sql)) {
+    public void updateSession(Session session) throws SQLException {
+        String sql = "UPDATE session SET empId = ?, isActive = ?, createdAt = ?, "
+                + "expiresAt = ? WHERE sessionId = ?";
+        try (Connection conn = DatabaseUtil.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, session.getEmpId());
             stmt.setBoolean(2, session.isActive());
             stmt.setTimestamp(3, Timestamp.valueOf(session.getCreatedAt()));
             stmt.setTimestamp(4, Timestamp.valueOf(session.getExpiresAt()));
             stmt.setInt(5, session.getSessionId());
             stmt.executeUpdate();
-            return "Session updated successfully.";
         } catch (SQLException e) {
-            e.printStackTrace();
-            return "Error updating session.";
+            logger.log(Level.SEVERE, "Error updating session: {0}", e.getMessage());
+            throw e;
         }
     }
 
-    /* Method to create SQL prepared statement to retrieve session
-     * after entering session ID.
-     */
-    public Session getSession(int sessionId) {
+    public Optional<Session> getSession(int sessionId) {
         String sql = "SELECT * FROM session WHERE sessionId = ?";
-        try (Connection conn = DatabaseUtil.getConnection(); 
-                PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseUtil.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, sessionId);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
@@ -71,23 +58,20 @@ public class SessionDAO {
                         rs.getTimestamp("expiresAt").toLocalDateTime()
                 );
                 session.setSessionId(rs.getInt("sessionId"));
-                return session;
+                return Optional.of(session);
             }
-            return null;
         } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
+            logger.log(Level.SEVERE, "Error retrieving session by ID: {0}", 
+                    e.getMessage());
         }
+        return Optional.empty();
     }
 
-    /* Method to create SQL prepared statement to create a new ArrayList called
-     * 'sessions' and add all sessions to the array.
-     */
     public List<Session> getAllSessions() {
         String sql = "SELECT * FROM session";
         List<Session> sessions = new ArrayList<>();
-        try (Connection conn = DatabaseUtil.getConnection(); 
-                PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseUtil.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 Session session = new Session(
@@ -100,28 +84,24 @@ public class SessionDAO {
                 sessions.add(session);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Error retrieving all sessions: {0}", 
+                    e.getMessage());
         }
         return sessions;
     }
-    
-    /* Method to create SQL prepared statement to remove a session record
-     * after entering session ID.
-     */
-    public String removeSession(int sessionId) {
+
+    public void removeSession(int sessionId) throws SQLException {
         String sql = "DELETE FROM session WHERE sessionId = ?";
-        try (Connection conn = DatabaseUtil.getConnection(); 
-                PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseUtil.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, sessionId);
             int rowsAffected = stmt.executeUpdate();
-            if (rowsAffected > 0) {
-                return "Session removed successfully.";
-            } else {
-                return "Session not found.";
+            if (rowsAffected == 0) {
+                logger.log(Level.WARNING, "No session found with ID {0}", sessionId);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
-            return "Error removing session.";
+            logger.log(Level.SEVERE, "Error removing session: {0}", e.getMessage());
+            throw e;
         }
     }
 }

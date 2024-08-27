@@ -1,40 +1,39 @@
 package gbmfg_ecs;
 
-/**
- * Program: Gigabyte Manufacturing - Equipment Checkout Service 
- * Course: CEIS 400 - Software Engineering II 
- * Author: Phillip Tette 
- * Program Description: Abstract class for handling login/logout/registrations. 
- * Date: August 13, 2024
- */
+import java.util.prefs.Preferences;
+
 public class LoginService {
 
     private AuthenticationService authenticationService;
+    private Preferences preferences;
 
     public LoginService() {
         this.authenticationService = new AuthenticationService();
+        this.preferences = Preferences.userRoot().node(getClass().getName());
     }
 
-    public int login(String username, String password) {
-        // Assuming authenticationService.login returns a session ID or -1 for failure
+    public int login(String username, String password, boolean rememberMe) {
         int sessionId = authenticationService.login(username, password);
 
-        if (sessionId != -1) {
-            return sessionId; // Successful login, return session ID
-        } else {
-            return -1; // Indicate login failure
+        if (sessionId != -1 && rememberMe) {
+            saveCredentials(username, password);
         }
+
+        return sessionId;
     }
 
-    public String logout(int sessionId) {
-        return authenticationService.logout(sessionId);
+    public void logout(int sessionId) {
+        authenticationService.logout(sessionId);
+        clearCredentials();
     }
 
-//    public String register(String lastName, String firstName, 
-//            String middleInitial, String phoneNum, String emailAddress, 
-//            String empRole, String username, String password) {
-//        return authenticationService.register(lastName, firstName, 
-//                middleInitial, phoneNum, emailAddress, empRole, username, 
-//                password);
-//    }
+    private void saveCredentials(String username, String password) {
+        preferences.put("username", username);
+        preferences.put("password", password);
+    }
+
+    private void clearCredentials() {
+        preferences.remove("username");
+        preferences.remove("password");
+    }
 }

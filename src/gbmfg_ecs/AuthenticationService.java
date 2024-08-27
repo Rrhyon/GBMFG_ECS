@@ -1,67 +1,59 @@
 package gbmfg_ecs;
 
-/**
- * Program: Gigabyte Manufacturing - Equipment Checkout Service
- * Course: CEIS 400 - Software Engineering II
- * Author: Phillip Tette
- * Program Description: Intermediary class to pass object information to the DAO.
- * Date: August 13, 2024
- */
+import java.sql.*;
 import java.time.LocalDateTime;
+import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class AuthenticationService {
 
-    // mapping the classes to variables for calls
-    private AuthenticationDAO authenticationDAO;
-    private EmployeeServiceImpl employeeService;
+    private static final Logger logger = Logger.getLogger(AuthenticationService.class.getName());
+    private final AuthenticationDAO authenticationDAO;
 
     public AuthenticationService() {
         this.authenticationDAO = new AuthenticationDAO();
-        this.employeeService = new EmployeeServiceImpl();
     }
 
-    /* When clicking login, the program will search for the username in the DB.
-     * If not null and the entered password's hash matches the hash saved in the
-     * DB, the program will search for an active session. If a session does not 
-     * already exist, a new session will be created using the employees ID.
-     */
     public int login(String username, String password) {
-    Employee employee = employeeService.getEmployeeByUsername(username);
-    if (employee != null && employee.checkPassword(password)) {
-        Session activeSession = authenticationDAO.
-                getActiveSessionByEmployeeId(employee.getEmpId());
-        if (activeSession == null) {
-            Session newSession = new Session(employee.getEmpId(), true, 
-                    LocalDateTime.now(), LocalDateTime.now().plusHours(1));
-            authenticationDAO.createSession(newSession);
-            return newSession.getSessionId(); // Return the new session ID
-        } else {
-            return activeSession.getSessionId(); // Return existing session ID
-        }
-    }
-    return -1; // Indicate login failure
-}
+        Optional<Employee> employeeOpt = authenticationDAO.getEmployeeByUsername(username);
 
-    // When a user finishes their work and click logout, the program will search
-    // for the sessionId and terminate the session.
+        if (employeeOpt.isPresent()) {
+            Employee employee = employeeOpt.get();
+            if (employee.checkPassword(password)) {
+                Optional<Session> activeSessionOpt = authenticationDAO.getActiveSessionByEmployeeId(employee.getEmpId());
+
+                if (activeSessionOpt.isPresent()) {
+                    return activeSessionOpt.get().getSessionId();
+                } else {
+                    try {
+                        Session newSession = new Session(employee.getEmpId(), true,
+                                LocalDateTime.now(), LocalDateTime.now().plusHours(1));
+                        authenticationDAO.createSession(newSession);
+                        return newSession.getSessionId();
+                    } catch (SQLException e) {
+                        logger.log(Level.SEVERE, "Error creating session: {0}", e.getMessage());
+                        return -1;  // Indicate session creation failure
+                    }
+                }
+            }
+        }
+
+        return -1;  // Indicate login failure
+    }
+
     public String logout(int sessionId) {
-        Session session = authenticationDAO.
-                getActiveSessionByEmployeeId(sessionId);
-        if (session != null) {
-            authenticationDAO.deactivateSession(session.getSessionId());
-            return "Logout successful.";
-        } else {
-            return "No active session found for the given session ID.";
+        try {
+            Optional<Session> sessionOpt = authenticationDAO.getActiveSessionByEmployeeId(sessionId);
+            if (sessionOpt.isPresent()) {
+                authenticationDAO.deactivateSession(sessionId);
+                return "Logout successful.";
+            } else {
+                return "No active session found for the given session ID.";
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error during logout: {0}", e.getMessage());
+            return "Logout failed due to a server error.";
         }
     }
-
-//    /* Pending additional security controls for effectiveness, this method will
-//     * allow a new employee to register for an account.
-//     */
-//    public String register(String lastName, String firstName, 
-//            String middleInitial, String phoneNum, String emailAddress, 
-//            String empRole, String username, String password) {
-//        return employeeService.addEmployee(lastName, firstName, middleInitial, 
-//                phoneNum, emailAddress, empRole, username, password);
-//    }
 }

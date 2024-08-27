@@ -1,52 +1,59 @@
 package gbmfg_ecs;
 
-/**
- * Program: Gigabyte Manufacturing - Equipment Checkout Service
- * Course: CEIS 400 - Software Engineering II
- * Author: Phillip Tette
- * Program Description: Intermediary class to pass object information to the DAO.
- * Date: August 13, 2024
- */
+import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class SessionService {
 
-    private SessionDAO sessionDAO;
+    private static final Logger logger = Logger.getLogger(SessionService.class.getName());
+    private final SessionDAO sessionDAO;
 
     public SessionService() {
         this.sessionDAO = new SessionDAO();
     }
 
-    // Creates a session and returns the session to the DAO method for DB Entry.
-    public String addSession(int empId, boolean isActive, 
-            LocalDateTime createdAt, LocalDateTime expiresAt) {
-        Session session = new Session(empId, isActive, createdAt, expiresAt);
-        return sessionDAO.addSession(session);
+    public boolean addSession(int empId, LocalDateTime createdAt, LocalDateTime expiresAt) {
+        Session session = new Session(empId, true, createdAt, expiresAt);
+        try {
+            sessionDAO.addSession(session);
+            return true;
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Failed to add session: {0}", e.getMessage());
+            return false;
+        }
     }
 
-    /* Creates the object, retrieves the existing ID and returns the updates to
-     * the DAO method for DB Entry.
-     */
-    public String updateSession(int sessionId, int empId, boolean isActive, 
-            LocalDateTime createdAt, LocalDateTime expiresAt) {
+    public boolean updateSession(int sessionId, int empId, boolean isActive, LocalDateTime createdAt, LocalDateTime expiresAt) {
         Session session = new Session(empId, isActive, createdAt, expiresAt);
         session.setSessionId(sessionId);
-        return sessionDAO.updateSession(session);
+        try {
+            sessionDAO.updateSession(session);
+            return true;
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Failed to update session: {0}", e.getMessage());
+            return false;
+        }
     }
-    
-    // Retrieves the session by ID.
-    public Session getSession(int sessionId) {
+
+    public Optional<Session> getSession(int sessionId) {
         return sessionDAO.getSession(sessionId);
     }
 
-    // Creates a list and retrieves all available sessions.
     public List<Session> getAllSessions() {
         return sessionDAO.getAllSessions();
     }
 
-    // Removes selected sessions.
-    public String removeSession(int sessionId) {
-        return sessionDAO.removeSession(sessionId);
+    public boolean removeSession(int sessionId) {
+        try {
+            sessionDAO.removeSession(sessionId);
+            return true;
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Failed to remove session: {0}", e.getMessage());
+            return false;
+        }
     }
 }

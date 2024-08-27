@@ -14,19 +14,15 @@ import java.util.prefs.Preferences;
 
 public class LoginUI extends JFrame {
 
-    private MainMenuUI mainMenu;
     private JButton loginButton;
-    private JButton logoutButton;
     private JTextField usernameField;
     private JPasswordField passwordField;
     private JCheckBox rememberMeCheckBox;
-    private LoginService loginService;
     private Preferences preferences;
-    private int currentSessionId = -1; // Track the session ID
+    private LoginService loginService;
 
     public LoginUI() {
-        this.mainMenu = new MainMenuUI();  // Initialize main menu here once
-        loginService = new LoginService();
+        loginService = new LoginService();  // Inject or initialize the LoginService
         preferences = Preferences.userRoot().node(getClass().getName());
         initializeUI();
         loadSavedCredentials();
@@ -37,7 +33,7 @@ public class LoginUI extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(300, 150);
         setLocationRelativeTo(null);
-        setLayout(new GridLayout(5, 2)); // Adjust layout to add 'Remember Me'
+        setLayout(new GridLayout(5, 2));
 
         add(new JLabel("Username:"));
         usernameField = new JTextField();
@@ -51,16 +47,12 @@ public class LoginUI extends JFrame {
         add(rememberMeCheckBox);
 
         loginButton = new JButton("Login");
-        loginButton.setEnabled(false); // Disable the login button initially
+        loginButton.setEnabled(false);
         loginButton.addActionListener(e -> performLogin());
         add(loginButton);
 
-        logoutButton = new JButton("Logout");
-        logoutButton.addActionListener(e -> performLogout());
-        add(logoutButton);
-
-        // Add document listeners to enable the login button when either field is filled
-        usernameField.getDocument().addDocumentListener(new DocumentListener() {
+        // Document listeners to enable/disable login button
+        DocumentListener loginButtonEnabler = new DocumentListener() {
             public void insertUpdate(DocumentEvent e) {
                 toggleLoginButton();
             }
@@ -72,21 +64,10 @@ public class LoginUI extends JFrame {
             public void changedUpdate(DocumentEvent e) {
                 toggleLoginButton();
             }
-        });
+        };
 
-        passwordField.getDocument().addDocumentListener(new DocumentListener() {
-            public void insertUpdate(DocumentEvent e) {
-                toggleLoginButton();
-            }
-
-            public void removeUpdate(DocumentEvent e) {
-                toggleLoginButton();
-            }
-
-            public void changedUpdate(DocumentEvent e) {
-                toggleLoginButton();
-            }
-        });
+        usernameField.getDocument().addDocumentListener(loginButtonEnabler);
+        passwordField.getDocument().addDocumentListener(loginButtonEnabler);
 
         setVisible(true);
     }
@@ -94,7 +75,6 @@ public class LoginUI extends JFrame {
     private void toggleLoginButton() {
         String username = usernameField.getText();
         String password = new String(passwordField.getPassword());
-        // Enable login button if both fields are filled
         loginButton.setEnabled(!username.isEmpty() && !password.isEmpty());
     }
 
@@ -102,44 +82,24 @@ public class LoginUI extends JFrame {
         String username = usernameField.getText();
         String password = new String(passwordField.getPassword());
 
-        // Validate username and password input
-        if (username.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Username is required.", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        if (password.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Password is required.", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
+        // Check if the username is at least three characters long
         if (username.length() < 3) {
             JOptionPane.showMessageDialog(this, "Username must be at least 3 characters long.", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
+            usernameField.requestFocus();  // Focus back on the username field
+            return;  // Exit the method to prevent further processing
         }
 
-        int sessionId = loginService.login(username, password);
+        // Delegating the authentication logic to the service
+        int sessionId = loginService.login(username, password, rememberMeCheckBox.isSelected());
 
-        if (sessionId != -1) {  // Check if login was successful
-            currentSessionId = sessionId;  // Store session ID
+        if (sessionId != -1) {
             JOptionPane.showMessageDialog(this, "Login successful. Welcome!", "Success", JOptionPane.INFORMATION_MESSAGE);
 
-            // Save credentials if 'Remember Me' is checked
-            if (rememberMeCheckBox.isSelected()) {
-                preferences.put("username", username);
-                preferences.put("password", password);
-            } else {
-                preferences.remove("username");
-                preferences.remove("password");
-            }
+            // Instantiate MainMenuUI with the session ID
+            MainMenuUI mainMenuUI = new MainMenuUI(sessionId);
+            mainMenuUI.setVisible(true);  // Show the main menu
 
-            // Show main menu and hide login screen
-            mainMenu.getContentPane().removeAll();  // Clear the InventoryManager components
-            mainMenu.initializeUI();  // Reinitialize the MainMenuUI components
-            mainMenu.revalidate();    // Revalidate to apply the new components
-            mainMenu.repaint();       // Repaint to make sure the UI is refreshed
-            mainMenu.setVisible(true);
-            this.setVisible(false);  // Hide the login screen
+            this.dispose();  // Close the login window
         } else {
             JOptionPane.showMessageDialog(this, "Invalid username or password.", "Error", JOptionPane.ERROR_MESSAGE);
             passwordField.setText("");  // Clear password field
@@ -153,34 +113,10 @@ public class LoginUI extends JFrame {
         usernameField.setText(savedUsername);
         passwordField.setText(savedPassword);
         rememberMeCheckBox.setSelected(!savedUsername.isEmpty() && !savedPassword.isEmpty());
-        toggleLoginButton(); // Enable/disable the login button based on loaded credentials
-    }
-
-    private void performLogout() {
-        if (currentSessionId != -1) {
-            // Perform logout through the login service
-            String result = loginService.logout(currentSessionId);
-
-            // Display logout result to the user
-            JOptionPane.showMessageDialog(this, result, "Logout", JOptionPane.INFORMATION_MESSAGE);
-
-            // Reset session ID to indicate no active session
-            currentSessionId = -1;
-
-            // Optionally, clear the user interface or navigate to a login screen
-            mainMenu.dispose();  // Close the main menu window
-
-            // Show the login screen again
-            new LoginUI().setVisible(true);  // Show the login screen
-        } else {
-            // Inform the user that there's no active session
-            JOptionPane.showMessageDialog(this, "No active session to logout.", "Error", JOptionPane.ERROR_MESSAGE);
-        }
+        toggleLoginButton();
     }
 
     public static void main(String[] args) {
-        javax.swing.SwingUtilities.invokeLater(() -> {
-            new LoginUI();
-        });
+        javax.swing.SwingUtilities.invokeLater(() -> new LoginUI());
     }
 }

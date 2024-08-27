@@ -1028,14 +1028,9 @@ public class InventoryManager {
     private void returnToMainMenu() {
         if (invFrame != null) {
             mainMenu.getContentPane().removeAll();  // Clear the InventoryManager components
-            mainMenu.initializeUI();  // Reinitialize the MainMenuUI components
             mainMenu.revalidate();  // Revalidate to apply the new components
             mainMenu.repaint();     // Repaint to make sure the UI is refreshed
-            mainMenu.setVisible(true);
+            mainMenu.initializeUI();
         }
-    }
-
-    void setVisible(boolean b) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }
