@@ -43,10 +43,10 @@ public class CheckoutGUI extends javax.swing.JFrame {
     private CategoryService catService = new CategoryService();
     private LocationService locService = new LocationService();
 
-    /* private static final String JDBC_URL = "jdbc:mysql://localhost:3306/gbmfg_ecs";
-    private static final String JDBC_USER = "root";
-    private static final String JDBC_PASSWORD = "FunkoPop09!!";*/
-    /**
+//    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/gbmfg_ecs";
+//    private static final String JDBC_USER = "root";
+//    private static final String JDBC_PASSWORD = "FunkoPop09!!";
+    /*
      * Creates new form CheckoutGUI
      */
     public CheckoutGUI() {
@@ -121,8 +121,7 @@ public class CheckoutGUI extends javax.swing.JFrame {
                     status
             );
 
-            cTService.addCheckoutTransaction(transaction.getEmpId(), transaction.getToolId(), transaction.getCheckoutDate(),
-                    transaction.getDueDate(), transaction.getReturnDate(), transaction.getStatus());
+            cTService.addCheckoutTransaction(transaction);
         }
     }
 
@@ -165,16 +164,16 @@ public class CheckoutGUI extends javax.swing.JFrame {
 //        } catch (SQLException e) {
 //            e.printStackTrace(); // Handle the exception appropriately in production code
 //        }
-    private int getGeneratedTransactionId(Connection conn) throws SQLException {
-        String query = "SELECT IFNULL(MAX(transactionId), 0) FROM cart";
-        try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(query)) {
-            if (rs.next()) {
-                return rs.getInt(1) + 1;
-            }
-        }
-        return 1; // Start with 1 if no entries are present
-    }
-
+//    private int getGeneratedTransactionId(Connection conn) throws SQLException {
+//        String query = "SELECT IFNULL(MAX(transactionId), 0) FROM cart";
+//        try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(query)) {
+//            if (rs.next()) {
+//                return rs.getInt(1) + 1;
+//            }
+//        }
+//        return 1; // Start with 1 if no entries are present
+//    }
+//
 //    private void populateCartTable() {
 //        String query = "SELECT transactionId, empId, toolId, checkoutDate, dueDate, returnDate, status FROM cart";
 //
