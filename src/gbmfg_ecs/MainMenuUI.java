@@ -114,6 +114,7 @@ import javax.swing.JOptionPane;
 public class MainMenuUI extends JFrame {
 
     private InventoryManager invManager;
+    //private EmployeeManager empManager;
     private JButton checkoutToolButton;
     private JButton returnToolButton;
     private JButton manageInventoryButton;
@@ -124,6 +125,7 @@ public class MainMenuUI extends JFrame {
         
         // Initialize the InventoryManager with this frame at the parent
         invManager = new InventoryManager(this);
+        //empManager = new EmployeeManager(this);
     }
 
     void initializeUI() {
@@ -131,8 +133,12 @@ public class MainMenuUI extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1792, 898);
         setLocationRelativeTo(null);
-        setLayout(new GridLayout(4, 1)); // Adjust layout to add more buttons if needed
+        setLayout(new GridLayout(5, 1)); // Adjust layout to add more buttons if needed
 
+//        employeeMgmtButton = new JButton("Manage Employees");
+//        employeeMgmtButton.addActionListener(e -> manageEmployee());
+//        add(employeeMgmtButton);
+        
         checkoutToolButton = new JButton("Check Out Tool");
         checkoutToolButton.addActionListener(e -> checkOutTool());
         add(checkoutToolButton);
@@ -152,6 +158,12 @@ public class MainMenuUI extends JFrame {
         setVisible(true);
     }
 
+//    private void manageEmployee(){
+//        this.getContentPane().removeAll();  // Clear existing components (main menu buttons)
+//        this.repaint();  // Refresh the frame
+//        empManager.showEmployeeServiceDialog(this);
+//    }
+    
     private void checkOutTool() {
         // Placeholder for tool checkout logic
         JOptionPane.showMessageDialog(this, "Tool Checkout Functionality");

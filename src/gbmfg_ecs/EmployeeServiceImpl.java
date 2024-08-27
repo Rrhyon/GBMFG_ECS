@@ -50,7 +50,7 @@ public class EmployeeServiceImpl implements EmployeeService{
     }
 
     // Method used to list all employee records in the DB.
-    List<Employee> getAllEmployees() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public List<Employee> getAllEmployees() {
+        return employeeDAO.getAllEmployees();
     }
 }

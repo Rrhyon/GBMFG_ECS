@@ -102,9 +102,12 @@ public class CategoryManager {
         categoryDialog.setLayout(new GridLayout(0, 2, 5, 5));
         categoryDialog.setSize(400, 250);
 
-        JTextField catIdField = new JTextField(category != null ? String.valueOf(category.getCategoryId()) : "");
-        JTextField catNameField = new JTextField(category != null ? category.getName() : "");
-        JTextField catDescField = new JTextField(category != null ? category.getDescription() : "");
+        JTextField catIdField = new JTextField(category != 
+                null ? String.valueOf(category.getCategoryId()) : "");
+        JTextField catNameField = new JTextField(category != 
+                null ? category.getName() : "");
+        JTextField catDescField = new JTextField(category != 
+                null ? category.getDescription() : "");
 
         if (action.equals("Edit")) {
             catIdField.setEditable(false);  // Prevent ID from being edited during update
@@ -121,11 +124,15 @@ public class CategoryManager {
         btnSave.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (catNameField.getText().trim().isEmpty()) {
-                    JOptionPane.showMessageDialog(categoryDialog, "Category name cannot be empty.", "Invalid Input", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(categoryDialog, 
+                            "Category name cannot be empty.", "Invalid Input", 
+                            JOptionPane.ERROR_MESSAGE);
                     return;
                 }
                 if (catDescField.getText().trim().isEmpty()) {
-                    JOptionPane.showMessageDialog(categoryDialog, "Category description cannot be empty.", "Invalid Input", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(categoryDialog, 
+                            "Category description cannot be empty.", 
+                            "Invalid Input", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
@@ -134,12 +141,15 @@ public class CategoryManager {
 
                     // Check if the category ID already exists
                     if (action.equals("Add") && categoryService.getCategoryById(categoryId) != null) {
-                        JOptionPane.showMessageDialog(categoryDialog, "Category ID already exists. Please choose a different ID.", "Duplicate ID", JOptionPane.WARNING_MESSAGE);
+                        JOptionPane.showMessageDialog(categoryDialog, 
+                                "Category ID already exists. Please choose a different ID.", 
+                                "Duplicate ID", JOptionPane.WARNING_MESSAGE);
                         return;
                     }
 
                     if (action.equals("Add")) {
-                        Category newCategory = new Category(categoryId, catNameField.getText(), catDescField.getText());
+                        Category newCategory = new Category(categoryId, 
+                                catNameField.getText(), catDescField.getText());
                         categoryService.saveCategory(newCategory);
                     } else if (action.equals("Edit") && category != null) {
                         category.setName(catNameField.getText());
@@ -151,7 +161,9 @@ public class CategoryManager {
                     refreshCategoryTable();
 
                 } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(categoryDialog, "Please enter a valid number for Category ID.", "Invalid Input", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(categoryDialog, 
+                            "Please enter a valid number for Category ID.", 
+                            "Invalid Input", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
