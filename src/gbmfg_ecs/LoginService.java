@@ -1,10 +1,10 @@
 package gbmfg_ecs;
 
 /**
- * Program: Gigabyte Manufacturing - Equipment Checkout Service
- * Course: CEIS 400 - Software Engineering II
- * Author: Phillip Tette
- * Program Description: Abstract class for handling login/logout/registrations.
+ * Program: Gigabyte Manufacturing - Equipment Checkout Service 
+ * Course: CEIS 400 - Software Engineering II 
+ * Author: Phillip Tette, Chandler Perry
+ * Program Description: Abstract class for handling login/logout/registrations. 
  * Date: August 13, 2024
  */
 public class LoginService {
@@ -16,15 +16,15 @@ public class LoginService {
     }
 
     public int login(String username, String password) {
-    // Assuming authenticationService.login returns a session ID or -1 for failure
-    int sessionId = authenticationService.login(username, password);
+        // Assuming authenticationService.login returns a session ID or -1 for failure
+        int sessionId = authenticationService.login(username, password);
 
-    if (sessionId != -1) {
-        return sessionId; // Successful login, return session ID
-    } else {
-        return -1; // Indicate login failure
+        if (sessionId != -1) {
+            return sessionId; // Successful login, return session ID
+        } else {
+            return -1; // Indicate login failure
+        }
     }
-}
 
     public String logout(int sessionId) {
         return authenticationService.logout(sessionId);

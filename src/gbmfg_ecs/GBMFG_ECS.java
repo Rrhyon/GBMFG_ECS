@@ -3,7 +3,7 @@ package gbmfg_ecs;
 /**
  * Program: Gigabyte Manufacturing - Equipment Checkout Service
  * Course: CEIS 400 - Software Engineering II
- * Author: Phillip Tette
+ * Author: Phillip Tette, Chandler Perry
  * Program Description: This program tracks tools using a checkout transaction
  * system that is associated with employee identification. Other features include
  * employee management, tool and material inventory management, maintenance

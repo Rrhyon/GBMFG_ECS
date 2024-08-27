@@ -3,7 +3,7 @@ package gbmfg_ecs;
 /**
  * Program: Gigabyte Manufacturing - Equipment Checkout Service
  * Course: CEIS 400 - Software Engineering II
- * Author: Phillip Tette
+ * Author: Phillip Tette, Chandler Perry
  * Program Description: Provides framework for session object creation.
  * Date: August 13, 2024
  */
