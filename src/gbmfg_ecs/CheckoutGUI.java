@@ -182,102 +182,6 @@ public class CheckoutGUI extends javax.swing.JFrame {
         };
         tblMaterial.setModel(model);
     }
-
-//    private void populateMaterialTable() {
-//        // Define your SQL query
-//        String query = "SELECT materialId, matName, matDesc, matQuantity, matUnit, categoryId, locationId FROM material";
-//
-//        // Create lists to hold the data
-//        List<Object[]> data = new ArrayList<>();
-//        String[] columnNames = {"Material ID", "Name", "Description", "Quantity", "Unit", "Category", "Location"};
-//
-//        try (Connection conn = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD); PreparedStatement stmt = conn.prepareStatement(query); ResultSet rs = stmt.executeQuery()) {
-//
-//            // Process the result set
-//            while (rs.next()) {
-//                // Create an array to hold the row data
-//                Object[] row = new Object[7];
-//                row[0] = rs.getInt("materialId");
-//                row[1] = rs.getString("matName");
-//                row[2] = rs.getString("matDesc");
-//                row[3] = rs.getInt("matQuantity");
-//                row[4] = rs.getString("matUnit");
-//                row[5] = getCategoryName(rs.getInt("categoryId"));
-//                row[6] = getLocationName(rs.getInt("locationId"));
-//
-//                // Add the row data to the list
-//                data.add(row);
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace(); // Handle the exception appropriately in production code
-//        }
-//
-//        // Convert list to array
-//        Object[][] dataArray = data.toArray(new Object[0][]);
-//
-//        // Update the table model
-//        tblMaterial.setModel(new DefaultTableModel(dataArray, columnNames));
-//    }
-//
-//    private String getCategoryName(int categoryId) {
-//        // Implement logic to retrieve category name by ID
-//        // For simplicity, use a placeholder
-//        return "Category" + categoryId;
-//    }
-//
-//    private String getLocationName(int locationId) {
-//        // Implement logic to retrieve location name by ID
-//        // For simplicity, use a placeholder
-//        return "Location" + locationId;
-//    }
-//        String toolId = (String) tblTool.getValueAt(selectedRow, 0);
-//        String empId = "EMP123"; 
-//        Date checkoutDate = new Date();
-//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-//        String checkoutDateStr = sdf.format(checkoutDate);
-//
-//        Calendar calendar = Calendar.getInstance();
-//        calendar.setTime(checkoutDate);
-//        calendar.add(Calendar.DAY_OF_MONTH, 30);
-//        Date dueDate = calendar.getTime();
-//        String dueDateStr = sdf.format(dueDate);
-//
-//        String returnDateStr = ""; // To be filled later when the tool is returned
-//        String status = "Checked Out";
-//
-//        String insertQuery = "INSERT INTO cart (transactionId, empId, toolId, checkoutDate, dueDate, returnDate, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
-//
-//        try (Connection conn = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD);
-//             PreparedStatement stmt = conn.prepareStatement(insertQuery, PreparedStatement.RETURN_GENERATED_KEYS)) {
-//
-//            // Generate a new transaction ID
-//            stmt.executeUpdate("SET @last_id = (SELECT IFNULL(MAX(transactionId), 0) FROM cart)");
-//            stmt.executeUpdate("SET @new_id = @last_id + 1");
-//            stmt.setInt(1, getGeneratedTransactionId(conn)); // Implement this method to get a new transaction ID
-//            stmt.setString(2, empId);
-//            stmt.setString(3, toolId);
-//            stmt.setString(4, checkoutDateStr);
-//            stmt.setString(5, dueDateStr);
-//            stmt.setString(6, returnDateStr);
-//            stmt.setString(7, status);
-//
-//            stmt.executeUpdate();
-//
-//            // Refresh the cart table
-//            populateCartTable();
-//
-//        } catch (SQLException e) {
-//            e.printStackTrace(); // Handle the exception appropriately in production code
-//        }
-//    private int getGeneratedTransactionId(Connection conn) throws SQLException {
-//        String query = "SELECT IFNULL(MAX(transactionId), 0) FROM cart";
-//        try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(query)) {
-//            if (rs.next()) {
-//                return rs.getInt(1) + 1;
-//            }
-//        }
-//        return 1; // Start with 1 if no entries are present
-//    }
 //
 //    private void populateCartTable() {
 //        String query = "SELECT transactionId, empId, toolId, checkoutDate, dueDate, returnDate, status FROM cart";
@@ -311,6 +215,7 @@ public class CheckoutGUI extends javax.swing.JFrame {
 //            e.printStackTrace(); // Handle the exception appropriately in production code
 //        }
 //    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -335,7 +240,6 @@ public class CheckoutGUI extends javax.swing.JFrame {
         btnMainMenu = new javax.swing.JButton();
         btnAddToolCart = new javax.swing.JButton();
         btnMaterial = new javax.swing.JButton();
-        jSpinner1 = new javax.swing.JSpinner();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(102, 255, 51));
@@ -403,7 +307,7 @@ public class CheckoutGUI extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Transaction ID", "Employee ID", "Tool ID", "Checkout Date", "Due Date", "Return Date", "Status"
+                "Transaction ID", "Employee ID", "Tool/Material ID", "Checkout Date", "Due Date", "Return Date", "Status"
             }
         ));
         jScrollPane4.setViewportView(tblCart);
@@ -452,9 +356,7 @@ public class CheckoutGUI extends javax.swing.JFrame {
                 .addComponent(btnAddToolCart)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnMaterial)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(188, 188, 188))
+                .addGap(264, 264, 264))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -472,17 +374,17 @@ public class CheckoutGUI extends javax.swing.JFrame {
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 597, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(254, 254, 254)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 639, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnCheckout, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btnReset, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btnMainMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(btnCheckout, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnReset, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnMainMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(547, 547, 547)
-                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(224, 224, 224)
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 708, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(17, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -507,9 +409,7 @@ public class CheckoutGUI extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnAddToolCart)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btnMaterial)
-                        .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(btnMaterial))
                 .addGap(31, 31, 31)
                 .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -639,8 +539,46 @@ public class CheckoutGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_tblToolMouseClicked
 
     private void btnMaterialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMaterialActionPerformed
+        int selectedRow = tblMaterial.getSelectedRow();
 
-        // TODO add your handling code here:
+        // Check if a row is selected
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Please select a material to add to the cart.");
+            return;
+        }
+
+        // Retrieve material details from the selected row
+        int materialId = (int) tblMaterial.getValueAt(selectedRow, 0);
+        String materialName = (String) tblMaterial.getValueAt(selectedRow, 1);
+        // Add more details if needed
+
+        // Get the employee ID (assuming you have a method to retrieve it)
+        int empId = sesService.getSession(HEIGHT).getEmpId();
+
+        // Calculate dates
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime dueDate = now.plusDays(30);
+        LocalDateTime returnDate = now.plusDays(30);
+
+        // Define transaction status
+        String status = "Checked Out";
+
+        // Generate a new transaction ID
+        int transactionId = generateNewTransactionId();
+
+        // Create a new row for tblCart
+        DefaultTableModel cartModel = (DefaultTableModel) tblCart.getModel();
+        Object[] newRow = new Object[]{
+            transactionId,
+            empId,
+            materialId,
+            now.toString(), // Checkout Date
+            dueDate.toString(), // Due Date
+            returnDate.toString(), // Return Date
+            status
+        };
+
+        cartModel.addRow(newRow);
     }//GEN-LAST:event_btnMaterialActionPerformed
 
     /**
@@ -691,7 +629,6 @@ public class CheckoutGUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JSpinner jSpinner1;
     private javax.swing.JTable tblCart;
     private javax.swing.JTable tblMaterial;
     private javax.swing.JTable tblTool;

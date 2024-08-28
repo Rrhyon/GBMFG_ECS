@@ -31,9 +31,7 @@
               <Component id="btnAddToolCart" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
               <Component id="btnMaterial" min="-2" max="-2" attributes="0"/>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Component id="jSpinner1" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="188" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="264" max="-2" attributes="0"/>
           </Group>
           <Group type="102" attributes="0">
               <Group type="103" groupAlignment="0" attributes="0">
@@ -55,20 +53,19 @@
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="254" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jScrollPane4" min="-2" pref="639" max="-2" attributes="0"/>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="btnCheckout" min="-2" pref="206" max="-2" attributes="0"/>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="btnReset" min="-2" pref="206" max="-2" attributes="0"/>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="btnMainMenu" min="-2" pref="206" max="-2" attributes="0"/>
-                          </Group>
-                      </Group>
+                      <Component id="btnCheckout" min="-2" pref="206" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="btnReset" min="-2" pref="206" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="btnMainMenu" min="-2" pref="206" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="547" max="-2" attributes="0"/>
                       <Component id="jLabel5" min="-2" pref="68" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" pref="224" max="-2" attributes="0"/>
+                      <Component id="jScrollPane4" min="-2" pref="708" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace pref="17" max="32767" attributes="0"/>
@@ -103,10 +100,7 @@
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="btnAddToolCart" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="btnMaterial" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jSpinner1" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
+                  <Component id="btnMaterial" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
               <Component id="jLabel5" min="-2" pref="30" max="-2" attributes="0"/>
@@ -313,7 +307,7 @@
               <Table columnCount="7" rowCount="0">
                 <Column editable="true" title="Transaction ID" type="java.lang.Object"/>
                 <Column editable="true" title="Employee ID" type="java.lang.Object"/>
-                <Column editable="true" title="Tool ID" type="java.lang.Object"/>
+                <Column editable="true" title="Tool/Material ID" type="java.lang.Object"/>
                 <Column editable="true" title="Checkout Date" type="java.lang.Object"/>
                 <Column editable="true" title="Due Date" type="java.lang.Object"/>
                 <Column editable="true" title="Return Date" type="java.lang.Object"/>
@@ -405,8 +399,6 @@
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnMaterialActionPerformed"/>
       </Events>
-    </Component>
-    <Component class="javax.swing.JSpinner" name="jSpinner1">
     </Component>
   </SubComponents>
 </Form>
