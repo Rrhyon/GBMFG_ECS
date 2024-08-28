@@ -13,7 +13,10 @@ import java.util.List;
 
 public class MaterialDAOImpl implements MaterialDAO {
 
-    // Method to create SQL prepared statement to create a material
+    /* Method to create SQL prepared statement to create a material
+     * material information
+     */
+    @Override
     public String saveMaterial(Material material) {
         String sql = "INSERT INTO material (matName, matDesc, matQuantity, "
                 + "matUnit, categoryId, locationId) VALUES (?, ?, ?, ?, ?, ?)";
@@ -28,7 +31,6 @@ public class MaterialDAOImpl implements MaterialDAO {
             stmt.executeUpdate();
             return "Material added successfully.";
         } catch (SQLException e) {
-            e.printStackTrace();
             return "Error adding material.";
         }
     }
