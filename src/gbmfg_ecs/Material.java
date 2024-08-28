@@ -16,13 +16,12 @@ public class Material {
     private String unit;
     private int categoryId;
     private int locationId;
-    
 
     // Constructors
     public Material() {
     }
 
-    // Constructor without toolId (for new tools)
+    // Constructor without materialId (for new materials)
     public Material(String name, String description, double quantity, 
             String unit, int categoryId, int locationId) {
         this.name = name;
@@ -32,8 +31,8 @@ public class Material {
         this.categoryId = categoryId;
         this.locationId = locationId;
     }
-    
-    // Constructor including materialId (for existing tools)
+
+    // Constructor including materialId (for existing materials)
     public Material(int materialId, String name, String description, double quantity, 
             String unit, int categoryId, int locationId) {
         this.materialId = materialId;
@@ -99,7 +98,7 @@ public class Material {
         this.categoryId = categoryId;
     }
     
-    public void setLocationId(){
+    public void setLocationId(int locationId) {
         this.locationId = locationId;
     }
 }

@@ -11,40 +11,40 @@ import java.util.List;
 
 public class MaterialServiceImpl implements MaterialService{
 
-    private MaterialDAOImpl materialDAO;
+    private MaterialDAOImpl materialDAOImpl;
 
     public MaterialServiceImpl() {
-        this.materialDAO = new MaterialDAOImpl();
+        this.materialDAOImpl = new MaterialDAOImpl();
     }
 
     // Creates the object and returns the object to the DAO method for DB Entry.
-    public void saveMaterial(Material material) {
-        materialDAO.saveMaterial(material);
+    public void saveMaterial(Material material){
+        materialDAOImpl.saveMaterial(material);
     }
 
     /* Creates the object, retrieves the existing ID and returns the updates to
      * the DAO method for DB Entry.
      */
-    public String saveMaterialUpdates(Material material) {
-        return materialDAO.saveMaterialUpdates(material);
+    public String saveMaterialUpdates(Material material){
+        return materialDAOImpl.saveMaterialUpdates(material);
     }
     
     // Retrieves the material by ID.
     public Material getMaterial(int materialId) {
-        return materialDAO.getMaterial(materialId);
+        return materialDAOImpl.getMaterial(materialId);
     }
 
     // Creates a list and retrieves all available materials.
     public List<Material> getAllMaterials() {
-        return materialDAO.getAllMaterials();
+        return materialDAOImpl.getAllMaterials();
     }
     
     public List<Material> searchMaterials(String inquiry){
-        return materialDAO.searchMaterials(inquiry);
+        return materialDAOImpl.searchMaterials(inquiry);
     }
     
     // Removes selected materials.
     public String removeMaterial(int materialId) {
-        return materialDAO.removeMaterial(materialId);
+        return materialDAOImpl.removeMaterial(materialId);
     }
 }

@@ -432,7 +432,7 @@ public class InventoryMgmtGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_btnGetAllMaterialsActionPerformed
 
     private void btnRemoveMaterialsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveMaterialsActionPerformed
-        deleteMaterial();
+        removeMaterial();
     }//GEN-LAST:event_btnRemoveMaterialsActionPerformed
 
     private void btnSearchMaterialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchMaterialActionPerformed
@@ -978,7 +978,7 @@ public void materialUpdater() {
                 locService.getAllLocations());
     }
     
-    public void deleteMaterial(){
+    public void removeMaterial(){
         // Gets the selected row's index
         int[] selectedRows = tblMaterials.getSelectedRows();
         
@@ -996,7 +996,7 @@ public void materialUpdater() {
                 // Looping backward to avoid potential index errors
                 for(int i = selectedRows.length - 1; i >= 0; i--){
                     // Gets the material ID for each material
-                    int materialId = (int) tblTools.getValueAt(selectedRows[i], 0);
+                    int materialId = (int) tblMaterials.getValueAt(selectedRows[i], 0);
                     materialService.removeMaterial(materialId);
                 }
                 // Refreshes the material list table

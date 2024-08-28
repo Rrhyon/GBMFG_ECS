@@ -11,11 +11,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MaterialDAOImpl implements MaterialDAO{
+public class MaterialDAOImpl implements MaterialDAO {
 
-    /* Method to create SQL prepared statement to create a material
-     * after entering material information.
-     */
+    // Method to create SQL prepared statement to create a material
     public String saveMaterial(Material material) {
         String sql = "INSERT INTO material (matName, matDesc, matQuantity, "
                 + "matUnit, categoryId, locationId) VALUES (?, ?, ?, ?, ?, ?)";
@@ -35,9 +33,7 @@ public class MaterialDAOImpl implements MaterialDAO{
         }
     }
 
-    /* Method to create SQL prepared statement to update materials
-     * after entering material information.
-     */
+    // Method to create SQL prepared statement to update materials
     public String saveMaterialUpdates(Material material) {
         String sql = "UPDATE material SET matName = ?, matDesc = ?, "
                 + "matQuantity = ?, matUnit = ?, categoryId = ?, "
@@ -52,16 +48,13 @@ public class MaterialDAOImpl implements MaterialDAO{
             stmt.setInt(6, material.getLocationId());
             stmt.setInt(7, material.getMaterialId());
             stmt.executeUpdate();
-            return "Material updated successfully.";
+                return "Material updated successfully.";
         } catch (SQLException e) {
-            e.printStackTrace();
             return "Error updating material.";
         }
     }
 
-    /* Method to create SQL prepared statement to retrieve material
-     * after entering material ID.
-     */
+    // Method to create SQL prepared statement to retrieve material by ID
     public Material getMaterial(int materialId) {
         String sql = "SELECT * FROM material WHERE materialId = ?";
         try (Connection conn = DatabaseUtil.getConnection(); 
@@ -82,14 +75,11 @@ public class MaterialDAOImpl implements MaterialDAO{
             }
             return null;
         } catch (SQLException e) {
-            e.printStackTrace();
             return null;
         }
     }
 
-    /* Method to create SQL prepared statement to create a new ArrayList called
-     * 'materials' and add all materials to the array.
-     */
+    // Method to create SQL prepared statement to retrieve all materials
     public List<Material> getAllMaterials() {
         String sql = "SELECT * FROM material";
         List<Material> materials = new ArrayList<>();
@@ -109,25 +99,19 @@ public class MaterialDAOImpl implements MaterialDAO{
                 materials.add(material);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
         }
         return materials;
     }
     
-    /* Method to create SQL prepared statement to search for material 
-     * after entering material information.
-     */
+    // Method to create SQL prepared statement to search for materials by name or description
     public List<Material> searchMaterials(String inquiry) {
-        String sql = "SELECT * FROM material WHERE matName LIKE ? OR "
-                + "matDesc LIKE ?";
+        String sql = "SELECT * FROM material WHERE matName LIKE ? OR matDesc LIKE ?";
         List<Material> materials = new ArrayList<>();
         try (Connection conn = DatabaseUtil.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql)) {
             String query = "%" + inquiry + "%";
             stmt.setString(1, query);
             stmt.setString(2, query);
-            stmt.setString(3, query);
-            stmt.setString(4, query);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 Material material = new Material(
@@ -138,19 +122,16 @@ public class MaterialDAOImpl implements MaterialDAO{
                     rs.getInt("categoryId"),
                     rs.getInt("locationId")
                 );
-            material.setMaterialId(rs.getInt("matId"));
-            materials.add(material);
+                material.setMaterialId(rs.getInt("materialId"));
+                materials.add(material);
             }
-        }catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
         }
         return materials;
     }
     
-    /* Method to create SQL prepared statement to remove a material record
-     * after entering material ID.
-     */
-     public String removeMaterial(int materialId) {
+    // Method to create SQL prepared statement to remove a material record by ID
+    public String removeMaterial(int materialId) {
         String sql = "DELETE FROM material WHERE materialId = ?";
         try (Connection conn = DatabaseUtil.getConnection(); 
                 PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -162,8 +143,8 @@ public class MaterialDAOImpl implements MaterialDAO{
                 return "Material not found.";
             }
         } catch (SQLException e) {
-            e.printStackTrace();
             return "Error removing material.";
         }
     }
 }
+
