@@ -91,7 +91,17 @@ public class CheckoutGUI extends javax.swing.JFrame {
             data[i][6] = categoryName;
             data[i][7] = locationName;
         }
-        tblTool.setModel(new DefaultTableModel(data, columnNames));
+//        tblTool.setModel(new DefaultTableModel(data, columnNames));
+        DefaultTableModel model = new DefaultTableModel(data, columnNames) {
+
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                //all cells false
+                return false;
+            }
+        };
+        tblTool.setModel(model);
+
     }
 
     private void addToolToCart() {
@@ -121,7 +131,6 @@ public class CheckoutGUI extends javax.swing.JFrame {
                     null,
                     status
             );
-
             cTService.addCheckoutTransaction(transaction);
         }
     }
@@ -162,7 +171,16 @@ public class CheckoutGUI extends javax.swing.JFrame {
             data[i][5] = categoryName;
             data[i][6] = locationName;
         }
-        tblMaterial.setModel(new DefaultTableModel(data, columnNames));
+//        tblMaterial.setModel(new DefaultTableModel(data, columnNames));
+        DefaultTableModel model = new DefaultTableModel(data, columnNames) {
+
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                //all cells false
+                return false;
+            }
+        };
+        tblMaterial.setModel(model);
     }
 
 //    private void populateMaterialTable() {
@@ -512,10 +530,46 @@ public class CheckoutGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jLabel1ComponentShown
 
     private void btnCheckoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCheckoutActionPerformed
+        int empId = sesService.getSession(HEIGHT).getEmpId();
+
+        // Get the model of the tblCart to access its data
+        DefaultTableModel cartModel = (DefaultTableModel) tblCart.getModel();
+
+        for (int i = 0; i < cartModel.getRowCount(); i++) {
+            // Retrieve data from the current row
+            int transactionId = (int) cartModel.getValueAt(i, 0);
+            int toolId = (int) cartModel.getValueAt(i, 2);
+            LocalDateTime checkoutDate = LocalDateTime.parse((String) cartModel.getValueAt(i, 3));
+            LocalDateTime dueDate = LocalDateTime.parse((String) cartModel.getValueAt(i, 4));
+            LocalDateTime returnDate = LocalDateTime.parse((String) cartModel.getValueAt(i, 5));
+            String status = (String) cartModel.getValueAt(i, 6);
+
+            // Create a CheckoutTransaction object with the data from the row
+            CheckoutTransaction transaction = new CheckoutTransaction(
+                    empId,
+                    toolId,
+                    checkoutDate,
+                    dueDate,
+                    returnDate,
+                    status
+            );
+
+            // Add the checkout transaction to the service
+            cTService.addCheckoutTransaction(transaction);
+        }
+
+        // Clear the tblCart table
+        cartModel.setRowCount(0);
+
+        // Show success message
+        JOptionPane.showMessageDialog(this, "Checkout successful");
         // TODO add your handling code here:
     }//GEN-LAST:event_btnCheckoutActionPerformed
 
     private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
+        DefaultTableModel cartModel = (DefaultTableModel) tblCart.getModel();
+        // clears rows
+        cartModel.setRowCount(0);
         // TODO add your handling code here:
     }//GEN-LAST:event_btnResetActionPerformed
 
@@ -585,7 +639,7 @@ public class CheckoutGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_tblToolMouseClicked
 
     private void btnMaterialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMaterialActionPerformed
-        
+
         // TODO add your handling code here:
     }//GEN-LAST:event_btnMaterialActionPerformed
 
