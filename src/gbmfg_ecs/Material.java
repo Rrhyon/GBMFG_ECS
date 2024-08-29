@@ -17,13 +17,13 @@ public class Material {
     private int categoryId;
     private int locationId;
 
-    // Constructors
+    // Default Constructor
     public Material() {
     }
 
     // Constructor without materialId (for new materials)
     public Material(String name, String description, double quantity, 
-            String unit, int categoryId, int locationId) {
+                    String unit, int categoryId, int locationId) {
         this.name = name;
         this.description = description;
         this.quantity = quantity;
@@ -32,9 +32,9 @@ public class Material {
         this.locationId = locationId;
     }
 
-    // Constructor including materialId (for existing materials)
+    // Constructor with materialId (for existing materials)
     public Material(int materialId, String name, String description, double quantity, 
-            String unit, int categoryId, int locationId) {
+                    String unit, int categoryId, int locationId) {
         this.materialId = materialId;
         this.name = name;
         this.description = description;
@@ -48,31 +48,31 @@ public class Material {
     public int getMaterialId() {
         return materialId;
     }
-    
+
     public String getName() {
         return name;
     }
-    
+
     public String getDescription() {
         return description;
     }
-    
+
     public double getQuantity() {
         return quantity;
     }
-    
+
     public String getUnit() {
         return unit;
     }
-    
-    public int getCategoryId(){
+
+    public int getCategoryId() {
         return categoryId;
     }
-    
-    public int getLocationId(){
+
+    public int getLocationId() {
         return locationId;
     }
-            
+
     // Setters
     public void setMaterialId(int materialId) {
         this.materialId = materialId;
@@ -93,11 +93,11 @@ public class Material {
     public void setUnit(String unit) {
         this.unit = unit;
     }
-    
-    public void setCategoryId(int categoryId){
+
+    public void setCategoryId(int categoryId) {
         this.categoryId = categoryId;
     }
-    
+
     public void setLocationId(int locationId) {
         this.locationId = locationId;
     }

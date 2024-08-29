@@ -132,7 +132,10 @@ public class MaterialDAOImpl implements MaterialDAO {
         return materials;
     }
     
-    // Method to create SQL prepared statement to remove a material record by ID
+    /* Method to create SQL prepared statement to remove a material record by ID
+     *after enetering material ID
+    */
+    @Override
     public String removeMaterial(int materialId) {
         String sql = "DELETE FROM material WHERE materialId = ?";
         try (Connection conn = DatabaseUtil.getConnection(); 
