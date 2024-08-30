@@ -25,10 +25,50 @@ public class EmployeeManagement {
     private MainMenuUI mainMenu;
     private JFrame empFrame;
     private JTable employeeTable;
-    private EmployeeService employeeService;
+    private final EmployeeService employeeService;
 
     public EmployeeManagement() {
-        employeeService = new EmployeeService();
+        employeeService = new EmployeeService() {
+            @Override
+            public String AddEmployee(Employee employee) {
+                throw new UnsupportedOperationException("Not supported yet."); 
+            }
+
+            @Override
+            public String UpdateEmployee(Employee employee) {
+                throw new UnsupportedOperationException("Not supported yet."); 
+            }
+
+            @Override
+            public Employee getEmployee(int empId) {
+                throw new UnsupportedOperationException("Not supported yet."); 
+            }
+
+            @Override
+            public Employee getEmployeeByUsername(String username) {
+                throw new UnsupportedOperationException("Not supported yet."); 
+            }
+
+            @Override
+            public List<Employee> getAllEmployees() {
+                throw new UnsupportedOperationException("Not supported yet."); 
+            }
+
+            @Override
+            public String RemoveEmployee(int empId) {
+                throw new UnsupportedOperationException("Not supported yet."); 
+            }
+
+            @Override
+            public String saveEmployee(Employee employee) {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+            }
+
+            @Override
+            public void saveEmployeeUpdates(Employee employee) {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+            }
+        };
     }
 
     public void showEmployeeServiceDialog(JFrame empFrame) {
@@ -52,10 +92,8 @@ public class EmployeeManagement {
         dialog.add(new JScrollPane(employeeTable), BorderLayout.CENTER);
 
         // Action listeners for buttons
-        btnAdd.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                showEmployeeDialog("Add", null);
-            }
+        btnAdd.addActionListener((ActionEvent e) -> {
+            showEmployeeDialog("Add", null);
         });
 
         btnUpdate.addActionListener((ActionListener e) -> {
@@ -72,24 +110,21 @@ public class EmployeeManagement {
             }
         });
 
-        btnDelete.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int selectedRow = employeeTable.getSelectedRow();
-                if (selectedRow != -1) {
-                    int employeeId = (int) employeeTable.getValueAt(selectedRow, 0);
-                    int confirmation = JOptionPane.showConfirmDialog(dialog,
-                            "Are you sure you want to delete this employee?",
-                            "Confirm Deletion", JOptionPane.YES_NO_OPTION);
-
-                    if (confirmation == JOptionPane.YES_OPTION) {
-                        employeeService.removeEmployee(empId);
-                        refreshEmployeeTable();
-
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(dialog, "Please select a employee to delete.");
+        btnDelete.addActionListener((ActionEvent e) -> {
+            int selectedRow = employeeTable.getSelectedRow();
+            if (selectedRow != -1) {
+                int employeeId = (int) employeeTable.getValueAt(selectedRow, 0);
+                int confirmation = JOptionPane.showConfirmDialog(dialog,
+                        "Are you sure you want to delete this employee?",
+                        "Confirm Deletion", JOptionPane.YES_NO_OPTION);
+                
+                if (confirmation == JOptionPane.YES_OPTION) {
+                    employeeService.RemoveEmployee(employeeId);
+                    refreshEmployeeTable();
+                    
                 }
+            } else {
+                JOptionPane.showMessageDialog(dialog, "Please select a employee to delete.");
             }
         });
         dialog.setVisible(true);
@@ -116,6 +151,7 @@ public class EmployeeManagement {
         employeeTable.setModel(new javax.swing.table.DefaultTableModel(data, columnNames));
     }
 
+    @SuppressWarnings("empty-statement")
     private void showEmployeeDialog(String action, Employee employee) {
         JDialog employeeDialog = new JDialog(empFrame, action + " Employee", true);
         employeeDialog.setLayout(new GridLayout(0, 2, 5, 5));
@@ -151,6 +187,7 @@ public class EmployeeManagement {
 
         JButton btnSave = new JButton(action);
         btnSave.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 String empId = empIdField.getText().trim();
                 String firstName = empFirstNameField.getText().trim();
@@ -159,77 +196,92 @@ public class EmployeeManagement {
                 String emailAddress = empEmailAddressField.getText().trim();
                 String empRole = empEmpRoleField.getText().trim();
                 String username = empUsernameField.getText().trim();
-
+                
                 if (empId.isEmpty()) {
-                    JOptionPane.showMessageDialog(employeeDialog, 
-                            "Employee name cannot be empty.", "Invalid Input", 
+                    JOptionPane.showMessageDialog(employeeDialog,
+                            "Employee ID cannot be empty.", "Invalid Input",
                             JOptionPane.ERROR_MESSAGE);
                     return;
                 }
                 if (firstName.isEmpty()) {
-                    JOptionPane.showMessageDialog(employeeDialog, 
-                            "Employee description cannot be empty.", "Invalid Input", 
+                    JOptionPane.showMessageDialog(employeeDialog,
+                            "Employee First Name cannot be empty.", "Invalid Input",
                             JOptionPane.ERROR_MESSAGE);
                     return;
                 }
                 if (empId.isEmpty()) {
-                    JOptionPane.showMessageDialog(employeeDialog, 
-                            "Employee name cannot be empty.", "Invalid Input", 
+                    JOptionPane.showMessageDialog(employeeDialog,
+                            "Employee Last Name cannot be empty.", "Invalid Input",
                             JOptionPane.ERROR_MESSAGE);
                     return;
                 }
                 if (empId.isEmpty()) {
-                    JOptionPane.showMessageDialog(employeeDialog, 
-                            "Employee name cannot be empty.", "Invalid Input", 
+                    JOptionPane.showMessageDialog(employeeDialog,
+                            "Employee Middle Initial cannot be empty.", "Invalid Input",
                             JOptionPane.ERROR_MESSAGE);
                     return;
                 }
                 if (empId.isEmpty()) {
-                    JOptionPane.showMessageDialog(employeeDialog, 
-                            "Employee name cannot be empty.", "Invalid Input", 
+                    JOptionPane.showMessageDialog(employeeDialog,
+                            "Employee Email Address cannot be empty.", "Invalid Input",
                             JOptionPane.ERROR_MESSAGE);
                     return;
                 }
                 if (empId.isEmpty()) {
-                    JOptionPane.showMessageDialog(employeeDialog, 
-                            "Employee name cannot be empty.", "Invalid Input", 
+                    JOptionPane.showMessageDialog(employeeDialog,
+                            "Employee Emp Role cannot be empty.", "Invalid Input",
                             JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-
+                if (empId.isEmpty()) {
+                    JOptionPane.showMessageDialog(employeeDialog,
+                            "Employee Username cannot be empty.", "Invalid Input",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
                 try {
-                    if ("Add".equals(action)) {
-                        // Check if the employee ID already exists
-                        if (EmployeeService.EmployeeById(employeeId) != null) {
-                            JOptionPane.showMessageDialog(employeeDialog, "Employee ID already exists. Please choose a different ID.", "Duplicate ID", JOptionPane.WARNING_MESSAGE);
-                            return;
-                        }
-
-                        // Add new category
-                        Employee newEmployee = new Employee(employeeId, Name, Desc);
-                        employeeService.saveEmployee(new);
-                    } else if ("Edit".equals(action) && employee != null) {
-                        // Edit existing category
-                        employee.setName(Name);
-                        employee.setDescription(Desc);
-                        EmployeeService.saveEmployeeUpdates(employee);
-                    }
-
-                    employeeDialog.dispose();
-                    refreshEmployeeTable();
-
-                } catch (HeadlessException ex) {
-                    JOptionPane.showMessageDialog(employeeDialog, "An unexpected error occurred: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
+                int employeeId = Integer.parseInt(empIdField.getText());
+                
+                // Check if the employee ID already exists
+                if (action.equals("Add") && employeeService.getemployeeByUsername(employee) != null) {
+                    JOptionPane.showMessageDialog(employeeDialog,
+                            "employee ID already exists. Please choose a different ID.",
+                            "Duplicate ID", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+                
+                // Add new employee
+                if (action.equals("Add")) {
+                    Employee newEmployee = new Employee(empId,
+                            empFirstNameField.getText(), empLastNameField.getText(),
+                            empMiddleInitialField.getText(),empPhoneNumField.getText(),
+                            empEmailAddressField.getText(),empEmpRoleField.getText(),
+                            empUsernameField.getText());
+                    employeeService.saveEmployee(newEmployee);
+                } else if (action.equals("Edit") && employee != null) {
+                    employee.setFirstName(empFirstNameField.getText());
+                    employee.setLastName(empLastNameField.getText());
+                    employee.setMiddleInitial(empMiddleInitialField.getText());
+                    employee.setPhoneNum(empPhoneNumField.getText());
+                    employee.setEmailAddress(empEmailAddressField.getText());
+                    employee.setEmpRole(empEmpRoleField.getText());
+                    employee.setUsername(empUsernameField.getText());
+                    employeeService.saveEmployeeUpdates(employee);
+                }
+                
+                employeeDialog.dispose();
+                refreshEmployeeTable();
+                
+                employeeDialog.add(new JLabel()); // Spacer
+                employeeDialog.add(btnSave);
+                employeeDialog.setVisible(true);
             }
-        });
-
-        employeeDialog.add(new JLabel()); // Spacer
-        employeeDialog.add(btnSave);
-        employeeDialog.setVisible(true);
+        }private List<Employee> getEmployeeList() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    private List<Employee> getEmployeeList() {
+    private String getMessage() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }
