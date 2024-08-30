@@ -49,7 +49,7 @@ public class MainMenuUI extends JFrame {
 
     private void maintenance() {
         // Placeholder for tool maintenance
-        new MaintenanceGUI().setVisible(true);
+        new MaintenanceMenu().setVisible(true);
     }
 
     private void manageInventory() {
