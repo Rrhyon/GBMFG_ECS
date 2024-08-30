@@ -12,17 +12,16 @@ import javax.swing.JTextField;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 
 /**
- * Program: Gigabyte Manufacturing - Equipment Checkout Service
- * Course: CEIS 400 - Software Engineering II
- * Author: Phillip Tette
- * Program Description: Provides an Inventory GUI for customers.
- * Date: August 13, 2024
+ * Program: Gigabyte Manufacturing - Equipment Checkout Service 
+ * Course: CEIS 400 - Software Engineering II 
+ * Author: Phillip Tette 
+ * Program Description: Provides an Inventory GUI for customers. 
+ * Date: August 24, 2024
  */
 public class InventoryManager {
 
@@ -234,161 +233,120 @@ public class InventoryManager {
         invFrame.add(pnlCatAndLocWrapper);
 
         // Main Menu Button
-        JButton mainMenu = new JButton("Return to Main Menu");
-        mainMenu.setAlignmentX(JButton.CENTER_ALIGNMENT);
-        invFrame.add(mainMenu);
+        JButton btnMainMenu = new JButton("Return to Main Menu");
+        btnMainMenu.setAlignmentX(JButton.CENTER_ALIGNMENT);
+        invFrame.add(btnMainMenu);
 
         displayToolsWithCatAndLocNames();
         displayMaterialsWithCatAndLocNames();
 
         // ActionListeners for buttons
-        btnAddTool.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                enterToolData();
+        btnAddTool.addActionListener((ActionEvent e) -> {
+            enterToolData();
+        });
+
+        btnUpdateTool.addActionListener((ActionEvent e) -> {
+            toolUpdater();
+        });
+
+        btnRefreshTool.addActionListener((ActionEvent e) -> {
+            // Fetch latest data from services
+            List<Tool> tools = toolService.getAllTools();
+            List<Category> categories = catService.getAllCategories();
+            List<Location> locations = locService.getAllLocations();
+
+            // Handle potential nulls
+            if (tools == null) {
+                tools = new ArrayList<>();
+            }
+            if (categories == null) {
+                categories = new ArrayList<>();
+            }
+            if (locations == null) {
+                locations = new ArrayList<>();
+            }
+
+            // Update the table with the latest data
+            displayTools(tools, categories, locations);
+        });
+
+        btnRemoveTool.addActionListener((ActionEvent e) -> {
+            deleteTool();
+        });
+
+        btnSearchTool.addActionListener((ActionEvent e) -> {
+            String inquiry = txtSearchTool.getText().trim();
+            if (!txtSearchTool.getText().isEmpty()) {
+                // Execute the search
+                List<Tool> results = toolService.searchTools(inquiry);
+
+                displayTools(results,
+                        catService.getAllCategories(),
+                        locService.getAllLocations());
+            } else {
+
+                displayToolsWithCatAndLocNames();
+                displayMaterialsWithCatAndLocNames();
             }
         });
 
-        btnUpdateTool.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                toolUpdater();
+        btnAddMaterial.addActionListener((ActionEvent e) -> {
+            enterMaterialData();
+        });
+
+        btnUpdateMaterial.addActionListener((ActionEvent e) -> {
+            materialUpdater();
+        });
+
+        btnRefreshMaterial.addActionListener((ActionEvent e) -> {
+            // Fetch latest data from services
+            List<Material> materials = matService.getAllMaterials();
+            List<Category> categories = catService.getAllCategories();
+            List<Location> locations = locService.getAllLocations();
+
+            // Handle potential nulls
+            if (materials == null) {
+                materials = new ArrayList<>();
+            }
+            if (categories == null) {
+                categories = new ArrayList<>();
+            }
+            if (locations == null) {
+                locations = new ArrayList<>();
+            }
+            displayMaterials(materials, categories, locations);
+        });
+
+        btnRemoveMaterial.addActionListener((ActionEvent e) -> {
+            deleteMaterial();
+        });
+
+        btnSearchMaterial.addActionListener((ActionEvent e) -> {
+            String inquiry = txtSearchMaterial.getText().trim();
+            if (!txtSearchMaterial.getText().isEmpty()) {
+                // Execute the search
+                List<Material> results = matService.searchMaterials(inquiry);
+                displayMaterials(results,
+                        catService.getAllCategories(),
+                        locService.getAllLocations());
+            } else {
+                displayMaterialsWithCatAndLocNames();
             }
         });
 
-        btnRefreshTool.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Fetch latest data from services
-                List<Tool> tools = toolService.getAllTools();
-                List<Category> categories = catService.getAllCategories();
-                List<Location> locations = locService.getAllLocations();
-
-                // Handle potential nulls
-                if (tools == null) {
-                    tools = new ArrayList<>();
-                }
-                if (categories == null) {
-                    categories = new ArrayList<>();
-                }
-                if (locations == null) {
-                    locations = new ArrayList<>();
-                }
-
-                // Update the table with the latest data
-                displayTools(tools, categories, locations);
-            }
+        btnCatManager.addActionListener((ActionEvent e) -> {
+            // Call the method to show the Location Manager dialog
+            catManager.showCategoryManagerDialog(invFrame);
         });
 
-        btnRemoveTool.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                deleteTool();
-            }
+        btnLocManager.addActionListener((ActionEvent e) -> {
+            // Call the method to show the Location Manager dialog
+            locManager.showLocationManagerDialog(invFrame);
         });
 
-        btnSearchTool.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String inquiry = txtSearchTool.getText().trim();
-                if (!txtSearchTool.getText().isEmpty()) {
-                    // Execute the search
-                    JOptionPane.showMessageDialog(invFrame, inquiry,
-                            "Notice", JOptionPane.WARNING_MESSAGE);
-                    List<Tool> results = toolService.searchTools(inquiry);
-
-                    displayTools(results,
-                            catService.getAllCategories(),
-                            locService.getAllLocations());
-                } else {
-
-                    displayToolsWithCatAndLocNames();
-                    displayMaterialsWithCatAndLocNames();
-                }
-            }
-        });
-
-        btnAddMaterial.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                enterMaterialData();
-            }
-        });
-
-        btnUpdateMaterial.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                materialUpdater();
-            }
-        });
-
-        btnRefreshMaterial.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Fetch latest data from services
-                List<Material> materials = matService.getAllMaterials();
-                List<Category> categories = catService.getAllCategories();
-                List<Location> locations = locService.getAllLocations();
-
-                // Handle potential nulls
-                if (materials == null) {
-                    materials = new ArrayList<>();
-                }
-                if (categories == null) {
-                    categories = new ArrayList<>();
-                }
-                if (locations == null) {
-                    locations = new ArrayList<>();
-                }
-                displayMaterials(materials, categories, locations);
-            }
-        });
-
-        btnRemoveMaterial.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                deleteMaterial();
-            }
-        });
-
-        btnSearchMaterial.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String inquiry = txtSearchMaterial.getText().trim();
-                if (!txtSearchMaterial.getText().isEmpty()) {
-                    // Execute the search
-                    List<Material> results = matService.searchMaterials(inquiry);
-                    displayMaterials(results,
-                            catService.getAllCategories(),
-                            locService.getAllLocations());
-                } else {
-                    displayToolsWithCatAndLocNames();
-                }
-            }
-        });
-
-        btnCatManager.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Call the method to show the Location Manager dialog
-                catManager.showCategoryManagerDialog(invFrame);
-            }
-        });
-
-        btnLocManager.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Call the method to show the Location Manager dialog
-                locManager.showLocationManagerDialog(invFrame);
-            }
-        });
-
-        mainMenu.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Code to return to main menu
-                returnToMainMenu();
-            }
+        btnMainMenu.addActionListener((ActionEvent e) -> {
+            // Code to return to main menu
+            returnToMainMenu();
         });
         invFrame.revalidate();
         invFrame.repaint();
@@ -405,23 +363,23 @@ public class InventoryManager {
 
         for (int i = 0; i < tools.size(); i++) {
             Tool tool = tools.get(i);
-            String categoryName = "Warboy"; // initialize variable
-            String locationName = "Thunderdome"; // initialize variable
-            for (int j = 0; j < categories.size(); j++) {
-                if (tool.getCategoryId() == categories.get(j).getCategoryId()) {
-                    categoryName = categories.get(j).getName();
+            String categoryName = "Uncategorized"; // initialize variable
+            String locationName = "Unknown"; // initialize variable
+            for (Category category : categories) {
+                if (tool.getCategoryId() == category.getCategoryId()) {
+                    categoryName = category.getName();
                 }
             }
-            for (int j = 0; j < locations.size(); j++) {
-                if (tool.getLocationId() == locations.get(j).getLocationId()) {
-                    locationName = locations.get(j).getName();
+            for (Location location : locations) {
+                if (tool.getLocationId() == location.getLocationId()) {
+                    locationName = location.getName();
                 }
             }
             data[i][0] = tool.getToolId();
             data[i][1] = tool.getName();
             data[i][2] = tool.getDescription();
             data[i][3] = tool.getCondition();
-            data[i][4] = tool.isAvailable();
+            data[i][4] = tool.isAvailable() ? "Yes" : "No";  // Convert boolean to "Yes"/"No"
             data[i][5] = tool.getSerialNum();
             data[i][6] = categoryName;
             data[i][7] = locationName;
@@ -445,9 +403,9 @@ public class InventoryManager {
 
         // Creates the JComboBoxes
         JComboBox<String> catComboBox
-                = new JComboBox<>(catNames.toArray(new String[0]));
+                = new JComboBox<>(catNames.toArray(String[]::new));
         JComboBox<String> locComboBox
-                = new JComboBox<>(locNames.toArray(new String[0]));
+                = new JComboBox<>(locNames.toArray(String[]::new));
 
         // Show a dialog to collect tool details
         JTextField toolName = new JTextField();
@@ -564,9 +522,9 @@ public class InventoryManager {
 
             // Creates the JComboBoxes
             JComboBox<String> catComboBox = new JComboBox<>(catNames.
-                    toArray(new String[0]));
+                    toArray(String[]::new));
             JComboBox<String> locComboBox = new JComboBox<>(locNames.
-                    toArray(new String[0]));
+                    toArray(String[]::new));
 
             // Show a dialog to collect tool details
             JTextField toolName = new JTextField(tool.getName());
@@ -710,9 +668,9 @@ public class InventoryManager {
 
         // Creates the JComboBoxes
         JComboBox<String> catComboBox
-                = new JComboBox<>(catNames.toArray(new String[0]));
+                = new JComboBox<>(catNames.toArray(String[]::new));
         JComboBox<String> locComboBox
-                = new JComboBox<>(locNames.toArray(new String[0]));
+                = new JComboBox<>(locNames.toArray(String[]::new));
 
         // Show a dialog to collect material details
         JTextField matName = new JTextField();
@@ -832,9 +790,9 @@ public class InventoryManager {
 
             // Creates the JComboBoxes and pre-select the current values
             JComboBox<String> catComboBox
-                    = new JComboBox<>(catNames.toArray(new String[0]));
+                    = new JComboBox<>(catNames.toArray(String[]::new));
             JComboBox<String> locComboBox
-                    = new JComboBox<>(locNames.toArray(new String[0]));
+                    = new JComboBox<>(locNames.toArray(String[]::new));
 
             // Set the current category and location as selected items
             catComboBox.setSelectedItem(catService.getCategoryById(material.
@@ -901,7 +859,7 @@ public class InventoryManager {
                         matQuantity.requestFocus();
                     } else {
                         try {
-                            Double.parseDouble(matQuantity.getText());
+                            Double.valueOf(matQuantity.getText());
                             validInput = true;  // Set validInput to true only if the input is valid
                         } catch (NumberFormatException e) {
                             JOptionPane.showMessageDialog(null,
@@ -939,7 +897,7 @@ public class InventoryManager {
                         matService.saveMaterialUpdates(materialUpdates);
 
                         // Reload the material list to reflect the changes
-                        displayToolsWithCatAndLocNames();
+                        displayMaterialsWithCatAndLocNames();
                     }
                 } else {
                     break;  // Exit loop if Cancel is clicked
@@ -1004,7 +962,7 @@ public class InventoryManager {
                     matService.removeMaterial(materialId);
                 }
                 // Refreshes the material list table
-                displayToolsWithCatAndLocNames();
+                displayMaterialsWithCatAndLocNames();
             }
         } else {
             JOptionPane.showMessageDialog(invFrame, "No materials are selected.",

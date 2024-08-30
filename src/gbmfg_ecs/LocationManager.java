@@ -1,15 +1,18 @@
 package gbmfg_ecs;
 
-/**
- *
- * @author phillip.tette
- */
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
+/**
+ * Program: Gigabyte Manufacturing - Equipment Checkout Service 
+ * Course: CEIS 400 - Software Engineering II 
+ * Author: Phillip Tette 
+ * Program Description: Provides a location management GUI for customers. 
+ * Date: August 24, 2024
+ */
 public class LocationManager {
 
     private JFrame locFrame;

@@ -1,9 +1,11 @@
 package gbmfg_ecs;
 
 /**
- * Program: Gigabyte Manufacturing - Equipment Checkout Service Course: CEIS 400
- * - Software Engineering II Author: Phillip Tette Program Description: Database
- * Access Object for Employee class. Date: August 13, 2024
+ * Program: Gigabyte Manufacturing - Equipment Checkout Service 
+ * Course: CEIS 400 - Software Engineering II 
+ * Author: Phillip Tette 
+ * Program Description: Database Access Object for Employee class. 
+ * Date: August 13, 2024
  */
 import java.sql.*;
 import java.util.ArrayList;
@@ -12,13 +14,14 @@ import java.util.List;
 public class EmployeeDAOImpl implements EmployeeDAO {
 
     /* Method to create SQL prepared statement to create an employee record
-     * after entering employee information.
+     * to add to the DB after entering employee information.
      */
     public String saveEmployee(Employee employee) {
         String sql = "INSERT INTO employee (empLastName, empFirstName, "
                 + "empMiddleInitial, empPhoneNum, empEmailAddress, empRole, "
                 + "empUsername, empPassword) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseUtil.getConnection(); 
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, employee.getLastName());
             stmt.setString(2, employee.getFirstName());
             stmt.setString(3, employee.getMiddleInitial());
@@ -43,7 +46,8 @@ public class EmployeeDAOImpl implements EmployeeDAO {
         String sql = "UPDATE employee SET empLastName = ?, empFirstName = ?, "
                 + "empMiddleInitial = ?, empPhoneNum = ?, empEmailAddress = ?, "
                 + "empRole = ?, empUsername = ?, empPassword = ? WHERE empId = ?";
-        try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseUtil.getConnection(); 
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, employee.getLastName());
             stmt.setString(2, employee.getFirstName());
             stmt.setString(3, employee.getMiddleInitial());
@@ -66,7 +70,8 @@ public class EmployeeDAOImpl implements EmployeeDAO {
      */
     public Employee getEmployee(int empId) {
         String sql = "SELECT * FROM employee WHERE empId = ?";
-        try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseUtil.getConnection(); 
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, empId);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
@@ -95,7 +100,8 @@ public class EmployeeDAOImpl implements EmployeeDAO {
      */
     public Employee getEmployeeByUsername(String username) {
         String sql = "SELECT * FROM employee WHERE empUsername = ?";
-        try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseUtil.getConnection(); 
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, username);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
@@ -120,7 +126,7 @@ public class EmployeeDAOImpl implements EmployeeDAO {
     }
 
     /* Method to create SQL prepared statement to create a new ArrayList called
-     * 'categories' and add all categories to the array.
+     * 'employees' and add all employees to the array.
      */
     public List<Employee> getAllEmployees() {
         String sql = "SELECT * FROM employee";
@@ -154,7 +160,8 @@ public class EmployeeDAOImpl implements EmployeeDAO {
      */
     public String removeEmployee(int empId) {
         String sql = "DELETE FROM employee WHERE empId = ?";
-        try (Connection conn = DatabaseUtil.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseUtil.getConnection(); 
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, empId);
             int rowsAffected = stmt.executeUpdate();
             if (rowsAffected > 0) {

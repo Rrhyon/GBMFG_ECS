@@ -8,7 +8,6 @@ package gbmfg_ecs;
  * Date: August 13, 2024
  */
 import java.sql.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +29,6 @@ public class MaintenanceRecordDAO {
             stmt.executeUpdate();
             return "Maintenance record added successfully.";
         } catch (SQLException e) {
-            e.printStackTrace();
             return "Error adding maintenance record.";
         }
     }
@@ -53,7 +51,6 @@ public class MaintenanceRecordDAO {
             stmt.executeUpdate();
             return "Maintenance record updated successfully.";
         } catch (SQLException e) {
-            e.printStackTrace();
             return "Error updating maintenance record.";
         }
     }
@@ -80,7 +77,6 @@ public class MaintenanceRecordDAO {
             }
             return null;
         } catch (SQLException e) {
-            e.printStackTrace();
             return null;
         }
     }
@@ -106,7 +102,6 @@ public class MaintenanceRecordDAO {
                 records.add(record);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
         }
         return records;
     }
@@ -126,7 +121,6 @@ public class MaintenanceRecordDAO {
                 return "Maintenance record not found.";
             }
         } catch (SQLException e) {
-            e.printStackTrace();
             return "Error removing maintenance record.";
         }
     }

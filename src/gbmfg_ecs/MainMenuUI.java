@@ -8,6 +8,14 @@ import java.time.LocalDateTime;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * Program: Gigabyte Manufacturing - Equipment Checkout Service
+ * Course: CEIS 400 - Software Engineering II
+ * Author: Chandler Perry
+ * Program Description: Provides framework for Checkout Transaction object 
+ * creation.
+ * Date: August 13, 2024
+ */
 public class MainMenuUI extends JFrame {
 
     private JButton checkoutToolButton;
@@ -19,10 +27,12 @@ public class MainMenuUI extends JFrame {
     private Timer sessionTimer;
     private final LoginService loginService;
     private final InventoryManager invManager;
+    private final CheckoutTransactionService ctService; // Add CheckoutService instance
 
     public MainMenuUI(int sessionId) {
         this.sessionId = sessionId;
         this.loginService = new LoginService();
+        this.ctService = new CheckoutTransactionService(); // Initialize CheckoutService
         this.invManager = new InventoryManager(this);
         this.sessionExpiry = LocalDateTime.now().plusMinutes(10);
         initializeUI();
@@ -74,12 +84,12 @@ public class MainMenuUI extends JFrame {
     }
 
     private void checkOutTool() {
-        JOptionPane.showMessageDialog(this, "Tool Checkout Functionality is not yet implemented.");
-        // Call the relevant service or UI for tool checkout here
+        // Create and display the CheckoutUI window without arguments
+        new CheckoutUI().setVisible(true);
     }
 
     private void openMaintenance() {
-        new MaintenanceGUI().setVisible(true);
+        new MaintenanceMenu().setVisible(true);
     }
 
     private void openInventoryManager() {

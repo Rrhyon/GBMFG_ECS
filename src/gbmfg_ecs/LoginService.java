@@ -2,6 +2,13 @@ package gbmfg_ecs;
 
 import java.util.prefs.Preferences;
 
+/**
+ * Program: Gigabyte Manufacturing - Equipment Checkout Service
+ * Course: CEIS 400 - Software Engineering II
+ * Author: Phillip Tette, Chandler Perry
+ * Program Description: Intermediary class to pass object information to the DAO.
+ * Date: August 13, 2024
+ */
 public class LoginService {
 
     private AuthenticationService authenticationService;

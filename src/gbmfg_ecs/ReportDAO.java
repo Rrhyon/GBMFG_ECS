@@ -8,14 +8,13 @@ package gbmfg_ecs;
  * Date: August 13, 2024
  */
 import java.sql.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ReportDAO {
 
-    /* Method to create SQL prepared statement to create a session
-     * after entering session information.
+    /* Method to create SQL prepared statement to create a reports
+     * after entering report information.
      */
     public String addReport(Report report) {
         String sql = "INSERT INTO reports (title, content, createdDate, "
@@ -29,12 +28,11 @@ public class ReportDAO {
             stmt.executeUpdate();
             return "Report added successfully.";
         } catch (SQLException e) {
-            e.printStackTrace();
             return "Error adding report.";
         }
     }
     
-    /* Method to create SQL prepared statement to update sessions
+    /* Method to create SQL prepared statement to update reports
      * after entering session information.
      */
     public String updateReport(Report report) {
@@ -50,13 +48,12 @@ public class ReportDAO {
             stmt.executeUpdate();
             return "Report updated successfully.";
         } catch (SQLException e) {
-            e.printStackTrace();
             return "Error updating report.";
         }
     }
 
-    /* Method to create SQL prepared statement to retrieve session
-     * after entering session ID.
+    /* Method to create SQL prepared statement to retrieve reports
+     * after entering ID.
      */
     public Report getReport(int reportId) {
         String sql = "SELECT * FROM reports WHERE reportId = ?";
@@ -76,13 +73,12 @@ public class ReportDAO {
             }
             return null;
         } catch (SQLException e) {
-            e.printStackTrace();
             return null;
         }
     }
 
     /* Method to create SQL prepared statement to create a new ArrayList called
-     * 'sessions' and add all sessions to the array.
+     * 'reports' and add all reports to the array.
      */
     public List<Report> getAllReports() {
         String sql = "SELECT * FROM reports";
@@ -101,13 +97,12 @@ public class ReportDAO {
                 reports.add(report);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
         }
         return reports;
     }
     
-    /* Method to create SQL prepared statement to remove a session record
-     * after entering session ID.
+    /* Method to create SQL prepared statement to remove a report
+     * after entering report ID.
      */
      public String removeReport(int reportId) {
         String sql = "DELETE FROM reports WHERE reportId = ?";
@@ -121,7 +116,6 @@ public class ReportDAO {
                 return "Report not found.";
             }
         } catch (SQLException e) {
-            e.printStackTrace();
             return "Error removing report.";
         }
     }

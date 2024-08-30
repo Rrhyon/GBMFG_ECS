@@ -1,5 +1,9 @@
 package gbmfg_ecs;
 
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Program: Gigabyte Manufacturing - Equipment Checkout Service
  * Course: CEIS 400 - Software Engineering II
@@ -7,10 +11,6 @@ package gbmfg_ecs;
  * Program Description: Database Access Object for Location class.
  * Date: August 13, 2024
  */
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-
 public class LocationDAO {
 
     /* Method to create SQL prepared statement to create a location record
@@ -27,7 +27,6 @@ public class LocationDAO {
             stmt.executeUpdate();
             return "Location added successfully.";
         } catch (SQLException e) {
-            e.printStackTrace();
             return "Error adding location.";
         }
     }
@@ -46,7 +45,6 @@ public class LocationDAO {
             stmt.executeUpdate();
             return "Location updated successfully.";
         } catch (SQLException e) {
-            e.printStackTrace();
             return "Error updating location.";
         }
     }
@@ -70,7 +68,6 @@ public class LocationDAO {
             }
             return null;
         } catch (SQLException e) {
-            e.printStackTrace();
             return null;
         }
     }
@@ -94,7 +91,6 @@ public class LocationDAO {
             }
             return null;
         } catch (SQLException e) {
-            e.printStackTrace();
             return null;
         }
     }
@@ -118,7 +114,6 @@ public class LocationDAO {
                 locations.add(location);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
         }
         return locations;
     }
@@ -138,7 +133,6 @@ public class LocationDAO {
                 return "Location not found.";
             }
         } catch (SQLException e) {
-            e.printStackTrace();
             return "Error removing location.";
         }
     }

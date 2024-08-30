@@ -1,9 +1,11 @@
 package gbmfg_ecs;
 
 /**
- * Program: Gigabyte Manufacturing - Equipment Checkout Service Course: CEIS 400
- * - Software Engineering II Author: Phillip Tette Program Description: Database
- * Access Object for Material class. Date: August 13, 2024
+ * Program: Gigabyte Manufacturing - Equipment Checkout Service
+ * Course: CEIS 400 - Software Engineering II
+ * Author: Phillip Tette
+ * Program Description: Database Access Object for Material class.
+ * Date: August 13, 2024
  */
 import java.sql.*;
 import java.util.ArrayList;
@@ -117,16 +119,14 @@ public class MaterialDAOImpl implements MaterialDAO {
      */
     @Override
     public List<Material> searchMaterials(String inquiry) {
-        String sql = "SELECT * FROM material WHERE matName LIKE ? OR "
-                + "matDesc LIKE ?";
+        String sql = "SELECT * FROM material WHERE matName LIKE ? OR matDesc LIKE ?";
         List<Material> materials = new ArrayList<>();
         try (Connection conn = DatabaseUtil.getConnection(); 
-                PreparedStatement stmt = conn.prepareStatement(sql)) {
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
             String query = "%" + inquiry + "%";
             stmt.setString(1, query);
             stmt.setString(2, query);
-            stmt.setString(3, query);
-            stmt.setString(4, query);
+
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 Material material = new Material(
@@ -137,13 +137,14 @@ public class MaterialDAOImpl implements MaterialDAO {
                         rs.getInt("categoryId"),
                         rs.getInt("locationId")
                 );
-                material.setMaterialId(rs.getInt("matId"));
+                material.setMaterialId(rs.getInt("materialId"));
                 materials.add(material);
             }
         } catch (SQLException e) {
         }
         return materials;
     }
+
 
     /* Method to create SQL prepared statement to remove a material record
      * after entering material ID.

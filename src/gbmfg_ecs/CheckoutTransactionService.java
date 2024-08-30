@@ -12,45 +12,30 @@ import java.util.List;
 
 public class CheckoutTransactionService {
 
-    private CheckoutTransactionDAO checkoutTransactionDAO;
+    private final CheckoutTransactionDAO transactionDAO;
 
     public CheckoutTransactionService() {
-        this.checkoutTransactionDAO = new CheckoutTransactionDAO();
+        this.transactionDAO = new CheckoutTransactionDAO();
     }
 
-    // Creates the object and returns the object to the DAO method for DB Entry.
-    public String addCheckoutTransaction(int empId, int toolId, 
-            LocalDateTime checkoutDate, LocalDateTime dueDate, 
-            LocalDateTime returnDate, String status) {
-        CheckoutTransaction transaction = new CheckoutTransaction(empId, toolId,
-                checkoutDate, dueDate, returnDate, status);
-        return checkoutTransactionDAO.addCheckoutTransaction(transaction);
-    }
-    
-    /* Creates the object, retrieves the existing ID and returns the updates to
-     * the DAO method for DB Entry.
-     */
-    public String updateCheckoutTransaction(int transactionId, int empId, 
-            int toolId, LocalDateTime checkoutDate, LocalDateTime dueDate, 
-            LocalDateTime returnDate, String status) {
-        CheckoutTransaction transaction = new CheckoutTransaction(empId, toolId,
-                checkoutDate, dueDate, returnDate, status);
-        transaction.setTransactionId(transactionId);
-        return checkoutTransactionDAO.updateCheckoutTransaction(transaction);
+    public boolean addCheckoutTransaction(int empId, int toolId, LocalDateTime checkoutDate, LocalDateTime dueDate) {
+        CheckoutTransaction transaction = new CheckoutTransaction(empId, toolId, checkoutDate, dueDate, null, "Checked Out");
+        return transactionDAO.addCheckoutTransaction(transaction);
     }
 
-    // Retrieves the transaction record by ID.
+    public boolean updateCheckoutTransaction(CheckoutTransaction transaction) {
+        return transactionDAO.updateCheckoutTransaction(transaction);
+    }
+
     public CheckoutTransaction getCheckoutTransaction(int transactionId) {
-        return checkoutTransactionDAO.getCheckoutTransaction(transactionId);
+        return transactionDAO.getCheckoutTransaction(transactionId);
     }
 
-    // Creates a list and retrieves all available transactions.
     public List<CheckoutTransaction> getAllCheckoutTransactions() {
-        return checkoutTransactionDAO.getAllCheckoutTransactions();
+        return transactionDAO.getAllCheckoutTransactions();
     }
-    
-    // Removes selected transactions.
-    public String removeCheckoutTransaction(int transactionId) {
-        return checkoutTransactionDAO.removeCheckoutTransaction(transactionId);
+
+    public boolean removeCheckoutTransaction(int transactionId) {
+        return transactionDAO.removeCheckoutTransaction(transactionId);
     }
 }

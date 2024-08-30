@@ -1,5 +1,7 @@
 package gbmfg_ecs;
 
+import java.util.List;
+
 /**
  * Program: Gigabyte Manufacturing - Equipment Checkout Service
  * Course: CEIS 400 - Software Engineering II
@@ -7,8 +9,6 @@ package gbmfg_ecs;
  * Program Description: Intermediary class to pass object information to the DAO.
  * Date: August 13, 2024
  */
-import java.util.List;
-
 public class CategoryService {
 
     private CategoryDAO categoryDAO;

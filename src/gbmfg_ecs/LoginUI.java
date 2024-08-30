@@ -11,7 +11,13 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.util.prefs.Preferences;
-
+/**
+ * Program: Gigabyte Manufacturing - Equipment Checkout Service
+ * Course: CEIS 400 - Software Engineering II
+ * Author: Chandler Perry
+ * Program Description: Provides an Inventory GUI for customers.
+ * Date: August 13, 2024
+ */
 public class LoginUI extends JFrame {
 
     private JButton loginButton;
