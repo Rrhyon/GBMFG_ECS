@@ -12,8 +12,7 @@ import java.util.TimerTask;
  * Program: Gigabyte Manufacturing - Equipment Checkout Service
  * Course: CEIS 400 - Software Engineering II
  * Author: Chandler Perry
- * Program Description: Provides framework for Checkout Transaction object 
- * creation.
+ * Program Description: Provides framework for Main Menu UI.
  * Date: August 13, 2024
  */
 public class MainMenuUI extends JFrame {
@@ -21,6 +20,7 @@ public class MainMenuUI extends JFrame {
     private JButton checkoutToolButton;
     private JButton maintenanceButton;
     private JButton manageInventoryButton;
+    private JButton employeeManagementButton;  // New button for Employee Management
     private JButton logoutButton;
     private int sessionId;
     private LocalDateTime sessionExpiry;
@@ -44,16 +44,18 @@ public class MainMenuUI extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(800, 600);
         setLocationRelativeTo(null);
-        setLayout(new GridLayout(4, 1));
+        setLayout(new GridLayout(5, 1));  // Updated to 5 rows to include new button
 
         checkoutToolButton = createButton("Check Out Tool", e -> checkOutTool());
         maintenanceButton = createButton("Maintenance", e -> openMaintenance());
         manageInventoryButton = createButton("Manage Inventory", e -> openInventoryManager());
+        employeeManagementButton = createButton("Employee Management", e -> openEmployeeManagement()); // New button
         logoutButton = createButton("Logout", e -> logout());
 
         add(checkoutToolButton);
         add(maintenanceButton);
         add(manageInventoryButton);
+        add(employeeManagementButton);  // Add new button to the layout
         add(logoutButton);
 
         setVisible(true);
@@ -96,6 +98,10 @@ public class MainMenuUI extends JFrame {
         this.getContentPane().removeAll();  // Clear existing components (main menu buttons)
         this.repaint();  // Refresh the frame
         invManager.showInventoryManagerDialog(this);
+    }
+
+    private void openEmployeeManagement() {
+        new EmployeeManagement().showEmployeeServiceDialog(this);  // Opens Employee Management dialog
     }
 
     private void logout() {

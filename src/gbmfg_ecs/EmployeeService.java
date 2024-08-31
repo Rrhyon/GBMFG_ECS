@@ -14,6 +14,6 @@ public interface EmployeeService {
     String updateEmployee(Employee employee);
     Employee getEmployee(int empId);
     Employee getEmployeeByUsername(String username);
-    List<Employee> getAllEmployees();
     String removeEmployee(int empId);
+    List<Employee> getAllEmployees();
 }

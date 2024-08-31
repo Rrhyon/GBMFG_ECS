@@ -52,6 +52,19 @@ public class Employee {
         this.username = username;
         this.password = password;
     }
+    
+        // Constructor is for getting all employees
+    public Employee(String lastName, String firstName, String middleInitial,
+            String phoneNum, String emailAddress, String empRole,
+            String username) {
+        this.lastName = lastName;
+        this.firstName = firstName;
+        this.middleInitial = middleInitial;
+        this.phoneNum = phoneNum;
+        this.emailAddress = emailAddress;
+        this.empRole = empRole;
+        this.username = username;
+    }
 
     // Getters
     public int getEmpId() {
